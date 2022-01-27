@@ -4,7 +4,7 @@ import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 
 
-class MultiStepTransformerModel(nn.Module):
+class _MultiStepTransformer(nn.Module):
     def __init__(
             self,
             n_encoder_features,
@@ -145,7 +145,7 @@ class MultiStepTransformerModel(nn.Module):
         return next(self.parameters()).device
 
 
-class MultiStepTransformerModelSystem(pl.LightningModule):
+class MultiStepTransformer(pl.LightningModule):
     def __init__(
             self,
             n_encoder_features,
@@ -162,7 +162,7 @@ class MultiStepTransformerModelSystem(pl.LightningModule):
         super().__init__()
         self.save_hyperparameters()
 
-        self.model = MultiStepTransformerModel(
+        self.model = _MultiStepTransformer(
             n_encoder_features=n_encoder_features,
             n_decoder_features=n_decoder_features,
             encoding_length=encoding_length,
