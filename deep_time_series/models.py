@@ -9,8 +9,8 @@ class MultiStepTransformerModel(nn.Module):
             self,
             n_encoder_features,
             n_decoder_features,
-            past_length,
-            future_length,
+            encoding_length,
+            decoding_length,
             d_model,
             n_heads,
             n_layers,
@@ -20,14 +20,14 @@ class MultiStepTransformerModel(nn.Module):
         super().__init__()
         self.n_encoder_features = n_encoder_features
         self.n_decoder_features = n_decoder_features
-        self.past_length = past_length
-        self.future_length = future_length
+        self.encoding_length = encoding_length
+        self.decoding_length = decoding_length
         self.d_model = d_model
         self.n_heads = n_heads
         self.n_layers = n_layers
         self.dim_feedforward = dim_feedforward
         self.n_outputs = n_outputs
-        
+
         self.encoder_d_matching_layer = nn.Linear(
             in_features=n_encoder_features,
             out_features=d_model,
@@ -39,12 +39,12 @@ class MultiStepTransformerModel(nn.Module):
         )
 
         self.past_pos_embedding = nn.Embedding(
-            num_embeddings=past_length,
+            num_embeddings=encoding_length,
             embedding_dim=d_model,
         )
 
         self.future_pos_embedding = nn.Embedding(
-            num_embeddings=future_length,
+            num_embeddings=decoding_length,
             embedding_dim=d_model,
         )
 
@@ -53,13 +53,13 @@ class MultiStepTransformerModel(nn.Module):
         )
 
         self.encoder = nn.TransformerEncoder(encoder_layer, n_layers)
-        
+
         decoder_layer = nn.TransformerDecoderLayer(
             d_model, n_heads, dim_feedforward=dim_feedforward, dropout=0,
         )
-        
+
         self.decoder = nn.TransformerDecoder(decoder_layer, n_layers)
-        
+
         self.head = nn.Sequential(
             nn.Linear(d_model, d_model//2),
             nn.ReLU(),
@@ -69,15 +69,15 @@ class MultiStepTransformerModel(nn.Module):
     def encode(self, inputs):
         # all_input: B x L_past X C.
         all_input = torch.cat([
-            inputs['past_targets'],
-            inputs['past_covariates']
+            inputs['encoding.targets'],
+            inputs['encoding.covariates']
         ], dim=2)
 
         x = self.encoder_d_matching_layer(all_input)
 
         # B x L_past x d_model.
         pos = self.past_pos_embedding(
-            self.generate_range(self.past_length)
+            self.generate_range(self.encoding_length)
         )
 
         # B x L_past x d_model.
@@ -92,7 +92,7 @@ class MultiStepTransformerModel(nn.Module):
         return memory
 
     def decode(self, inputs, memory):
-        all_input = inputs['future_covariates']
+        all_input = inputs['decoding.covariates']
         x = self.decoder_d_matching_layer(all_input)
 
         # B x L_future x d_model.
@@ -121,12 +121,12 @@ class MultiStepTransformerModel(nn.Module):
 
         return y
 
-    def forward(self, inputs):  
+    def forward(self, inputs):
         memory = self.encode(inputs)
         y = self.decode(inputs, memory)
 
         return y
-        
+
     def generate_range(self, length):
         range_ = torch.arange(0, length)
         return range_.to(device=self.device, dtype=torch.long)
@@ -150,8 +150,8 @@ class MultiStepTransformerModelSystem(pl.LightningModule):
             self,
             n_encoder_features,
             n_decoder_features,
-            past_length,
-            future_length,
+            encoding_length,
+            decoding_length,
             d_model,
             n_heads,
             n_layers,
@@ -165,8 +165,8 @@ class MultiStepTransformerModelSystem(pl.LightningModule):
         self.model = MultiStepTransformerModel(
             n_encoder_features=n_encoder_features,
             n_decoder_features=n_decoder_features,
-            past_length=past_length,
-            future_length=future_length,
+            encoding_length=encoding_length,
+            decoding_length=decoding_length,
             d_model=d_model,
             n_heads=n_heads,
             n_layers=n_layers,
@@ -181,7 +181,7 @@ class MultiStepTransformerModelSystem(pl.LightningModule):
 
     def _evaluate_loss(self, batch):
         y = self.model(batch)
-        loss = self.loss_fn(y, batch['future_targets'])
+        loss = self.loss_fn(y, batch['label.targets'])
 
         return loss
 

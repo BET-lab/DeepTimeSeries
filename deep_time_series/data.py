@@ -11,8 +11,61 @@ class ChunkSpec:
         self.dtype = dtype
 
 
+class ChunkableSpec:
+    def __init__(self, tag, names, dtype, shift=0):
+        self.tag = tag
+        self.names = names
+        self.shift = shift
+        self.dtype = dtype
+
+    def to_chunk_spec(self, encoding_length, decoding_length):
+        range_ = (
+            encoding_length - self.shift,
+            encoding_length + decoding_length - self.shift
+        )
+
+        return ChunkSpec(
+            tag=self.tag, names=self.names,
+            range_=range_, dtype=self.dtype,
+        )
+
+
+class EncodingChunkSpec(ChunkableSpec):
+    def __init__(self, tag, names, dtype, shift=0):
+        super().__init__(
+            tag=f'encoding.{tag}',
+            names=names,
+            shift=shift,
+            dtype=dtype,
+        )
+
+
+class DecodingChunkSpec(ChunkableSpec):
+    def __init__(self, tag, names, dtype, shift=0):
+        super().__init__(
+            tag=f'decoding.{tag}',
+            names=names,
+            shift=shift,
+            dtype=dtype,
+        )
+
+
+class LabelChunkSpec(ChunkableSpec):
+    def __init__(self, tag, names, dtype, shift=0):
+        super().__init__(
+            tag=f'label.{tag}',
+            names=names,
+            shift=shift,
+            dtype=dtype,
+        )
+
+
 class ChunkExtractor:
     def __init__(self, df, chunk_specs):
+        # Check tag duplication.
+        tags = [spec.tag for spec in chunk_specs]
+        assert len(tags) == len(set(tags))
+
         self.chunk_specs = chunk_specs
         self.chunk_length = max(spec.range_[1] for spec in chunk_specs)
 
@@ -61,7 +114,7 @@ class FeatureTransformers:
     def fit(self, df):
         for name in self._get_valid_names(df.columns):
             transformer = self.transformer_dict[name]
-            
+
             self._apply_to_single_feature(
                 df[name], transformer.fit
             )
@@ -105,11 +158,22 @@ class FeatureTransformers:
 
 class TimeSeriesDataset(Dataset):
     def __init__(self,
-        df, chunk_specs, feature_transformers,
+        df,
+        encoding_length,
+        decoding_length,
+        chunk_specs,
+        feature_transformers,
         fit_feature_transformers=True,
     ):
         self.df = df.copy()
-        self.chunk_specs = chunk_specs
+        self.encoding_length = encoding_length,
+        self.decoding_length = decoding_length,
+        # Make chunk_specs from encoding, decoding and label specs.
+        self.chunk_specs = [
+            spec.to_chunk_spec(encoding_length, decoding_length)
+            for spec in chunk_specs
+        ]
+
         self.feature_transformers = feature_transformers
         self.fit_feature_transformers = fit_feature_transformers
 
@@ -146,12 +210,12 @@ class TimeSeriesDataset(Dataset):
         start_time_index = i - cumsum[df_index]
 
         chunk_dict = chunk_extractor.extract(start_time_index)
-        
+
         return chunk_dict
 
     def convert_item_to_df(self, item):
         tag_to_names_dict = {
-            spec.tag: spec.names 
+            spec.tag: spec.names
             for spec in self.chunk_extractors[0].chunk_specs
         }
         output = {}
