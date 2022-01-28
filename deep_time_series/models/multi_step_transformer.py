@@ -119,7 +119,9 @@ class _MultiStepTransformer(nn.Module):
         # B x L_future x n_outputs.
         y = y.permute((1, 0, 2))
 
-        return y
+        return {
+            'label.targets': y
+        }
 
     def forward(self, inputs):
         memory = self.encode(inputs)
@@ -180,8 +182,11 @@ class MultiStepTransformer(pl.LightningModule):
         return self.model(x)
 
     def _evaluate_loss(self, batch):
-        y = self.model(batch)
-        loss = self.loss_fn(y, batch['label.targets'])
+        outputs = self.model(batch)
+        loss = self.loss_fn(
+            outputs['label.targets'],
+            batch['label.targets']
+        )
 
         return loss
 
