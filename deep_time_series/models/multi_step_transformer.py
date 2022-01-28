@@ -38,7 +38,7 @@ class _MultiStepTransformer(nn.Module):
             out_features=d_model,
         )
 
-        self.past_pos_embedding = nn.Embedding(
+        self.encoding_pos_embedding = nn.Embedding(
             num_embeddings=encoding_length,
             embedding_dim=d_model,
         )
@@ -76,7 +76,7 @@ class _MultiStepTransformer(nn.Module):
         x = self.encoder_d_matching_layer(all_input)
 
         # B x L_past x d_model.
-        pos = self.past_pos_embedding(
+        pos = self.encoding_pos_embedding(
             self.generate_range(self.encoding_length)
         )
 
