@@ -6,7 +6,7 @@ class RangeChunkSpec:
         self.dtype = dtype
 
 
-class ChunkSpec:
+class EncodingChunkSpec:
     def __init__(self, tag, names, dtype, shift=0):
         self.tag = tag
         self.names = names
@@ -15,43 +15,51 @@ class ChunkSpec:
 
     def to_range_chunk_spec(self, encoding_length, decoding_length):
         range_ = (
-            encoding_length - self.shift,
-            encoding_length + decoding_length - self.shift
+            self.shift,
+            decoding_length + self.shift
         )
 
         return RangeChunkSpec(
-            tag=self.tag, names=self.names,
+            tag=f'encoding.{self.tag}', names=self.names,
             range_=range_, dtype=self.dtype,
         )
 
 
-class EncodingChunkSpec(ChunkSpec):
+class DecodingChunkSpec:
     def __init__(self, tag, names, dtype, shift=0):
-        super().__init__(
-            tag=f'encoding.{tag}',
-            names=names,
-            shift=shift,
-            dtype=dtype,
+        self.tag = tag
+        self.names = names
+        self.shift = shift
+        self.dtype = dtype
+
+    def to_range_chunk_spec(self, encoding_length, decoding_length):
+        range_ = (
+            encoding_length + self.shift,
+            encoding_length + decoding_length + self.shift
+        )
+
+        return RangeChunkSpec(
+            tag=f'decoding.{self.tag}', names=self.names,
+            range_=range_, dtype=self.dtype,
         )
 
 
-class DecodingChunkSpec(ChunkSpec):
+class LabelChunkSpec:
     def __init__(self, tag, names, dtype, shift=0):
-        super().__init__(
-            tag=f'decoding.{tag}',
-            names=names,
-            shift=shift,
-            dtype=dtype,
+        self.tag = tag
+        self.names = names
+        self.shift = shift
+        self.dtype = dtype
+
+    def to_range_chunk_spec(self, encoding_length, decoding_length):
+        range_ = (
+            encoding_length + self.shift,
+            encoding_length + decoding_length + self.shift
         )
 
-
-class LabelChunkSpec(ChunkSpec):
-    def __init__(self, tag, names, dtype, shift=0):
-        super().__init__(
-            tag=f'label.{tag}',
-            names=names,
-            shift=shift,
-            dtype=dtype,
+        return RangeChunkSpec(
+            tag=f'label.{self.tag}', names=self.names,
+            range_=range_, dtype=self.dtype,
         )
 
 
@@ -62,7 +70,9 @@ class ChunkExtractor:
         assert len(tags) == len(set(tags))
 
         self.range_chunk_specs = range_chunk_specs
-        self.chunk_length = max(spec.range_[1] for spec in range_chunk_specs)
+        self.chunk_min_t = min(spec.range_[0] for spec in range_chunk_specs)
+        self.chunk_max_t = max(spec.range_[1] for spec in range_chunk_specs)
+        self.chunk_length = self.chunk_max_t - self.chunk_min_t
 
         self._preprocess(df)
 
@@ -75,9 +85,15 @@ class ChunkExtractor:
         chunk_dict = {}
         for spec in self.range_chunk_specs:
             array = self.data[spec.tag][
-                start_time_index : start_time_index+self.chunk_length
+                start_time_index + self.chunk_min_t :
+                start_time_index + self.chunk_max_t
             ]
 
-            chunk_dict[spec.tag] = array[slice(*spec.range_)]
+            range_ = (
+                spec.range_[0] - self.chunk_min_t,
+                spec.range_[1] - self.chunk_min_t,
+            )
+
+            chunk_dict[spec.tag] = array[slice(*range_)]
 
         return chunk_dict

@@ -48,6 +48,9 @@ class TimeSeriesDataset(Dataset):
             for df in splitted_dfs
         ]
 
+        self.min_start_time_index = \
+            max(0, -self.chunk_extractors[0].chunk_min_t)
+
     def __len__(self):
         return sum(self.lengths)
 
@@ -56,7 +59,7 @@ class TimeSeriesDataset(Dataset):
         df_index = np.argmax(cumsum - i > 0) - 1
 
         chunk_extractor = self.chunk_extractors[df_index]
-        start_time_index = i - cumsum[df_index]
+        start_time_index = i - cumsum[df_index] + self.min_start_time_index
 
         chunk_dict = chunk_extractor.extract(start_time_index)
 
