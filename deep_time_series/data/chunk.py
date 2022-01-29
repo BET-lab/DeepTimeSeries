@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class RangeChunkSpec:
     def __init__(self, tag, names, range_, dtype):
         self.tag = tag
@@ -79,9 +82,14 @@ class ChunkExtractor:
     def _preprocess(self, df):
         self.data = {}
         for spec in self.range_chunk_specs:
-            self.data[spec.tag] = df[spec.names].astype(spec.dtype).values
+            values = df[spec.names].astype(spec.dtype).values
+            if len(values.shape) == 1:
+                values = values[:, np.newaxis]
+            self.data[spec.tag] = values
 
     def extract(self, start_time_index):
+        assert start_time_index + self.chunk_min_t >= 0
+
         chunk_dict = {}
         for spec in self.range_chunk_specs:
             array = self.data[spec.tag][
