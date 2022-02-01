@@ -77,6 +77,8 @@ class ChunkExtractor:
         self.chunk_max_t = max(spec.range_[1] for spec in range_chunk_specs)
         self.chunk_length = self.chunk_max_t - self.chunk_min_t
 
+        self.time_index_values = df['time_index'].values
+
         self._preprocess(df)
 
     def _preprocess(self, df):
@@ -87,8 +89,13 @@ class ChunkExtractor:
                 values = values[:, np.newaxis]
             self.data[spec.tag] = values
 
-    def extract(self, start_time_index):
+    def extract(self, start_time_index, return_time_index=False):
         assert start_time_index + self.chunk_min_t >= 0
+
+        times = self.time_index_values[
+            start_time_index + self.chunk_min_t :
+            start_time_index + self.chunk_max_t
+        ]
 
         chunk_dict = {}
         for spec in self.range_chunk_specs:
@@ -103,5 +110,8 @@ class ChunkExtractor:
             )
 
             chunk_dict[spec.tag] = array[slice(*range_)]
+            # Time index information.
+            if return_time_index:
+                chunk_dict[f'{spec.tag}.time_index'] = times[slice(*range_)]
 
         return chunk_dict
