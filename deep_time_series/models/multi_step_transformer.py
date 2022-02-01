@@ -3,6 +3,8 @@ import torch.nn as nn
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 
+from ..utils import merge_dicts
+
 
 class _MultiStepTransformer(nn.Module):
     def __init__(
@@ -89,9 +91,13 @@ class _MultiStepTransformer(nn.Module):
         # L_past x B x d_model.
         memory = self.encoder(x)
 
-        return memory
+        return {
+            'memory': memory
+        }
 
-    def decode(self, inputs, memory):
+    def decode(self, inputs):
+        memory = inputs['memory']
+
         all_input = inputs['decoding.covariates']
         x = self.decoder_d_matching_layer(all_input)
 
@@ -124,10 +130,11 @@ class _MultiStepTransformer(nn.Module):
         }
 
     def forward(self, inputs):
-        memory = self.encode(inputs)
-        y = self.decode(inputs, memory)
+        encoder_outputs = self.encode(inputs)
+        decoder_inputs = merge_dicts([inputs, encoder_outputs])
+        outputs = self.decode(decoder_inputs)
 
-        return y
+        return outputs
 
     def generate_range(self, length):
         range_ = torch.arange(0, length)
