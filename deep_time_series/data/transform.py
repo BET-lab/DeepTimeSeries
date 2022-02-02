@@ -6,6 +6,7 @@ class CategoryMapper:
     def __init__(self):
         self.map = {}
         self.inverse_map = {}
+        self.dtype = None
 
     def fit(self, x):
         assert len(x.shape) == 2
@@ -14,6 +15,7 @@ class CategoryMapper:
         x = x.reshape(-1)
         self.map = {v: k for k, v in enumerate(np.unique(x))}
         self.inverse_map = {v: k for k, v in self.map.items()}
+        self.dtype = x.dtype
 
     def transform(self, x):
         assert len(x.shape) == 2
@@ -31,7 +33,7 @@ class CategoryMapper:
 
         x = x.reshape(-1)
 
-        x = np.array([self.inverse_map[v] for v in x], dtype=object)
+        x = np.array([self.inverse_map[v] for v in x], dtype=self.dtype)
 
         return x
 
