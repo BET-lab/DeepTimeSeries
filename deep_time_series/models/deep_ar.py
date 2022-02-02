@@ -1,12 +1,11 @@
 import torch
 import torch.nn as nn
-import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 
 from ..utils import merge_dicts
+from .forecasting_module import ForecastingModule
 
-
-class _DeepAR(nn.Module):
+class DeepAR(ForecastingModule):
     def __init__(
             self,
             n_features,
@@ -17,15 +16,13 @@ class _DeepAR(nn.Module):
             n_outputs,
             rnn_class,
             dropout_rate,
+            lr,
+            teacher_forcing,
         ):
         super().__init__()
-        self.n_features = n_features
-        self.encoding_length = encoding_length
-        self.decoding_length = decoding_length
-        self.hidden_size = hidden_size
-        self.n_layers = n_layers
-        self.n_outputs = n_outputs
-        self.rnn_class = rnn_class
+        self.save_hyperparameters()
+
+        self.loss_fn = nn.MSELoss()
 
         self.encoder = rnn_class(
             input_size=n_features,
@@ -61,13 +58,10 @@ class _DeepAR(nn.Module):
             'memory': hidden_state,
         }
 
-    def decode(self, inputs):
-        if self.training:
-            return self.decode_train(inputs)
-        else:
+    def decode_train(self, inputs):
+        if not self.hparams.teacher_forcing:
             return self.decode_eval(inputs)
 
-    def decode_train(self, inputs):
         all_input = torch.cat([
             inputs['decoding.targets'],
             inputs['decoding.covariates']
@@ -121,45 +115,8 @@ class _DeepAR(nn.Module):
 
         return outputs
 
-    @property
-    def device(self):
-        return next(self.parameters()).device
-
-
-class DeepAR(pl.LightningModule):
-    def __init__(
-            self,
-            n_features,
-            encoding_length,
-            decoding_length,
-            hidden_size,
-            n_layers,
-            n_outputs,
-            rnn_class,
-            dropout_rate,
-            lr,
-        ):
-        super().__init__()
-        self.save_hyperparameters()
-
-        self.model = _DeepAR(
-            n_features=n_features,
-            encoding_length=encoding_length,
-            decoding_length=decoding_length,
-            hidden_size=hidden_size,
-            n_layers=n_layers,
-            n_outputs=n_outputs,
-            rnn_class=rnn_class,
-            dropout_rate=dropout_rate,
-        )
-
-        self.loss_fn = nn.MSELoss()
-
-    def forward(self, x):
-        return self.model(x)
-
-    def _evaluate_loss(self, batch):
-        outputs = self.model(batch)
+    def evaluate_loss(self, batch):
+        outputs = self(batch)
         loss = self.loss_fn(
             outputs['label.targets'],
             batch['label.targets']
@@ -167,18 +124,8 @@ class DeepAR(pl.LightningModule):
 
         return loss
 
-    def training_step(self, batch, batch_idx):
-        loss = self._evaluate_loss(batch)
-        self.log('loss/training', loss)
-
-        return loss
-
-    def validation_step(self, batch, batch_idx):
-        loss = self._evaluate_loss(batch)
-        self.log('loss/validation', loss)
-
     def configure_optimizers(self):
-        return torch.optim.Adam(self.model.parameters(), lr=self.hparams.lr)
+        return torch.optim.Adam(self.parameters(), lr=self.hparams.lr)
 
     def configure_callbacks(self):
         return  [
