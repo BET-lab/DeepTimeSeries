@@ -9,8 +9,6 @@ class DeepAR(ForecastingModule):
     def __init__(
             self,
             n_features,
-            encoding_length,
-            decoding_length,
             hidden_size,
             n_layers,
             n_outputs,

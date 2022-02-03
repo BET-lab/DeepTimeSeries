@@ -12,8 +12,6 @@ class MultiStepTransformer(ForecastingModule):
             self,
             n_encoder_features,
             n_decoder_features,
-            encoding_length,
-            decoding_length,
             d_model,
             n_heads,
             n_layers,
