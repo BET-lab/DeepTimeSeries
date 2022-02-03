@@ -1,12 +1,12 @@
 import torch
 import torch.nn as nn
-import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 
 from ..utils import merge_dicts
+from .forecasting_module import ForecastingModule
 
 
-class _MultiStepTransformer(nn.Module):
+class MultiStepTransformer(ForecastingModule):
     def __init__(
             self,
             n_encoder_features,
@@ -18,17 +18,12 @@ class _MultiStepTransformer(nn.Module):
             n_layers,
             dim_feedforward,
             n_outputs,
+            lr,
         ):
         super().__init__()
-        self.n_encoder_features = n_encoder_features
-        self.n_decoder_features = n_decoder_features
-        self.encoding_length = encoding_length
-        self.decoding_length = decoding_length
-        self.d_model = d_model
-        self.n_heads = n_heads
-        self.n_layers = n_layers
-        self.dim_feedforward = dim_feedforward
-        self.n_outputs = n_outputs
+        self.save_hyperparameters()
+
+        self.loss_fn = nn.MSELoss()
 
         self.encoder_d_matching_layer = nn.Linear(
             in_features=n_encoder_features,
@@ -79,7 +74,7 @@ class _MultiStepTransformer(nn.Module):
 
         # B x L_past x d_model.
         pos = self.encoding_pos_embedding(
-            self.generate_range(self.encoding_length)
+            self.generate_range(self.hparams.encoding_length)
         )
 
         # B x L_past x d_model.
@@ -95,7 +90,7 @@ class _MultiStepTransformer(nn.Module):
             'memory': memory
         }
 
-    def decode(self, inputs):
+    def decode_train(self, inputs):
         memory = inputs['memory']
 
         all_input = inputs['decoding.covariates']
@@ -129,12 +124,24 @@ class _MultiStepTransformer(nn.Module):
             'label.targets': y
         }
 
+    def decode_eval(self, inputs):
+        return self.decode_train(inputs)
+
     def forward(self, inputs):
         encoder_outputs = self.encode(inputs)
         decoder_inputs = merge_dicts([inputs, encoder_outputs])
         outputs = self.decode(decoder_inputs)
 
         return outputs
+
+    def evaluate_loss(self, batch):
+        outputs = self(batch)
+        loss = self.loss_fn(
+            outputs['label.targets'],
+            batch['label.targets']
+        )
+
+        return loss
 
     def generate_range(self, length):
         range_ = torch.arange(0, length)
@@ -149,66 +156,8 @@ class _MultiStepTransformer(nn.Module):
             torch.full((sz, sz), float('-inf')), diagonal=1
         ).to(self.device)
 
-    @property
-    def device(self):
-        return next(self.parameters()).device
-
-
-class MultiStepTransformer(pl.LightningModule):
-    def __init__(
-            self,
-            n_encoder_features,
-            n_decoder_features,
-            encoding_length,
-            decoding_length,
-            d_model,
-            n_heads,
-            n_layers,
-            dim_feedforward,
-            n_outputs,
-            lr
-        ):
-        super().__init__()
-        self.save_hyperparameters()
-
-        self.model = _MultiStepTransformer(
-            n_encoder_features=n_encoder_features,
-            n_decoder_features=n_decoder_features,
-            encoding_length=encoding_length,
-            decoding_length=decoding_length,
-            d_model=d_model,
-            n_heads=n_heads,
-            n_layers=n_layers,
-            dim_feedforward=dim_feedforward,
-            n_outputs=n_outputs,
-        )
-
-        self.loss_fn = nn.MSELoss()
-
-    def forward(self, x):
-        return self.model(x)
-
-    def _evaluate_loss(self, batch):
-        outputs = self.model(batch)
-        loss = self.loss_fn(
-            outputs['label.targets'],
-            batch['label.targets']
-        )
-
-        return loss
-
-    def training_step(self, batch, batch_idx):
-        loss = self._evaluate_loss(batch)
-        self.log('loss/training', loss)
-
-        return loss
-
-    def validation_step(self, batch, batch_idx):
-        loss = self._evaluate_loss(batch)
-        self.log('loss/validation', loss)
-
     def configure_optimizers(self):
-        return torch.optim.Adam(self.model.parameters(), lr=self.hparams.lr)
+        return torch.optim.Adam(self.parameters(), lr=self.hparams.lr)
 
     def configure_callbacks(self):
         return  [
