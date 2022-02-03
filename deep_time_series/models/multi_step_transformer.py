@@ -117,10 +117,6 @@ class MultiStepTransformer(ForecastingModule):
 
         return loss
 
-    def generate_range(self, length):
-        range_ = torch.arange(0, length)
-        return range_.to(device=self.device, dtype=torch.long)
-
     def generate_square_subsequent_mask(self, sz):
         r"""Generate a square mask for the sequence.
             The masked positions are filled with float('-inf').
