@@ -6,6 +6,7 @@ import pytorch_lightning as pl
 
 from ..utils import merge_dicts
 
+
 class ForecastingModule(pl.LightningModule, ABC):
     def __init__(self):
         super().__init__()

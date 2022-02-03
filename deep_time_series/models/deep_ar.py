@@ -4,6 +4,7 @@ from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 
 from .forecasting_module import ForecastingModule
 
+
 class DeepAR(ForecastingModule):
     def __init__(
             self,
