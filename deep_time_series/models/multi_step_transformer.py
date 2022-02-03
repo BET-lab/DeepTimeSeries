@@ -1,3 +1,5 @@
+import math
+
 import torch
 import torch.nn as nn
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
@@ -35,14 +37,8 @@ class MultiStepTransformer(ForecastingModule):
             out_features=d_model,
         )
 
-        self.encoding_pos_embedding = nn.Embedding(
-            num_embeddings=encoding_length,
-            embedding_dim=d_model,
-        )
-
-        self.future_pos_embedding = nn.Embedding(
-            num_embeddings=decoding_length,
-            embedding_dim=d_model,
+        self.positional_encoding = PositionalEncoding(
+            d_model=d_model, max_len=5000,
         )
 
         encoder_layer = nn.TransformerEncoderLayer(
@@ -72,13 +68,7 @@ class MultiStepTransformer(ForecastingModule):
 
         x = self.encoder_d_matching_layer(all_input)
 
-        # B x L_past x d_model.
-        pos = self.encoding_pos_embedding(
-            self.generate_range(self.hparams.encoding_length)
-        )
-
-        # B x L_past x d_model.
-        x = x + pos
+        x = self.positional_encoding(x)
 
         # L_past x B x d_model.
         x = x.permute((1, 0, 2))
@@ -99,20 +89,14 @@ class MultiStepTransformer(ForecastingModule):
         # B x L_future x d_model.
         L_future = all_input.shape[1]
 
-        pos = self.future_pos_embedding(
-            self.generate_range(L_future)
-        )
-
-        # B x L_future x d_model.
-        x = x + pos
+        x = self.positional_encoding(x)
 
         # L_future x B x d_model.
         x = x.permute((1, 0, 2))
 
-        mask = self.generate_square_subsequent_mask(L_future)
-
         # L_future x B x d_model.
-        x = self.decoder(tgt=x, memory=memory, tgt_mask=mask)
+        tgt_mask = self.generate_square_subsequent_mask(x.size(0))
+        x = self.decoder(tgt=x, memory=memory, tgt_mask=tgt_mask)
 
         # L_future x B x n_outputs.
         y = self.head(x)
@@ -160,7 +144,7 @@ class MultiStepTransformer(ForecastingModule):
         return torch.optim.Adam(self.parameters(), lr=self.hparams.lr)
 
     def configure_callbacks(self):
-        return  [
+        return [
             EarlyStopping(
                 monitor='loss/validation',
                 mode='min',
@@ -171,3 +155,30 @@ class MultiStepTransformer(ForecastingModule):
                 mode='min',
             ),
         ]
+
+# Modified from:
+# https://pytorch.org/tutorials/beginner/transformer_tutorial.html.
+# Modifications
+# 1. Dropout functionality is removed.
+# 2. Changed to batch_first format.
+class PositionalEncoding(nn.Module):
+    def __init__(self, d_model, max_len):
+        super().__init__()
+
+        position = torch.arange(max_len).unsqueeze(1)
+        div_term = torch.exp(torch.arange(0, d_model, 2) \
+            * (-math.log(10000.0) / d_model))
+
+        pe = torch.zeros(max_len, 1, d_model)
+        pe[:, 0, 0::2] = torch.sin(position * div_term)
+        pe[:, 0, 1::2] = torch.cos(position * div_term)
+
+        # Change to batch_first format.
+        pe = pe.permute((1, 0, 2))
+
+        self.register_buffer('pe', pe)
+
+    def forward(self, x):
+        # x: (B, L, F).
+        x = x + self.pe[:, :x.size(1), :]
+        return x
