@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 
-from ..utils import merge_dicts
 from .forecasting_module import ForecastingModule
 
 class DeepAR(ForecastingModule):
@@ -105,15 +104,6 @@ class DeepAR(ForecastingModule):
             'label.targets': y,
             'hidden_state': hidden_state,
         }
-
-    def forward(self, inputs):
-        encoder_outputs = self.encode(inputs)
-        decoder_inputs = merge_dicts(
-            [inputs, encoder_outputs], ignore_keys='y'
-        )
-        outputs = self.decode(decoder_inputs)
-
-        return outputs
 
     def evaluate_loss(self, batch):
         outputs = self(batch)

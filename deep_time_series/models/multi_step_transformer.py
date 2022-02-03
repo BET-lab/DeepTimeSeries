@@ -4,7 +4,6 @@ import torch
 import torch.nn as nn
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 
-from ..utils import merge_dicts
 from .forecasting_module import ForecastingModule
 
 
@@ -111,13 +110,6 @@ class MultiStepTransformer(ForecastingModule):
     def decode_eval(self, inputs):
         return self.decode_train(inputs)
 
-    def forward(self, inputs):
-        encoder_outputs = self.encode(inputs)
-        decoder_inputs = merge_dicts([inputs, encoder_outputs])
-        outputs = self.decode(decoder_inputs)
-
-        return outputs
-
     def evaluate_loss(self, batch):
         outputs = self(batch)
         loss = self.loss_fn(
@@ -155,6 +147,7 @@ class MultiStepTransformer(ForecastingModule):
                 mode='min',
             ),
         ]
+
 
 # Modified from:
 # https://pytorch.org/tutorials/beginner/transformer_tutorial.html.

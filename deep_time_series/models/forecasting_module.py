@@ -4,6 +4,7 @@ import torch
 import torch.nn as nn
 import pytorch_lightning as pl
 
+from ..utils import merge_dicts
 
 class ForecastingModule(pl.LightningModule, ABC):
     def __init__(self):
@@ -45,6 +46,15 @@ class ForecastingModule(pl.LightningModule, ABC):
             return self.decode_train(inputs)
         else:
             return self.decode_eval(inputs)
+
+    def forward(self, inputs):
+        encoder_outputs = self.encode(inputs)
+        decoder_inputs = merge_dicts(
+            [inputs, encoder_outputs]
+        )
+        outputs = self.decode(decoder_inputs)
+
+        return outputs
 
     @property
     def device(self):
