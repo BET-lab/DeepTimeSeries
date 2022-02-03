@@ -36,6 +36,10 @@ class ForecastingModule(pl.LightningModule, ABC):
         loss = self.evaluate_loss(batch)
         self.log('loss/validation', loss)
 
+    def test_step(self, batch, batch_idx):
+        loss = self.evaluate_loss(batch)
+        self.log('loss/test', loss)
+
     def decode(self, inputs):
         if self.training:
             return self.decode_train(inputs)
