@@ -3,7 +3,7 @@ import pandas as pd
 from torch.utils.data import Dataset
 
 from .chunk import ChunkExtractor
-
+from ..plotting import plot_chunks
 
 class TimeSeriesDataset(Dataset):
     def __init__(self,
@@ -16,8 +16,8 @@ class TimeSeriesDataset(Dataset):
         return_time_index=False,
     ):
         self.df = df.copy()
-        self.encoding_length = encoding_length,
-        self.decoding_length = decoding_length,
+        self.encoding_length = encoding_length
+        self.decoding_length = decoding_length
         # Make chunk_specs from encoding, decoding and label specs.
         self.chunk_specs = [
             spec.to_range_chunk_spec(encoding_length, decoding_length)
@@ -85,3 +85,10 @@ class TimeSeriesDataset(Dataset):
             output[tag] = df
 
         return output
+
+    def plot_chunks(self):
+        plot_chunks(
+            self.chunk_specs,
+            self.encoding_length,
+            self.decoding_length
+        )
