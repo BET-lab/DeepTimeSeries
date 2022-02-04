@@ -13,6 +13,7 @@ class TimeSeriesDataset(Dataset):
         chunk_specs,
         feature_transformers,
         fit_feature_transformers=True,
+        return_time_index=False,
     ):
         self.df = df.copy()
         self.encoding_length = encoding_length,
@@ -25,6 +26,7 @@ class TimeSeriesDataset(Dataset):
 
         self.feature_transformers = feature_transformers
         self.fit_feature_transformers = fit_feature_transformers
+        self.return_time_index = return_time_index
 
         self._preprocess()
 
@@ -61,7 +63,9 @@ class TimeSeriesDataset(Dataset):
         chunk_extractor = self.chunk_extractors[df_index]
         start_time_index = i - cumsum[df_index] + self.min_start_time_index
 
-        chunk_dict = chunk_extractor.extract(start_time_index)
+        chunk_dict = chunk_extractor.extract(
+            start_time_index, self.return_time_index
+        )
 
         return chunk_dict
 
