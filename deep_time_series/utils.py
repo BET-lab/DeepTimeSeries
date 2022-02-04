@@ -33,3 +33,12 @@ def merge_dicts(dicts, ignore_keys=None):
         merged_dict[k] = v
 
     return merged_dict
+
+
+def merge_data_frames(dfs):
+    dfs = dfs.copy()
+    for i, df in enumerate(dfs):
+        df['time_index'] = df.index
+        df['time_series_id'] = i
+
+    return pd.concat(dfs).reset_index(drop=True)
