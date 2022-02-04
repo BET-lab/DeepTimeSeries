@@ -19,7 +19,7 @@ class EncodingChunkSpec:
     def to_range_chunk_spec(self, encoding_length, decoding_length):
         range_ = (
             self.shift,
-            decoding_length + self.shift
+            encoding_length + self.shift
         )
 
         return RangeChunkSpec(
