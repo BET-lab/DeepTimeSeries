@@ -17,6 +17,7 @@ class MultiStepTransformer(ForecastingModule):
             n_layers,
             dim_feedforward,
             n_outputs,
+            dropout_rate,
             lr,
         ):
         super().__init__()
@@ -39,13 +40,17 @@ class MultiStepTransformer(ForecastingModule):
         )
 
         encoder_layer = nn.TransformerEncoderLayer(
-            d_model, n_heads, dim_feedforward=dim_feedforward, dropout=0,
+            d_model, n_heads,
+            dim_feedforward=dim_feedforward,
+            dropout=dropout_rate,
         )
 
         self.encoder = nn.TransformerEncoder(encoder_layer, n_layers)
 
         decoder_layer = nn.TransformerDecoderLayer(
-            d_model, n_heads, dim_feedforward=dim_feedforward, dropout=0,
+            d_model, n_heads,
+            dim_feedforward=dim_feedforward,
+            dropout=dropout_rate,
         )
 
         self.decoder = nn.TransformerDecoder(decoder_layer, n_layers)
