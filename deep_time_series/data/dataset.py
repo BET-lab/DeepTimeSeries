@@ -5,6 +5,7 @@ from torch.utils.data import Dataset
 from .chunk import ChunkExtractor
 from ..plotting import plot_chunks
 
+
 class TimeSeriesDataset(Dataset):
     def __init__(self,
         df,
