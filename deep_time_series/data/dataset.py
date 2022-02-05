@@ -20,7 +20,7 @@ class TimeSeriesDataset(Dataset):
         self.encoding_length = encoding_length
         self.decoding_length = decoding_length
         # Make chunk_specs from encoding, decoding and label specs.
-        self.chunk_specs = [
+        self.range_chunk_specs = [
             spec.to_range_chunk_spec(encoding_length, decoding_length)
             for spec in chunk_specs
         ]
@@ -43,7 +43,7 @@ class TimeSeriesDataset(Dataset):
         ]
 
         self.chunk_extractors = [
-            ChunkExtractor(df, self.chunk_specs) for df in splitted_dfs
+            ChunkExtractor(df, self.range_chunk_specs) for df in splitted_dfs
         ]
 
         self.lengths = [
@@ -73,7 +73,7 @@ class TimeSeriesDataset(Dataset):
     def convert_item_to_df(self, item):
         tag_to_names_dict = {
             spec.tag: spec.names
-            for spec in self.chunk_extractors[0].range_chunk_specs
+            for spec in self.range_chunk_specs
         }
         output = {}
         for tag, values in item.items():
@@ -89,7 +89,7 @@ class TimeSeriesDataset(Dataset):
 
     def plot_chunks(self):
         plot_chunks(
-            self.chunk_specs,
+            self.range_chunk_specs,
             self.encoding_length,
             self.decoding_length
         )
