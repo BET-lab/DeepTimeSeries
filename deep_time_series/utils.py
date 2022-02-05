@@ -1,5 +1,7 @@
 import itertools
 
+import pandas as pd
+
 
 def logical_and_for_set_list(set_list):
     s = set_list[0]
