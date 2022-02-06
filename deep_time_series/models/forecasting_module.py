@@ -56,7 +56,3 @@ class ForecastingModule(pl.LightningModule, ABC):
         outputs = self.decode(decoder_inputs)
 
         return outputs
-
-    @property
-    def device(self):
-        return next(self.parameters()).device
