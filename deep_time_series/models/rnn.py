@@ -33,9 +33,7 @@ class RNN(ForecastingModule):
         self.decoder = self.encoder
 
         self.head = nn.Sequential(
-            nn.Linear(hidden_size, hidden_size//2),
-            nn.ReLU(),
-            nn.Linear(hidden_size//2, n_outputs),
+            nn.Linear(hidden_size, n_outputs),
         )
 
     def encode(self, inputs):

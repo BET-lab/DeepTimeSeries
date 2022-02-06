@@ -56,9 +56,7 @@ class MultiStepTransformer(ForecastingModule):
         self.decoder = nn.TransformerDecoder(decoder_layer, n_layers)
 
         self.head = nn.Sequential(
-            nn.Linear(d_model, d_model//2),
-            nn.ReLU(),
-            nn.Linear(d_model//2, n_outputs),
+            nn.Linear(d_model, n_outputs),
         )
 
     def encode(self, inputs):
