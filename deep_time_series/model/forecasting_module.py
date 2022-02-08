@@ -23,10 +23,10 @@ class ForecastingModule(pl.LightningModule, ABC):
     def decode_eval(self, inputs):
         pass
 
-    @abstractmethod
     def evaluate_loss(self, batch):
-        # return loss
-        pass
+        outputs = self(batch)
+        loss = self.loss_fn(outputs, batch)
+        return loss
 
     def training_step(self, batch, batch_idx):
         loss = self.evaluate_loss(batch)
