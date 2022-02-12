@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 import pytorch_lightning as pl
 
-from ..utils import merge_dicts
+from ..util import merge_dicts
 
 
 class ForecastingModule(pl.LightningModule, ABC):
@@ -25,7 +25,7 @@ class ForecastingModule(pl.LightningModule, ABC):
 
     def evaluate_loss(self, batch):
         outputs = self(batch)
-        loss = self.loss_fn(outputs, batch)
+        loss = self.hparams.loss_fn(outputs, batch)
         return loss
 
     def training_step(self, batch, batch_idx):

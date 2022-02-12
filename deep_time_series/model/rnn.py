@@ -15,12 +15,11 @@ class RNN(ForecastingModule):
             rnn_class,
             dropout_rate,
             lr,
+            loss_fn,
             teacher_forcing,
         ):
         super().__init__()
         self.save_hyperparameters()
-
-        self.loss_fn = nn.MSELoss()
 
         self.encoder = rnn_class(
             input_size=n_features,
@@ -101,15 +100,6 @@ class RNN(ForecastingModule):
             'label.targets': y,
             'hidden_state': hidden_state,
         }
-
-    def evaluate_loss(self, batch):
-        outputs = self(batch)
-        loss = self.loss_fn(
-            outputs['label.targets'],
-            batch['label.targets']
-        )
-
-        return loss
 
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=self.hparams.lr)

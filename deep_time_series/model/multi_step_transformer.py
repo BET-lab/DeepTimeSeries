@@ -19,11 +19,10 @@ class MultiStepTransformer(ForecastingModule):
             n_outputs,
             dropout_rate,
             lr,
+            loss_fn,
         ):
         super().__init__()
         self.save_hyperparameters()
-
-        self.loss_fn = nn.MSELoss()
 
         self.encoder_d_matching_layer = nn.Linear(
             in_features=n_encoder_features,
@@ -110,15 +109,6 @@ class MultiStepTransformer(ForecastingModule):
 
     def decode_eval(self, inputs):
         return self.decode_train(inputs)
-
-    def evaluate_loss(self, batch):
-        outputs = self(batch)
-        loss = self.loss_fn(
-            outputs['label.targets'],
-            batch['label.targets']
-        )
-
-        return loss
 
     def generate_square_subsequent_mask(self, sz):
         r"""Generate a square mask for the sequence.
