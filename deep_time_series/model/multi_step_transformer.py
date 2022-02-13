@@ -59,7 +59,8 @@ class MultiStepTransformer(ForecastingModule):
         )
 
     def encode(self, inputs):
-        # all_input: B x L_past X C.
+        # L: encoding length.
+        # all_input: (B, L, F).
         all_input = torch.cat([
             inputs['encoding.targets'],
             inputs['encoding.covariates']
@@ -69,10 +70,10 @@ class MultiStepTransformer(ForecastingModule):
 
         x = self.positional_encoding(x)
 
-        # L_past x B x d_model.
+        # (L, B, d_model).
         x = x.permute((1, 0, 2))
 
-        # L_past x B x d_model.
+        # (L, B, d_model).
         memory = self.encoder(x)
 
         return {
@@ -80,27 +81,28 @@ class MultiStepTransformer(ForecastingModule):
         }
 
     def decode_train(self, inputs):
+        # L: decoding_length
         memory = inputs['memory']
 
         all_input = inputs['decoding.covariates']
         x = self.decoder_d_matching_layer(all_input)
 
-        # B x L_future x d_model.
+        # (B, L, d_model).
         L_future = all_input.shape[1]
 
         x = self.positional_encoding(x)
 
-        # L_future x B x d_model.
+        # (L, B, d_model).
         x = x.permute((1, 0, 2))
 
-        # L_future x B x d_model.
+        # (L, B, d_model).
         tgt_mask = self.generate_square_subsequent_mask(x.size(0))
         x = self.decoder(tgt=x, memory=memory, tgt_mask=tgt_mask)
 
-        # L_future x B x n_outputs.
+        # (L, B, n_outputs).
         y = self.head(x)
 
-        # B x L_future x n_outputs.
+        # (B, L, x n_outputs).
         y = y.permute((1, 0, 2))
 
         return {

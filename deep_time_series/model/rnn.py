@@ -36,7 +36,8 @@ class RNN(ForecastingModule):
         )
 
     def encode(self, inputs):
-        # all_input: B x L_past X C.
+        # L: encoding length.
+        # all_input: (B, L, F).
         all_input = torch.cat([
             inputs['encoding.targets'],
             inputs['encoding.covariates']
@@ -45,7 +46,7 @@ class RNN(ForecastingModule):
         # Don't use last time step.
         x = all_input[:, :-1, :]
 
-        # B x L_past x hidden_size.
+        # (B, L, H).
         x, hidden_state = self.encoder(x)
 
         return {
@@ -66,10 +67,10 @@ class RNN(ForecastingModule):
 
         hidden_state = inputs['memory']
 
-        # B x L_future x hidden_size.
+        # (B, L, H).
         x, hidden_state = self.decoder(x, hidden_state)
 
-        # L_future x B x n_outputs.
+        # (L, B, n_outputs).
         y = self.head(x)
 
         return {
