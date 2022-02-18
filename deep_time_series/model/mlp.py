@@ -20,9 +20,10 @@ class MLP(ForecastingModule):
         super().__init__()
         self.save_hyperparameters()
 
-        L = encoding_length
-        size = hidden_size * L
-        layers = [nn.Linear(n_features*L, size), activation]
+        size = hidden_size * encoding_length
+        layers = [
+            nn.Linear(n_features*encoding_length, size), activation
+        ]
         for i in range(n_hidden_layers):
             layers.append(nn.Linear(size, size))
             layers.append(activation)
