@@ -9,3 +9,7 @@ from .multi_step_transformer import (
 from .rnn import (
     RNN,
 )
+
+from .mlp import (
+    MLP,
+)
