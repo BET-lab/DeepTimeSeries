@@ -1,9 +1,14 @@
+import numpy as np
 import torch
 import torch.nn as nn
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 
 from .forecasting_module import ForecastingModule
-
+from ..data import (
+    EncodingChunkSpec,
+    DecodingChunkSpec,
+    LabelChunkSpec,
+)
 
 class MLP(ForecastingModule):
     def __init__(
@@ -75,6 +80,34 @@ class MLP(ForecastingModule):
         return {
             'label.targets': y,
         }
+
+    def make_chunk_specs(self, target_names, covariate_names):
+        chunk_specs = [
+            EncodingChunkSpec(
+                tag='targets',
+                names=target_names,
+                dtype=np.float32
+            ),
+            EncodingChunkSpec(
+                tag='covariates',
+                names=covariate_names,
+                dtype=np.float32,
+                shift=1,
+            ),
+            DecodingChunkSpec(
+                tag='covariates',
+                names=covariate_names,
+                dtype=np.float32,
+                shift=1
+            ),
+            LabelChunkSpec(
+                tag='targets',
+                names=target_names,
+                dtype=np.float32,
+            ),
+        ]
+
+        return chunk_specs
 
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=self.hparams.lr)

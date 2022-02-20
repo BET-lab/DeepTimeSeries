@@ -1,8 +1,14 @@
+import numpy as np
 import torch
 import torch.nn as nn
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 
 from .forecasting_module import ForecastingModule
+from ..data import (
+    EncodingChunkSpec,
+    DecodingChunkSpec,
+    LabelChunkSpec,
+)
 
 
 class RNN(ForecastingModule):
@@ -44,14 +50,18 @@ class RNN(ForecastingModule):
         ], dim=2)
 
         # Don't use last time step.
+        # (B, L-1, F).
         x = all_input[:, :-1, :]
+        # (B, 1, F).
+        last_x = all_input[:, -1:, :]
 
         # (B, L, H).
-        x, hidden_state = self.encoder(x)
+        y, hidden_state = self.encoder(x)
 
         return {
-            'y': x,
+            'y': y,
             'memory': hidden_state,
+            'last_x': last_x,
         }
 
     def decode_train(self, inputs):
@@ -63,7 +73,15 @@ class RNN(ForecastingModule):
             inputs['decoding.covariates']
         ], dim=2)
 
-        x = all_input
+        # Don't use last time.
+        # (B, L-1, F).
+        x = all_input[:, :-1, :]
+
+        # Concat last of encoding input.
+        # (B, 1, F).
+        last_x = inputs['last_x']
+        # (B, L, F).
+        x = torch.cat([last_x, x], dim=1)
 
         hidden_state = inputs['memory']
 
@@ -80,20 +98,18 @@ class RNN(ForecastingModule):
 
     def decode_eval(self, inputs):
         # decoding.covariates: (B, L, F).
-        L = inputs['decoding.covariates'].shape[1]
-
-        # decoding.targets: (B, 1, F).
-        y = inputs['decoding.targets'][:, :1, :]
         c = inputs['decoding.covariates']
+        L = c.shape[1]
 
+        x = inputs['last_x']
         hidden_state = inputs['memory']
 
         ys = []
         for i in range(L):
-            x = torch.cat([y, c[:, i:i+1, :]], dim=2)
             y, hidden_state = self.decoder(x, hidden_state)
             y = self.head(y)
             ys.append(y)
+            x = torch.cat([y, c[:, i:i+1, :]], dim=2)
 
         y = torch.cat(ys, dim=1)
 
@@ -117,3 +133,35 @@ class RNN(ForecastingModule):
                 mode='min',
             ),
         ]
+
+    def make_chunk_specs(self, target_names, covariate_names):
+        chunk_specs = [
+            EncodingChunkSpec(
+                tag='targets',
+                names=target_names,
+                dtype=np.float32
+            ),
+            EncodingChunkSpec(
+                tag='covariates',
+                names=covariate_names,
+                dtype=np.float32, shift=1,
+            ),
+            DecodingChunkSpec(
+                tag='targets',
+                names=target_names,
+                dtype=np.float32,
+            ),
+            DecodingChunkSpec(
+                tag='covariates',
+                names=covariate_names,
+                dtype=np.float32,
+                shift=1
+            ),
+            LabelChunkSpec(
+                tag='targets',
+                names=target_names,
+                dtype=np.float32
+            ),
+        ]
+
+        return chunk_specs
