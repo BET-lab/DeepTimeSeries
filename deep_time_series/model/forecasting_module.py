@@ -56,3 +56,7 @@ class ForecastingModule(pl.LightningModule, ABC):
         outputs = self.decode(decoder_inputs)
 
         return outputs
+
+    @abstractmethod
+    def make_chunk_specs(self, *args, **kwargs):
+        pass

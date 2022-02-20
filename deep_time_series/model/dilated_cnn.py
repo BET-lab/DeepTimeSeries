@@ -1,3 +1,4 @@
+import math
 import numpy as np
 import torch
 import torch.nn as nn
@@ -10,13 +11,32 @@ from ..data import (
     LabelChunkSpec,
 )
 
-class MLP(ForecastingModule):
+
+class LeftPadding1D(nn.Module):
+    def __init__(self, padding_size):
+        super().__init__()
+        self.padding_size = padding_size
+
+    def forward(self, x):
+        # x: (B, C, L).
+        B = x.size(0)
+        C = x.size(1)
+
+        padding = torch.zeros(B, C, self.padding_size).to(x.device)
+
+        y = torch.cat([padding, x], axis=2)
+
+        return y
+
+
+class DilatedCNN(ForecastingModule):
     def __init__(
             self,
             n_features,
             hidden_size,
             encoding_length,
-            n_hidden_layers,
+            dilation_base,
+            kernel_size,
             activation,
             n_outputs,
             lr,
@@ -25,16 +45,37 @@ class MLP(ForecastingModule):
         super().__init__()
         self.save_hyperparameters()
 
-        size = hidden_size * encoding_length
-        layers = [
-            nn.Linear(n_features*encoding_length, size), activation
-        ]
-        for i in range(n_hidden_layers):
-            layers.append(nn.Linear(size, size))
-            layers.append(activation)
-        layers.append(nn.Linear(size, n_outputs))
+        assert kernel_size >= dilation_base
 
-        self.mlp = nn.Sequential(*layers)
+        # Calculate the number of layers.
+        # Formula is obtained from Darts.
+        v = (encoding_length - 1) * (dilation_base - 1) / (kernel_size - 1) + 1
+        n_layers = math.ceil(math.log(v) / math.log(dilation_base))
+
+        layers = []
+        for i in range(n_layers):
+            dilation = dilation_base**i
+            padding_size = dilation * (kernel_size - 1)
+
+            layers.append(LeftPadding1D(padding_size))
+
+            if i == 0:
+                layers.append(nn.Conv1d(
+                    n_features, hidden_size,
+                    kernel_size=kernel_size, dilation=dilation,
+                ))
+            else:
+                layers.append(nn.Conv1d(
+                    hidden_size, hidden_size,
+                    kernel_size=kernel_size, dilation=dilation,
+                ))
+
+            layers.append(activation)
+
+        # (B, H, L).
+        self.body = nn.Sequential(*layers)
+        # (B, L, n_outputs).
+        self.head = nn.Linear(hidden_size, n_outputs)
 
     def encode(self, inputs):
        # (B, L, F).
@@ -55,22 +96,23 @@ class MLP(ForecastingModule):
 
         # (B, L, C).
         c = inputs['decoding.covariates']
-
-        B = c.size(0)
         L = c.size(1)
 
         ys = []
         for i in range(L):
-            # (B, L*F)
-            x = x.view(B, -1)
+            # (B, F, L).
+            permuted_x = x.permute(0, 2, 1)
+            # (B, H).
+            y = self.body(permuted_x)[:, :, -1]
+            # (B, 1, H).
+            y = y.unsqueeze(1)
             # (B, 1, n_outputs).
-            y = self.mlp(x).unsqueeze(1)
+            y = self.head(y)
+
             ys.append(y)
 
             # (B, 1, F).
             z = torch.cat([y, c[:, i:i+1, :]], dim=2)
-            # (B, L, F).
-            x = x.view(B, L, -1)
             # (B, L, F).
             x = torch.cat([
                 x[:, 1:, :], z

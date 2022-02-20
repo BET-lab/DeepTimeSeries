@@ -13,3 +13,7 @@ from .rnn import (
 from .mlp import (
     MLP,
 )
+
+from .dilated_cnn import (
+    DilatedCNN,
+)
