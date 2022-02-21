@@ -26,6 +26,7 @@ class MultiStepTransformer(ForecastingModule):
             dropout_rate,
             lr,
             loss_fn,
+            head=None,
         ):
         super().__init__()
         self.save_hyperparameters()
@@ -60,9 +61,10 @@ class MultiStepTransformer(ForecastingModule):
 
         self.decoder = nn.TransformerDecoder(decoder_layer, n_layers)
 
-        self.head = nn.Sequential(
-            nn.Linear(d_model, n_outputs),
-        )
+        if head is None:
+            self.head = nn.Linear(d_model, n_outputs)
+        else:
+            self.head = head
 
     def encode(self, inputs):
         # L: encoding length.

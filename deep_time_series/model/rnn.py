@@ -23,6 +23,7 @@ class RNN(ForecastingModule):
             lr,
             loss_fn,
             teacher_forcing,
+            head=None,
         ):
         super().__init__()
         self.save_hyperparameters()
@@ -37,9 +38,10 @@ class RNN(ForecastingModule):
 
         self.decoder = self.encoder
 
-        self.head = nn.Sequential(
-            nn.Linear(hidden_size, n_outputs),
-        )
+        if head is None:
+            self.head = nn.Linear(hidden_size, n_outputs)
+        else:
+            self.head = head
 
     def encode(self, inputs):
         # L: encoding length.

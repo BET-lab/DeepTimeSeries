@@ -41,6 +41,7 @@ class DilatedCNN(ForecastingModule):
             n_outputs,
             lr,
             loss_fn,
+            head=None,
         ):
         super().__init__()
         self.save_hyperparameters()
@@ -74,8 +75,10 @@ class DilatedCNN(ForecastingModule):
 
         # (B, H, L).
         self.body = nn.Sequential(*layers)
-        # (B, L, n_outputs).
-        self.head = nn.Linear(hidden_size, n_outputs)
+        if head is None:
+            self.head = nn.Linear(hidden_size, n_outputs)
+        else:
+            self.head = head
 
     def encode(self, inputs):
        # (B, L, F).

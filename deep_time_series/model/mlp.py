@@ -21,6 +21,7 @@ class MLP(ForecastingModule):
             n_outputs,
             lr,
             loss_fn,
+            head=None,
         ):
         super().__init__()
         self.save_hyperparameters()
@@ -32,9 +33,13 @@ class MLP(ForecastingModule):
         for i in range(n_hidden_layers):
             layers.append(nn.Linear(size, size))
             layers.append(activation)
-        layers.append(nn.Linear(size, n_outputs))
 
-        self.mlp = nn.Sequential(*layers)
+        if head is None:
+            self.head = nn.Linear(size, n_outputs)
+        else:
+            self.head = head
+
+        self.body = nn.Sequential(*layers)
 
     def encode(self, inputs):
        # (B, L, F).
@@ -64,7 +69,9 @@ class MLP(ForecastingModule):
             # (B, L*F)
             x = x.view(B, -1)
             # (B, 1, n_outputs).
-            y = self.mlp(x).unsqueeze(1)
+            y = self.body(x)
+            y = self.head(y)
+            y = y.unsqueeze(1)
             ys.append(y)
 
             # (B, 1, F).
