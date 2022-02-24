@@ -50,9 +50,6 @@ class MLP(ForecastingModule):
 
         return {'x': x}
 
-    def decode_train(self, inputs):
-        return self.decode_eval(inputs)
-
     def decode_eval(self, inputs):
         # F = T + C.
         # (B, L, F)

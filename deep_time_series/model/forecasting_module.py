@@ -15,9 +15,8 @@ class ForecastingModule(pl.LightningModule, ABC):
     def encode(self, inputs):
         pass
 
-    @abstractmethod
     def decode_train(self, inputs):
-        pass
+        return self.decode_eval(inputs)
 
     @abstractmethod
     def decode_eval(self, inputs):

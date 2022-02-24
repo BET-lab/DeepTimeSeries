@@ -88,7 +88,7 @@ class MultiStepTransformer(ForecastingModule):
             'memory': memory
         }
 
-    def decode_train(self, inputs):
+    def decode_eval(self, inputs):
         # L: decoding_length
         memory = inputs['memory']
 
@@ -116,9 +116,6 @@ class MultiStepTransformer(ForecastingModule):
         return {
             'label.targets': y
         }
-
-    def decode_eval(self, inputs):
-        return self.decode_train(inputs)
 
     def generate_square_subsequent_mask(self, sz):
         r"""Generate a square mask for the sequence.
