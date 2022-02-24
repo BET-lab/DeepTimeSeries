@@ -1,3 +1,4 @@
+import copy
 import itertools
 
 import pandas as pd
@@ -38,7 +39,7 @@ def merge_dicts(dicts, ignore_keys=None):
 
 
 def merge_data_frames(dfs):
-    dfs = dfs.copy()
+    dfs = copy.deepcopy(dfs)
     for i, df in enumerate(dfs):
         df['time_index'] = df.index
         df['time_series_id'] = i
