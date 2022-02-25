@@ -19,6 +19,7 @@ class MLP(ForecastingModule):
             n_hidden_layers,
             activation,
             n_outputs,
+            dropout_rate,
             lr,
             loss_fn,
             head=None,
@@ -31,6 +32,8 @@ class MLP(ForecastingModule):
             nn.Linear(n_features*encoding_length, size), activation
         ]
         for i in range(n_hidden_layers):
+            if dropout_rate > 1e-6:
+                layers.append(nn.Dropout(p=dropout_rate))
             layers.append(nn.Linear(size, size))
             layers.append(activation)
 
@@ -67,8 +70,8 @@ class MLP(ForecastingModule):
             x = x.view(B, -1)
             # (B, 1, n_outputs).
             y = self.body(x)
-            y = self.head(y)
             y = y.unsqueeze(1)
+            y = self.head(y)
             ys.append(y)
 
             # (B, 1, F).
