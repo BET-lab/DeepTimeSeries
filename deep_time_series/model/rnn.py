@@ -22,7 +22,7 @@ class RNN(ForecastingModule):
             dropout_rate,
             lr,
             loss_fn,
-            teacher_forcing,
+            teacher_forcing_rate,
             head=None,
         ):
         super().__init__()
@@ -67,7 +67,7 @@ class RNN(ForecastingModule):
         }
 
     def decode_train(self, inputs):
-        if not self.hparams.teacher_forcing:
+        if np.random.random() > self.hparams.teacher_forcing_rate:
             return self.decode_eval(inputs)
 
         all_input = torch.cat([
