@@ -49,6 +49,7 @@ class MultiStepTransformer(ForecastingModule):
             d_model, n_heads,
             dim_feedforward=dim_feedforward,
             dropout=dropout_rate,
+            batch_first=True,
         )
 
         self.encoder = nn.TransformerEncoder(encoder_layer, n_layers)
@@ -57,6 +58,7 @@ class MultiStepTransformer(ForecastingModule):
             d_model, n_heads,
             dim_feedforward=dim_feedforward,
             dropout=dropout_rate,
+            batch_first=True,
         )
 
         self.decoder = nn.TransformerDecoder(decoder_layer, n_layers)
@@ -78,10 +80,7 @@ class MultiStepTransformer(ForecastingModule):
 
         x = self.positional_encoding(x)
 
-        # (L, B, d_model).
-        x = x.permute((1, 0, 2))
-
-        # (L, B, d_model).
+        # (B, L, d_model).
         memory = self.encoder(x)
 
         return {
@@ -100,18 +99,12 @@ class MultiStepTransformer(ForecastingModule):
 
         x = self.positional_encoding(x)
 
-        # (L, B, d_model).
-        x = x.permute((1, 0, 2))
-
-        # (L, B, d_model).
-        tgt_mask = self.generate_square_subsequent_mask(x.size(0))
+        # (B, L, d_model).
+        tgt_mask = self.generate_square_subsequent_mask(x.size(1))
         x = self.decoder(tgt=x, memory=memory, tgt_mask=tgt_mask)
 
-        # (L, B, n_outputs).
+        # (B, L, n_outputs).
         y = self.head(x)
-
-        # (B, L, x n_outputs).
-        y = y.permute((1, 0, 2))
 
         return {
             'label.targets': y
