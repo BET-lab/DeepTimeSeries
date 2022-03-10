@@ -6,6 +6,10 @@ from .multi_step_transformer import (
     MultiStepTransformer,
 )
 
+from .single_step_transformer import (
+    SingleStepTransformer,
+)
+
 from .rnn import (
     RNN,
 )
