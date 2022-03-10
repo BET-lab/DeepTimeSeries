@@ -94,9 +94,6 @@ class MultiStepTransformer(ForecastingModule):
         all_input = inputs['decoding.covariates']
         x = self.decoder_d_matching_layer(all_input)
 
-        # (B, L, d_model).
-        L_future = all_input.shape[1]
-
         x = self.positional_encoding(x)
 
         # (B, L, d_model).
