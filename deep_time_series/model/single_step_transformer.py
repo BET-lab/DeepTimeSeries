@@ -160,19 +160,6 @@ class SingleStepTransformer(ForecastingModule):
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=self.hparams.lr)
 
-    def configure_callbacks(self):
-        return [
-            EarlyStopping(
-                monitor='loss/validation',
-                mode='min',
-                patience=50,
-            ),
-            ModelCheckpoint(
-                monitor='loss/validation',
-                mode='min',
-            ),
-        ]
-
     def make_chunk_specs(self, target_names, covariate_names):
         chunk_specs = [
             EncodingChunkSpec(

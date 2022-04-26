@@ -18,6 +18,10 @@ from .mlp import (
     MLP,
 )
 
+from .mlp2 import (
+    MLP2,
+)
+
 from .dilated_cnn import (
     DilatedCNN,
 )

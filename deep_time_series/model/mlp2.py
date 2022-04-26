@@ -1,4 +1,3 @@
-import math
 import numpy as np
 import torch
 import torch.nn as nn
@@ -11,32 +10,13 @@ from ..data import (
     LabelChunkSpec,
 )
 
-
-class LeftPadding1D(nn.Module):
-    def __init__(self, padding_size):
-        super().__init__()
-        self.padding_size = padding_size
-
-    def forward(self, x):
-        # x: (B, C, L).
-        B = x.size(0)
-        C = x.size(1)
-
-        padding = torch.zeros(B, C, self.padding_size).to(x.device)
-
-        y = torch.cat([padding, x], axis=2)
-
-        return y
-
-
-class DilatedCNN(ForecastingModule):
+class MLP2(ForecastingModule):
     def __init__(
             self,
             n_features,
             hidden_size,
             encoding_length,
-            dilation_base,
-            kernel_size,
+            n_hidden_layers,
             activation,
             n_outputs,
             dropout_rate,
@@ -47,42 +27,25 @@ class DilatedCNN(ForecastingModule):
         super().__init__()
         self.save_hyperparameters()
 
-        assert kernel_size >= dilation_base
-
-        # Calculate the number of layers.
-        # Formula is obtained from Darts.
-        v = (encoding_length - 1) * (dilation_base - 1) / (kernel_size - 1) + 1
-        n_layers = math.ceil(math.log(v) / math.log(dilation_base))
-
-        layers = []
-        for i in range(n_layers):
-            dilation = dilation_base**i
-            padding_size = dilation * (kernel_size - 1)
-
-            layers.append(LeftPadding1D(padding_size))
-
-            if i == 0:
-                layers.append(nn.Conv1d(
-                    n_features, hidden_size,
-                    kernel_size=kernel_size, dilation=dilation,
-                ))
-            else:
-                layers.append(nn.Conv1d(
-                    hidden_size, hidden_size,
-                    kernel_size=kernel_size, dilation=dilation,
-                ))
-
-            layers.append(activation)
-
+        size = hidden_size * encoding_length
+        layers = [
+            nn.Linear(n_features*encoding_length, hidden_size), activation
+        ]
+        for i in range(n_hidden_layers):
             if dropout_rate > 1e-6:
                 layers.append(nn.Dropout(p=dropout_rate))
+            layers.append(nn.Linear(hidden_size, hidden_size))
+            layers.append(activation)
 
-        # (B, H, L).
-        self.body = nn.Sequential(*layers)
+        if dropout_rate > 1e-6:
+            layers.append(nn.Dropout(p=dropout_rate))
+
         if head is None:
             self.head = nn.Linear(hidden_size, n_outputs)
         else:
             self.head = head
+
+        self.body = nn.Sequential(*layers)
 
     def encode(self, inputs):
        # (B, L, F).
@@ -100,23 +63,26 @@ class DilatedCNN(ForecastingModule):
 
         # (B, L, C).
         c = inputs['decoding.covariates']
+
+        B = c.size(0)
         L = c.size(1)
+
+        EL = self.hparams.encoding_length
 
         ys = []
         for i in range(L):
-            # (B, F, L).
-            permuted_x = x.permute(0, 2, 1)
-            # (B, H).
-            y = self.body(permuted_x)[:, :, -1]
-            # (B, 1, H).
-            y = y.unsqueeze(1)
+            # (B, L*F)
+            x = x.view(B, -1)
             # (B, 1, n_outputs).
+            y = self.body(x)
+            y = y.unsqueeze(1)
             y = self.head(y)
-
             ys.append(y)
 
             # (B, 1, F).
             z = torch.cat([y, c[:, i:i+1, :]], dim=2)
+            # (B, EL, F).
+            x = x.view(B, EL, -1)
             # (B, L, F).
             x = torch.cat([
                 x[:, 1:, :], z

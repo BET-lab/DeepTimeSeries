@@ -58,6 +58,7 @@ class RNN(ForecastingModule):
         last_x = all_input[:, -1:, :]
 
         # (B, L, H).
+        # For LSTM, hidden_state is a tuple: (h_0, c_0).
         y, hidden_state = self.encoder(x)
 
         return {
@@ -122,19 +123,6 @@ class RNN(ForecastingModule):
 
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=self.hparams.lr)
-
-    def configure_callbacks(self):
-        return  [
-            EarlyStopping(
-                monitor='loss/validation',
-                mode='min',
-                patience=50,
-            ),
-            ModelCheckpoint(
-                monitor='loss/validation',
-                mode='min',
-            ),
-        ]
 
     def make_chunk_specs(self, target_names, covariate_names):
         chunk_specs = [

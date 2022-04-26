@@ -9,5 +9,6 @@ from .transform import (
 )
 
 from .dataset import (
-    TimeSeriesDataset
+    TimeSeriesDataset,
+    IterableTimeSeriesDataset,
 )

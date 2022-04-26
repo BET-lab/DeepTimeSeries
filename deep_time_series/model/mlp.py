@@ -37,6 +37,9 @@ class MLP(ForecastingModule):
             layers.append(nn.Linear(size, size))
             layers.append(activation)
 
+        if dropout_rate > 1e-6:
+            layers.append(nn.Dropout(p=dropout_rate))
+
         if head is None:
             self.head = nn.Linear(size, n_outputs)
         else:
@@ -64,6 +67,8 @@ class MLP(ForecastingModule):
         B = c.size(0)
         L = c.size(1)
 
+        EL = self.hparams.encoding_length
+
         ys = []
         for i in range(L):
             # (B, L*F)
@@ -76,8 +81,8 @@ class MLP(ForecastingModule):
 
             # (B, 1, F).
             z = torch.cat([y, c[:, i:i+1, :]], dim=2)
-            # (B, L, F).
-            x = x.view(B, L, -1)
+            # (B, EL, F).
+            x = x.view(B, EL, -1)
             # (B, L, F).
             x = torch.cat([
                 x[:, 1:, :], z
@@ -119,16 +124,3 @@ class MLP(ForecastingModule):
 
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=self.hparams.lr)
-
-    def configure_callbacks(self):
-        return  [
-            EarlyStopping(
-                monitor='loss/validation',
-                mode='min',
-                patience=50,
-            ),
-            ModelCheckpoint(
-                monitor='loss/validation',
-                mode='min',
-            ),
-        ]

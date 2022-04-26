@@ -36,6 +36,7 @@ class ForecastingModule(pl.LightningModule, ABC):
     def validation_step(self, batch, batch_idx):
         loss = self.evaluate_loss(batch)
         self.log('loss/validation', loss)
+        self.log('hp_metric', loss)
 
     def test_step(self, batch, batch_idx):
         loss = self.evaluate_loss(batch)
