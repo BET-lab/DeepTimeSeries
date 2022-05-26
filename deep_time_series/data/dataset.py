@@ -47,7 +47,7 @@ class TimeSeriesDataset(Dataset):
         ]
 
         self.lengths = [
-            len(df) - self.chunk_extractors[0].chunk_length
+            len(df) - self.chunk_extractors[0].chunk_length + 1
             for df in splitted_dfs
         ]
 
