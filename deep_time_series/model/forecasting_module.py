@@ -1,5 +1,3 @@
-from abc import ABC, abstractmethod
-
 import torch
 import torch.nn as nn
 import pytorch_lightning as pl
@@ -7,20 +5,59 @@ import pytorch_lightning as pl
 from ..util import merge_dicts
 
 
-class ForecastingModule(pl.LightningModule, ABC):
+class ForecastingModule(pl.LightningModule):
     def __init__(self):
         super().__init__()
 
-    @abstractmethod
+        self.__encoding_length = None
+        self.__decoding_length = None
+
+    @property
+    def encoding_length(self):
+        if self.__encoding_length is None:
+            raise NotImplementedError(
+                f'Define {self.__class__.__name__}.encoding_length'
+            )
+        else:
+            return self.__encoding_length
+
+    @encoding_length.setter
+    def encoding_length(self, value):
+        if not isinstance(value, int):
+            raise TypeError(
+                f'Invalid type for "encoding_length": {type(value)}'
+            )
+        self.__encoding_length = value
+
+    @property
+    def decoding_length(self):
+        if self.__decoding_length is None:
+            raise NotImplementedError(
+                f'Define {self.__class__.__name__}.decoding_length'
+            )
+        else:
+            return self.__decoding_length
+
+    @decoding_length.setter
+    def decoding_length(self, value):
+        if not isinstance(value, int):
+            raise TypeError(
+                f'Invalid type for "decoding_length": {type(value)}'
+            )
+        self.__decoding_length = value
+
     def encode(self, inputs):
-        pass
+        raise NotImplementedError(
+            f'Define {self.__class__.__name__}.encode()'
+        )
 
     def decode_train(self, inputs):
         return self.decode_eval(inputs)
 
-    @abstractmethod
     def decode_eval(self, inputs):
-        pass
+        NotImplementedError(
+            f'Define {self.__class__.__name__}.decode()'
+        )
 
     def evaluate_loss(self, batch):
         outputs = self(batch)
@@ -57,6 +94,5 @@ class ForecastingModule(pl.LightningModule, ABC):
 
         return outputs
 
-    @abstractmethod
     def make_chunk_specs(self, *args, **kwargs):
         pass
