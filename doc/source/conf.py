@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 # To import __init__(self).
 autoclass_content = 'both'
 
-project = 'Deep Time Series'
+project = 'DeepTimeSeries'
 copyright = '2022, Sangwon Lee'
 author = 'Sangwon Lee'
 
