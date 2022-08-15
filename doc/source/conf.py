@@ -6,6 +6,16 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+import os
+import sys
+
+
+# To recognize the path of the python library.
+sys.path.insert(0, os.path.abspath('../..'))
+
+# To import __init__(self).
+autoclass_content = 'both'
+
 project = 'Deep Time Series'
 copyright = '2022, Sangwon Lee'
 author = 'Sangwon Lee'
@@ -15,6 +25,7 @@ author = 'Sangwon Lee'
 
 extensions = [
     'sphinx_copybutton',
+    'sphinx.ext.doctest',
     'sphinx.ext.napoleon',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',

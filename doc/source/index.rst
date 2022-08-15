@@ -7,14 +7,6 @@ Welcome to Deep Time Series's documentation!
 ============================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 1
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   API Reference <_autosummary/deep_time_series>
