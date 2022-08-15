@@ -1,12 +1,9 @@
-.. Deep Time Series documentation master file, created by
-   sphinx-quickstart on Mon Aug 15 15:22:32 2022.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to DeepTimeSeries's documentation!
+DeepTimeSeries documentation
 ============================================
 
 .. toctree::
-   :maxdepth: 1
+   :hidden:
 
+   User Guide <user_guide/index>
+   Tutorial <tutorial/index>
    API Reference <_autosummary/deep_time_series>
