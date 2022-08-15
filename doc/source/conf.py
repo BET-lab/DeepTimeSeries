@@ -43,4 +43,5 @@ html_theme = 'pydata_sphinx_theme'
 html_static_path = ['_static']
 
 
+add_module_names = False
 autodoc_inherit_docstrings = False
