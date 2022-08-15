@@ -31,19 +31,19 @@ class LeftPadding1D(nn.Module):
 
 class DilatedCNN(ForecastingModule):
     def __init__(
-            self,
-            n_features,
-            hidden_size,
-            encoding_length,
-            dilation_base,
-            kernel_size,
-            activation,
-            n_outputs,
-            dropout_rate,
-            lr,
-            loss_fn,
-            head=None,
-        ):
+        self,
+        n_features,
+        hidden_size,
+        encoding_length,
+        dilation_base,
+        kernel_size,
+        activation,
+        n_outputs,
+        dropout_rate,
+        lr,
+        loss_fn,
+        head=None,
+    ):
         super().__init__()
         self.save_hyperparameters()
 

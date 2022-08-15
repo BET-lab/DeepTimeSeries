@@ -12,18 +12,18 @@ from ..data import (
 
 class MLP2(ForecastingModule):
     def __init__(
-            self,
-            n_features,
-            hidden_size,
-            encoding_length,
-            n_hidden_layers,
-            activation,
-            n_outputs,
-            dropout_rate,
-            lr,
-            loss_fn,
-            head=None,
-        ):
+        self,
+        n_features,
+        hidden_size,
+        encoding_length,
+        n_hidden_layers,
+        activation,
+        n_outputs,
+        dropout_rate,
+        lr,
+        loss_fn,
+        head=None,
+    ):
         super().__init__()
         self.save_hyperparameters()
 

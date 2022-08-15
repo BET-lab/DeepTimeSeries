@@ -13,18 +13,18 @@ from ..data import (
 
 class RNN(ForecastingModule):
     def __init__(
-            self,
-            n_features,
-            hidden_size,
-            n_layers,
-            n_outputs,
-            rnn_class,
-            dropout_rate,
-            lr,
-            loss_fn,
-            teacher_forcing_rate,
-            head=None,
-        ):
+        self,
+        n_features,
+        hidden_size,
+        n_layers,
+        n_outputs,
+        rnn_class,
+        dropout_rate,
+        lr,
+        loss_fn,
+        teacher_forcing_rate,
+        head=None,
+    ):
         super().__init__()
         self.save_hyperparameters()
 

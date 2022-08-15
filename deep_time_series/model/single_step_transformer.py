@@ -15,20 +15,20 @@ from ..data import (
 
 class SingleStepTransformer(ForecastingModule):
     def __init__(
-            self,
-            n_encoder_features,
-            n_decoder_features,
-            d_model,
-            n_heads,
-            n_layers,
-            dim_feedforward,
-            n_outputs,
-            dropout_rate,
-            lr,
-            loss_fn,
-            teacher_forcing_rate,
-            head=None,
-        ):
+        self,
+        n_encoder_features,
+        n_decoder_features,
+        d_model,
+        n_heads,
+        n_layers,
+        dim_feedforward,
+        n_outputs,
+        dropout_rate,
+        lr,
+        loss_fn,
+        teacher_forcing_rate,
+        head=None,
+    ):
         super().__init__()
         self.save_hyperparameters()
 
