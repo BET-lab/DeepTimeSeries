@@ -13,9 +13,6 @@ import sys
 # To recognize the path of the python library.
 sys.path.insert(0, os.path.abspath('../..'))
 
-# To import __init__(self).
-autoclass_content = 'both'
-
 project = 'DeepTimeSeries'
 copyright = '2022, Sangwon Lee'
 author = 'Sangwon Lee'
@@ -43,5 +40,7 @@ html_theme = 'pydata_sphinx_theme'
 html_static_path = ['_static']
 
 
+autoclass_content = 'both'
 add_module_names = False
 autodoc_inherit_docstrings = False
+autodoc_typehints = 'description'

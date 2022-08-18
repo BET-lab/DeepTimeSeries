@@ -7,13 +7,16 @@ from ..util import merge_dicts
 
 class ForecastingModule(pl.LightningModule):
     def __init__(self):
+        """Base class of all forecasting modules.
+        """
         super().__init__()
 
         self.__encoding_length = None
         self.__decoding_length = None
 
     @property
-    def encoding_length(self):
+    def encoding_length(self) -> int:
+        """Encoding length."""
         if self.__encoding_length is None:
             raise NotImplementedError(
                 f'Define {self.__class__.__name__}.encoding_length'
@@ -22,7 +25,7 @@ class ForecastingModule(pl.LightningModule):
             return self.__encoding_length
 
     @encoding_length.setter
-    def encoding_length(self, value):
+    def encoding_length(self, value: int):
         if not isinstance(value, int):
             raise TypeError(
                 f'Invalid type for "encoding_length": {type(value)}'
@@ -30,7 +33,7 @@ class ForecastingModule(pl.LightningModule):
         self.__encoding_length = value
 
     @property
-    def decoding_length(self):
+    def decoding_length(self) -> int:
         if self.__decoding_length is None:
             raise NotImplementedError(
                 f'Define {self.__class__.__name__}.decoding_length'
@@ -39,7 +42,7 @@ class ForecastingModule(pl.LightningModule):
             return self.__decoding_length
 
     @decoding_length.setter
-    def decoding_length(self, value):
+    def decoding_length(self, value: int):
         if not isinstance(value, int):
             raise TypeError(
                 f'Invalid type for "decoding_length": {type(value)}'
