@@ -97,5 +97,5 @@ class ForecastingModule(pl.LightningModule):
 
         return outputs
 
-    def make_chunk_specs(self, *args, **kwargs):
+    def make_chunk_specs(self):
         pass
