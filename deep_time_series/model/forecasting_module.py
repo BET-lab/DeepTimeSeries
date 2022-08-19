@@ -1,3 +1,5 @@
+from typing import Any
+
 import torch
 import torch.nn as nn
 import pytorch_lightning as pl
@@ -57,31 +59,37 @@ class ForecastingModule(pl.LightningModule):
             )
         self.__decoding_length = value
 
-    def encode(self, inputs):
+    def encode(self, inputs: dict[str, Any]) -> dict[str, Any]:
         raise NotImplementedError(
             f'Define {self.__class__.__name__}.encode()'
         )
 
-    def decode_train(self, inputs):
+    def decode_train(self, inputs: dict[str, Any]) -> dict[str, Any]:
         return self.decode_eval(inputs)
 
-    def decode_eval(self, inputs):
+    def decode_eval(self, inputs: dict[str, Any]) -> dict[str, Any]:
         NotImplementedError(
             f'Define {self.__class__.__name__}.decode()'
         )
 
-    def evaluate_loss(self, batch):
+    def evaluate_loss(self, batch: dict[str, Any]) -> dict[str, Any]:
         outputs = self(batch)
         loss = self.hparams.loss_fn(outputs, batch)
         return loss
 
-    def training_step(self, batch, batch_idx):
+    def training_step(
+        self,
+        batch: dict[str, Any], batch_idx: int
+    ) -> dict[str, Any]:
         loss = self.evaluate_loss(batch)
         self.log('loss/training', loss)
 
         return loss
 
-    def validation_step(self, batch, batch_idx):
+    def validation_step(
+        self,
+        batch: dict[str, Any], batch_idx: int
+    ) -> dict[str, Any]:
         loss = self.evaluate_loss(batch)
         self.log('loss/validation', loss)
         self.log('hp_metric', loss)
@@ -96,7 +104,7 @@ class ForecastingModule(pl.LightningModule):
         else:
             return self.decode_eval(inputs)
 
-    def forward(self, inputs):
+    def forward(self, inputs: dict[str, Any]) -> dict[str, Any]:
         encoder_outputs = self.encode(inputs)
         decoder_inputs = merge_dicts(
             [inputs, encoder_outputs]
