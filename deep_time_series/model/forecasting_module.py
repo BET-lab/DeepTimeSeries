@@ -30,6 +30,10 @@ class ForecastingModule(pl.LightningModule):
             raise TypeError(
                 f'Invalid type for "encoding_length": {type(value)}'
             )
+        elif value <= 0:
+            raise ValueError(
+                'Encoding length <= 0.'
+            )
         self.__encoding_length = value
 
     @property
@@ -46,6 +50,10 @@ class ForecastingModule(pl.LightningModule):
         if not isinstance(value, int):
             raise TypeError(
                 f'Invalid type for "decoding_length": {type(value)}'
+            )
+        elif value <= 0:
+            raise ValueError(
+                'Decoding length <= 0.'
             )
         self.__decoding_length = value
 
