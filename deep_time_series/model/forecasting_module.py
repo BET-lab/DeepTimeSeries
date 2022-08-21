@@ -42,6 +42,8 @@ class ForecastingModule(pl.LightningModule):
         self.__encoding_length = None
         self.__decoding_length = None
 
+        self.__heads = None
+
     @property
     def encoding_length(self) -> int:
         """Encoding length."""
@@ -85,6 +87,24 @@ class ForecastingModule(pl.LightningModule):
             )
         self.__decoding_length = value
 
+    @property
+    def heads(self) -> list[Head]:
+        if self.__heads is None:
+            raise NotImplementedError(
+                f'Define {self.__class__.__name__}.heads'
+            )
+        else:
+            return self.__heads
+
+    @heads.setter
+    def heads(self, heads: list[Head]):
+        if not all(isinstance(head, Head) for head in heads):
+            raise TypeError(
+                f'Invalid type for "heads".'
+            )
+
+        self.__heads = nn.ModuleList(heads)
+
     def encode(self, inputs: dict[str, Any]) -> dict[str, Any]:
         raise NotImplementedError(
             f'Define {self.__class__.__name__}.encode()'
@@ -100,14 +120,18 @@ class ForecastingModule(pl.LightningModule):
 
     def calculate_loss(self, batch: dict[str, Any]) -> dict[str, Any]:
         outputs = self(batch)
-        loss = self.hparams.loss_fn(outputs, batch)
+
+        loss = 0
+        for head in self.heads:
+            loss += head.weight * head.calculate_loss(outputs, batch)
+
         return loss
 
     def training_step(
         self,
         batch: dict[str, Any], batch_idx: int
     ) -> dict[str, Any]:
-        loss = self.evaluate_loss(batch)
+        loss = self.calculate_loss(batch)
         self.log('loss/training', loss)
 
         return loss
@@ -116,12 +140,12 @@ class ForecastingModule(pl.LightningModule):
         self,
         batch: dict[str, Any], batch_idx: int
     ) -> dict[str, Any]:
-        loss = self.evaluate_loss(batch)
+        loss = self.calculate_loss(batch)
         self.log('loss/validation', loss)
         self.log('hp_metric', loss)
 
     def test_step(self, batch, batch_idx):
-        loss = self.evaluate_loss(batch)
+        loss = self.calculate_loss(batch)
         self.log('loss/test', loss)
 
     def decode(self, inputs):
