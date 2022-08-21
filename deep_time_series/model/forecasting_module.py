@@ -1,10 +1,36 @@
-from typing import Any
+from typing import Any, Callable
 
 import torch
 import torch.nn as nn
 import pytorch_lightning as pl
 
 from ..util import merge_dicts
+
+
+class Head(nn.Module):
+    def __init__(
+        self,
+        tag: str,
+        output_module: nn.Module,
+        loss_fn: Callable,
+        weight: float = 1.0,
+    ):
+        super().__init__()
+
+        self.tag = tag
+        self.output_module = output_module
+        self.loss_fn = loss_fn
+        self.weight = weight
+
+    def forward(self, inputs: Any) -> torch.Tensor:
+        return self.output_module(inputs)
+
+    def calculate_loss(
+            self,
+            outputs: dict[str, Any],
+            batch: dict[str, Any]
+        ) -> torch.Tensor:
+        return self.loss_fn(outputs[self.tag], batch[self.tag])
 
 
 class ForecastingModule(pl.LightningModule):
@@ -72,7 +98,7 @@ class ForecastingModule(pl.LightningModule):
             f'Define {self.__class__.__name__}.decode()'
         )
 
-    def evaluate_loss(self, batch: dict[str, Any]) -> dict[str, Any]:
+    def calculate_loss(self, batch: dict[str, Any]) -> dict[str, Any]:
         outputs = self(batch)
         loss = self.hparams.loss_fn(outputs, batch)
         return loss
