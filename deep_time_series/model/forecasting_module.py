@@ -7,7 +7,37 @@ import pytorch_lightning as pl
 from ..util import merge_dicts
 
 
-class Head(nn.Module):
+class HeadBase(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.weight = 1
+
+    def forward(self, inputs: Any) -> torch.Tensor:
+        raise NotImplementedError(
+            f'Define {self.__class__.__name__}.forward()'
+        )
+
+    def get_outputs(self, reset_outputs=True) -> dict[str, Any]:
+        raise NotImplementedError(
+            f'Define {self.__class__.__name__}.get_outputs()'
+        )
+
+    def reset_outputs(self):
+        raise NotImplementedError(
+            f'Define {self.__class__.__name__}.get_outputs()'
+        )
+
+    def calculate_loss(
+        self,
+        outputs: dict[str, Any],
+        batch: dict[str, Any]
+    ) -> torch.Tensor:
+        raise NotImplementedError(
+            f'Define {self.__class__.__name__}.calculate_loss()'
+        )
+
+
+class Head(HeadBase):
     def __init__(
         self,
         tag: str,
@@ -22,14 +52,26 @@ class Head(nn.Module):
         self.loss_fn = loss_fn
         self.weight = weight
 
+        self.__ys = []
+
     def forward(self, inputs: Any) -> torch.Tensor:
-        return self.output_module(inputs)
+        y = self.output_module(inputs)
+        self.__ys.append(y)
+        return y
+
+    def get_outputs(self):
+        return {
+            self.tag: torch.cat(self.__ys, dim=1)
+        }
+
+    def reset_outputs(self):
+        self.__ys = []
 
     def calculate_loss(
-            self,
-            outputs: dict[str, Any],
-            batch: dict[str, Any]
-        ) -> torch.Tensor:
+        self,
+        outputs: dict[str, Any],
+        batch: dict[str, Any]
+    ) -> torch.Tensor:
         return self.loss_fn(outputs[self.tag], batch[self.tag])
 
 
@@ -88,7 +130,7 @@ class ForecastingModule(pl.LightningModule):
         self.__decoding_length = value
 
     @property
-    def heads(self) -> list[Head]:
+    def heads(self) -> list[HeadBase]:
         if self.__heads is None:
             raise NotImplementedError(
                 f'Define {self.__class__.__name__}.heads'
@@ -97,8 +139,8 @@ class ForecastingModule(pl.LightningModule):
             return self.__heads
 
     @heads.setter
-    def heads(self, heads: list[Head]):
-        if not all(isinstance(head, Head) for head in heads):
+    def heads(self, heads: list[HeadBase]):
+        if not all(isinstance(head, HeadBase) for head in heads):
             raise TypeError(
                 f'Invalid type for "heads".'
             )
