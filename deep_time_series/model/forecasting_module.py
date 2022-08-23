@@ -11,6 +11,33 @@ class HeadBase(nn.Module):
     def __init__(self):
         super().__init__()
         self.weight = 1
+        self.__tag = None
+
+    @property
+    def tag(self) -> str:
+        """Tag for head. Prefix 'head.' is added automatically.'"""
+        if self.__tag is None:
+            raise NotImplementedError(
+                f'Define {self.__class__.__name__}.tag'
+            )
+        else:
+            return self.__tag
+
+    @tag.setter
+    def tag(self, value: int):
+        if not isinstance(value, str):
+            raise TypeError(
+                f'Invalid type for "tag": {type(value)}'
+            )
+
+        if not value.startswith('head.'):
+            value = f'head.{value}'
+
+        self.__tag = value
+
+    @property
+    def label_tag(self) -> str:
+        return f'label.{self.tag[5:]}'
 
     def forward(self, inputs: Any) -> torch.Tensor:
         raise NotImplementedError(
@@ -72,7 +99,7 @@ class Head(HeadBase):
         outputs: dict[str, Any],
         batch: dict[str, Any]
     ) -> torch.Tensor:
-        return self.loss_fn(outputs[self.tag], batch[self.tag])
+        return self.loss_fn(outputs[self.tag], batch[self.label_tag])
 
 
 class ForecastingModule(pl.LightningModule):
