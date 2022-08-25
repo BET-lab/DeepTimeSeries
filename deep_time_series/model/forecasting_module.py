@@ -7,11 +7,22 @@ import pytorch_lightning as pl
 from ..util import merge_dicts
 
 
-class HeadBase(nn.Module):
+class BaseHead(nn.Module):
+    SPECIAL_ATTRIBUTES = (
+        'weight',
+        'tag',
+    )
+
     def __init__(self):
         super().__init__()
         self.weight = 1
         self.__tag = None
+
+    def __setattr__(self, name, value):
+        if name in ForecastingModule.SPECIAL_ATTRIBUTES:
+            return object.__setattr__(self, name, value)
+        else:
+            return super().__setattr__(name, value)
 
     @property
     def tag(self) -> str:
@@ -64,7 +75,7 @@ class HeadBase(nn.Module):
         )
 
 
-class Head(HeadBase):
+class Head(BaseHead):
     def __init__(
         self,
         tag: str,
@@ -103,6 +114,13 @@ class Head(HeadBase):
 
 
 class ForecastingModule(pl.LightningModule):
+    SPECIAL_ATTRIBUTES = (
+        'encoding_length',
+        'decoding_length',
+        'head',
+        'heads',
+    )
+
     def __init__(self):
         """Base class of all forecasting modules.
         """
@@ -112,6 +130,12 @@ class ForecastingModule(pl.LightningModule):
         self.__decoding_length = None
 
         self.__heads = None
+
+    def __setattr__(self, name, value):
+        if name in ForecastingModule.SPECIAL_ATTRIBUTES:
+            return object.__setattr__(self, name, value)
+        else:
+            return super().__setattr__(name, value)
 
     @property
     def encoding_length(self) -> int:
@@ -157,7 +181,7 @@ class ForecastingModule(pl.LightningModule):
         self.__decoding_length = value
 
     @property
-    def heads(self) -> list[HeadBase]:
+    def heads(self) -> list[BaseHead]:
         if self.__heads is None:
             raise NotImplementedError(
                 f'Define {self.__class__.__name__}.heads'
@@ -166,13 +190,37 @@ class ForecastingModule(pl.LightningModule):
             return self.__heads
 
     @heads.setter
-    def heads(self, heads: list[HeadBase]):
-        if not all(isinstance(head, HeadBase) for head in heads):
+    def heads(self, heads: list[BaseHead]):
+        if not isinstance(heads, list):
             raise TypeError(
-                f'Invalid type for "heads".'
+                f'Invalid type for "heads". {type(heads)}'
+            )
+        elif not all(isinstance(head, BaseHead) for head in heads):
+            raise TypeError(
+                f'Invalid type for "heads". {[type(v) for v in heads]}'
             )
 
         self.__heads = nn.ModuleList(heads)
+
+    @property
+    def head(self) -> BaseHead:
+        if self.__heads is None:
+            raise NotImplementedError(
+                f'Define {self.__class__.__name__}.heads'
+            )
+        elif len(self.__heads) != 1:
+            raise Exception('Multi-head model cannot use head.')
+        else:
+            return self.__heads[0]
+
+    @head.setter
+    def head(self, head: BaseHead):
+        if not isinstance(head, BaseHead):
+            raise TypeError(
+                f'Invalid type for "heads". {type(head)}'
+            )
+
+        self.heads = [head]
 
     def encode(self, inputs: dict[str, Any]) -> dict[str, Any]:
         raise NotImplementedError(
