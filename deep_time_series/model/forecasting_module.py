@@ -55,7 +55,7 @@ class BaseHead(nn.Module):
             f'Define {self.__class__.__name__}.forward()'
         )
 
-    def get_outputs(self, reset_outputs=True) -> dict[str, Any]:
+    def get_outputs(sel) -> dict[str, Any]:
         raise NotImplementedError(
             f'Define {self.__class__.__name__}.get_outputs()'
         )
