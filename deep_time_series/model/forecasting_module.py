@@ -17,6 +17,7 @@ class BaseHead(nn.Module):
     )
 
     def __init__(self):
+        """Base class of all Head classes."""
         super().__init__()
         self.__tag = None
         self.__loss_weight = None
@@ -29,7 +30,7 @@ class BaseHead(nn.Module):
 
     @property
     def tag(self) -> str:
-        """Tag for head. Prefix 'head.' is added automatically."""
+        """Tag for a head. Prefix 'head.' is added automatically."""
         if self.__tag is None:
             raise NotImplementedError(
                 f'Define {self.__class__.__name__}.tag'
@@ -51,6 +52,7 @@ class BaseHead(nn.Module):
 
     @property
     def loss_weight(self) -> float:
+        """Loss weight for loss calculations."""
         if self.__loss_weight is None:
             self.__loss_weight = 1.0
         return self.__loss_weight
@@ -68,6 +70,9 @@ class BaseHead(nn.Module):
 
     @property
     def label_tag(self) -> str:
+        """Tag of target label. If the tag of head is "head.my_tag" then
+        label_tag is "label.my_tag".
+        """
         return f'label.{self.tag[5:]}'
 
     def forward(self, inputs: Any) -> torch.Tensor:
@@ -154,13 +159,11 @@ class DistributionHead(BaseHead):
                 continue
 
             linears[k] = nn.Linear(in_features, out_features)
-            # transforms[k] = TRANSFORM_DICT[v]
             transforms[k] = torch.distributions.transform_to(v)
 
         self.distribution = distribution
 
         self.linears = nn.ModuleDict(linears)
-        # self.transforms = nn.ModuleDict(transforms)
         self.transforms = transforms
 
         self._outputs = defaultdict(list)
