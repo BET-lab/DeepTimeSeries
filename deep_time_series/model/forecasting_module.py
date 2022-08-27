@@ -12,8 +12,8 @@ from ..util import merge_dicts
 
 class BaseHead(nn.Module):
     SPECIAL_ATTRIBUTES = (
-        'weight',
         'tag',
+        'loss_weight',
     )
 
     def __init__(self):
@@ -50,17 +50,19 @@ class BaseHead(nn.Module):
         self.__tag = value
 
     @property
-    def loss_weight(self) -> str:
+    def loss_weight(self) -> float:
         if self.__loss_weight is None:
             self.__loss_weight = 1.0
         return self.__loss_weight
 
     @loss_weight.setter
     def loss_weight(self, value: float):
-        if not isinstance(value, float):
+        if not isinstance(value, (float, int)):
             raise TypeError(
                 f'Invalid type for "loss_weight": {type(value)}'
             )
+        elif value < 0:
+            raise ValueError('loss_weight < 0')
 
         self.__loss_weight = value
 
