@@ -1,7 +1,10 @@
+from collections import defaultdict
 from typing import Any, Callable
 
 import torch
 import torch.nn as nn
+import torch.distributions
+
 import pytorch_lightning as pl
 
 from ..util import merge_dicts
@@ -26,7 +29,7 @@ class BaseHead(nn.Module):
 
     @property
     def tag(self) -> str:
-        """Tag for head. Prefix 'head.' is added automatically.'"""
+        """Tag for head. Prefix 'head.' is added automatically."""
         if self.__tag is None:
             raise NotImplementedError(
                 f'Define {self.__class__.__name__}.tag'
@@ -55,7 +58,7 @@ class BaseHead(nn.Module):
             f'Define {self.__class__.__name__}.forward()'
         )
 
-    def get_outputs(sel) -> dict[str, Any]:
+    def get_outputs(self) -> dict[str, Any]:
         raise NotImplementedError(
             f'Define {self.__class__.__name__}.get_outputs()'
         )
@@ -90,20 +93,20 @@ class Head(BaseHead):
         self.loss_fn = loss_fn
         self.weight = weight
 
-        self.__ys = []
+        self._ys = []
 
     def forward(self, inputs: Any) -> torch.Tensor:
         y = self.output_module(inputs)
-        self.__ys.append(y)
+        self._ys.append(y)
         return y
 
     def get_outputs(self):
         return {
-            self.tag: torch.cat(self.__ys, dim=1)
+            self.tag: torch.cat(self._ys, dim=1)
         }
 
     def reset_outputs(self):
-        self.__ys = []
+        self._ys = []
 
     def calculate_loss(
         self,
@@ -111,6 +114,79 @@ class Head(BaseHead):
         batch: dict[str, Any]
     ) -> torch.Tensor:
         return self.loss_fn(outputs[self.tag], batch[self.label_tag])
+
+
+class DistributionHead(BaseHead):
+    def __init__(self,
+        tag,
+        distribution: torch.distributions.Distribution,
+        in_features,
+        out_features,
+        weight=1,
+    ):
+        super().__init__()
+
+        self.tag = tag
+        self.weight = 1
+
+        linears = {}
+        transforms = {}
+        for k, v in distribution.arg_constraints.items():
+            # 'logits' is prefered.
+            if k == 'probs':
+                continue
+
+            linears[k] = nn.Linear(in_features, out_features)
+            # transforms[k] = TRANSFORM_DICT[v]
+            transforms[k] = torch.distributions.transform_to(v)
+
+        self.distribution = distribution
+
+        self.linears = nn.ModuleDict(linears)
+        # self.transforms = nn.ModuleDict(transforms)
+        self.transforms = transforms
+
+        self._outputs = defaultdict(list)
+
+    def forward(self, x):
+        kwargs = {
+            k: self.transforms[k](layer(x))
+            for k, layer in self.linears.items()
+        }
+
+        m = self.distribution(**kwargs)
+        y = m.sample()
+
+        for k, v in kwargs.items():
+            self._outputs[f'{self.tag}.{k}'].append(v)
+
+        self._outputs[self.tag].append(y)
+
+        return y
+
+    def get_outputs(self):
+        outputs = {}
+        for k, v in self._outputs.items():
+            outputs[k] = torch.cat(v, dim=1)
+
+        return outputs
+
+    def reset_outputs(self):
+        self._outputs = defaultdict(list)
+
+    def calculate_loss(
+            self,
+            outputs,
+            batch
+        ) -> torch.Tensor:
+        kwargs = {
+            k: outputs[f'{self.tag}.{k}']
+            for k in self.linears.keys()
+        }
+
+        m = self.distribution(**kwargs)
+
+        return -torch.mean(m.log_prob(batch[self.label_tag]))
 
 
 class ForecastingModule(pl.LightningModule):

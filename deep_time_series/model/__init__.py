@@ -1,5 +1,5 @@
 from .forecasting_module import (
-    ForecastingModule, BaseHead, Head,
+    ForecastingModule, BaseHead, Head, DistributionHead
 )
 
 from .multi_step_transformer import (
