@@ -22,7 +22,7 @@ class BaseHead(nn.Module):
         self.__loss_weight = None
 
     def __setattr__(self, name, value):
-        if name in ForecastingModule.SPECIAL_ATTRIBUTES:
+        if name in BaseHead.SPECIAL_ATTRIBUTES:
             return object.__setattr__(self, name, value)
         else:
             return super().__setattr__(name, value)
@@ -38,7 +38,7 @@ class BaseHead(nn.Module):
             return self.__tag
 
     @tag.setter
-    def tag(self, value: int):
+    def tag(self, value: str):
         if not isinstance(value, str):
             raise TypeError(
                 f'Invalid type for "tag": {type(value)}'
