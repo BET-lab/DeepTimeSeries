@@ -18,8 +18,8 @@ class BaseHead(nn.Module):
 
     def __init__(self):
         super().__init__()
-        self.weight = 1
         self.__tag = None
+        self.__loss_weight = None
 
     def __setattr__(self, name, value):
         if name in ForecastingModule.SPECIAL_ATTRIBUTES:
@@ -48,6 +48,21 @@ class BaseHead(nn.Module):
             value = f'head.{value}'
 
         self.__tag = value
+
+    @property
+    def loss_weight(self) -> str:
+        if self.__loss_weight is None:
+            self.__loss_weight = 1.0
+        return self.__loss_weight
+
+    @loss_weight.setter
+    def loss_weight(self, value: float):
+        if not isinstance(value, float):
+            raise TypeError(
+                f'Invalid type for "loss_weight": {type(value)}'
+            )
+
+        self.__loss_weight = value
 
     @property
     def label_tag(self) -> str:
@@ -84,14 +99,14 @@ class Head(BaseHead):
         tag: str,
         output_module: nn.Module,
         loss_fn: Callable,
-        weight: float = 1.0,
+        loss_weight: float = 1.0,
     ):
         super().__init__()
 
         self.tag = tag
         self.output_module = output_module
         self.loss_fn = loss_fn
-        self.weight = weight
+        self.loss_weight = loss_weight
 
         self._ys = []
 
@@ -122,12 +137,12 @@ class DistributionHead(BaseHead):
         distribution: torch.distributions.Distribution,
         in_features,
         out_features,
-        weight=1,
+        loss_weight: float = 1.0,
     ):
         super().__init__()
 
         self.tag = tag
-        self.weight = 1
+        self.loss_weight = loss_weight
 
         linears = {}
         transforms = {}
@@ -316,7 +331,7 @@ class ForecastingModule(pl.LightningModule):
 
         loss = 0
         for head in self.heads:
-            loss += head.weight * head.calculate_loss(outputs, batch)
+            loss += head.loss_weight * head.calculate_loss(outputs, batch)
 
         return loss
 
