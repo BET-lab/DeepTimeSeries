@@ -4,7 +4,7 @@ import pytest
 
 import torch
 import torch.nn as nn
-from deep_time_series.model import (
+from deep_time_series import (
     BaseHead, Head,
 )
 

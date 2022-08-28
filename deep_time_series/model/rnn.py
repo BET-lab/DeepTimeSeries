@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 
-from .forecasting_module import ForecastingModule
+from ..core import ForecastingModule
 from ..data import (
     EncodingChunkSpec,
     DecodingChunkSpec,
