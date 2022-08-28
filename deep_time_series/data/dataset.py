@@ -9,21 +9,14 @@ from ..plotting import plot_chunks
 class TimeSeriesDataset(Dataset):
     def __init__(self,
         df,
-        encoding_length,
-        decoding_length,
         chunk_specs,
         feature_transformers,
         fit_feature_transformers=True,
         return_time_index=False,
     ):
         self.df = df.copy()
-        self.encoding_length = encoding_length
-        self.decoding_length = decoding_length
         # Make chunk_specs from encoding, decoding and label specs.
-        self.range_chunk_specs = [
-            spec.to_range_chunk_spec(encoding_length, decoding_length)
-            for spec in chunk_specs
-        ]
+        self.chunk_specs = chunk_specs
 
         self.feature_transformers = feature_transformers
         self.fit_feature_transformers = fit_feature_transformers
@@ -43,7 +36,7 @@ class TimeSeriesDataset(Dataset):
         ]
 
         self.chunk_extractors = [
-            ChunkExtractor(df, self.range_chunk_specs) for df in splitted_dfs
+            ChunkExtractor(df, self.chunk_specs) for df in splitted_dfs
         ]
 
         self.lengths = [
@@ -73,7 +66,7 @@ class TimeSeriesDataset(Dataset):
     def convert_item_to_df(self, item):
         tag_to_names_dict = {
             spec.tag: spec.names
-            for spec in self.range_chunk_specs
+            for spec in self.chunk_specs
         }
         output = {}
         for tag, values in item.items():
@@ -88,11 +81,7 @@ class TimeSeriesDataset(Dataset):
         return output
 
     def plot_chunks(self):
-        plot_chunks(
-            self.range_chunk_specs,
-            self.encoding_length,
-            self.decoding_length
-        )
+        plot_chunks(self.chunk_specs)
 
 
 class IterableTimeSeriesDataset(IterableDataset):
@@ -110,7 +99,7 @@ class IterableTimeSeriesDataset(IterableDataset):
         self.encoding_length = encoding_length
         self.decoding_length = decoding_length
         # Make chunk_specs from encoding, decoding and label specs.
-        self.range_chunk_specs = [
+        self.chunk_specs = [
             spec.to_range_chunk_spec(encoding_length, decoding_length)
             for spec in chunk_specs
         ]
@@ -134,7 +123,7 @@ class IterableTimeSeriesDataset(IterableDataset):
         ]
 
         self.chunk_extractors = [
-            ChunkExtractor(df, self.range_chunk_specs) for df in splitted_dfs
+            ChunkExtractor(df, self.chunk_specs) for df in splitted_dfs
         ]
 
         self.lengths = [
@@ -173,7 +162,7 @@ class IterableTimeSeriesDataset(IterableDataset):
     def convert_item_to_df(self, item):
         tag_to_names_dict = {
             spec.tag: spec.names
-            for spec in self.range_chunk_specs
+            for spec in self.chunk_specs
         }
         output = {}
         for tag, values in item.items():
@@ -189,7 +178,7 @@ class IterableTimeSeriesDataset(IterableDataset):
 
     def plot_chunks(self):
         plot_chunks(
-            self.range_chunk_specs,
+            self.chunk_specs,
             self.encoding_length,
             self.decoding_length
         )

@@ -10,8 +10,8 @@ def plot_chunks(range_chunk_specs, encoding_length, decoding_length):
 
     for y, spec in enumerate(range_chunk_specs, start=1):
         ys.append(y)
-        widths.append(spec.range_[1]-spec.range_[0])
-        lefts.append(spec.range_[0])
+        widths.append(spec.range[1]-spec.range[0])
+        lefts.append(spec.range[0])
         tags.append(spec.tag)
 
     for y, width, left, tag in zip(ys, widths, lefts, tags):
