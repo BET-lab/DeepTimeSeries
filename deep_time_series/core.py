@@ -105,7 +105,7 @@ class Head(BaseHead):
         self,
         tag: str,
         output_module: nn.Module,
-        loss_fn: Callable,
+        loss_fn: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
         loss_weight: float = 1.0,
     ):
         super().__init__()
@@ -140,10 +140,10 @@ class Head(BaseHead):
 
 class DistributionHead(BaseHead):
     def __init__(self,
-        tag,
+        tag: str,
         distribution: torch.distributions.Distribution,
-        in_features,
-        out_features,
+        in_features: int,
+        out_features: int,
         loss_weight: float = 1.0,
     ):
         super().__init__()
