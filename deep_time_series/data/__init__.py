@@ -1,4 +1,5 @@
 from .chunk import (
+    BaseChunkSpec,
     EncodingChunkSpec,
     DecodingChunkSpec,
     LabelChunkSpec,
