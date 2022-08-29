@@ -137,7 +137,10 @@ class ChunkExtractor:
     def __init__(self, df, chunk_specs):
         # Check tag duplication.
         tags = [spec.tag for spec in chunk_specs]
-        assert len(tags) == len(set(tags))
+        if len(tags) != len(set(tags)):
+            raise ValueError(
+                f'Tags are duplicated. {[s.tag for s in chunk_specs]}.'
+            )
 
         self.chunk_specs = chunk_specs
         self.chunk_min_t = min(spec.range[0] for spec in chunk_specs)

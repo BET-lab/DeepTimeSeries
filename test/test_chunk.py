@@ -125,3 +125,9 @@ def test_chunk_extractor():
     data = chunk_extractor.extract(2)
 
     logger.info(data)
+
+    # Tag duplication.
+    with pytest.raises(ValueError) as e:
+        chunk_extractor = ChunkExtractor(df, [chunk_spec] * 2)
+
+    logger.info(str(e.value))
