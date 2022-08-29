@@ -55,7 +55,7 @@ class FeatureTransformers:
             return return_value
 
     def _append_index_and_id(self, data, df):
-        for name in ['time_index', 'time_series_id']:
+        for name in ['__time_index', '__time_series_id']:
             if name in df.columns:
                 data[name] = df[name]
 

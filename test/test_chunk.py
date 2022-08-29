@@ -99,7 +99,7 @@ def test_chunk_spec():
 def test_chunk_extractor():
     df = pd.DataFrame(
         data={
-            'time_index': np.arange(20),
+            '__time_index': np.arange(20),
             'a': np.arange(20)**2,
             'b': -np.arange(20),
         }

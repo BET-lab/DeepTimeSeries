@@ -11,5 +11,4 @@ from .transform import (
 
 from .dataset import (
     TimeSeriesDataset,
-    IterableTimeSeriesDataset,
 )
