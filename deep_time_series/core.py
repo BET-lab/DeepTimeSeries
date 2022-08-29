@@ -331,9 +331,11 @@ class ForecastingModule(pl.LightningModule):
             f'Define {self.__class__.__name__}.decode()'
         )
 
-    def calculate_loss(self, batch: dict[str, Any]) -> dict[str, Any]:
-        outputs = self(batch)
-
+    def calculate_loss(
+        self,
+        outputs: dict[str, Any],
+        batch: dict[str, Any]
+    ) -> dict[str, Any]:
         loss = 0
         for head in self.heads:
             loss += head.loss_weight * head.calculate_loss(outputs, batch)
@@ -342,9 +344,11 @@ class ForecastingModule(pl.LightningModule):
 
     def training_step(
         self,
-        batch: dict[str, Any], batch_idx: int
+        batch: dict[str, Any],batch_idx: int
     ) -> dict[str, Any]:
-        loss = self.calculate_loss(batch)
+        outputs = self(batch)
+        loss = self.calculate_loss(outputs, batch)
+
         self.log('loss/training', loss)
 
         return loss
@@ -353,12 +357,16 @@ class ForecastingModule(pl.LightningModule):
         self,
         batch: dict[str, Any], batch_idx: int
     ) -> dict[str, Any]:
-        loss = self.calculate_loss(batch)
+        outputs = self(batch)
+        loss = self.calculate_loss(outputs, batch)
+
         self.log('loss/validation', loss)
         self.log('hp_metric', loss)
 
     def test_step(self, batch, batch_idx):
-        loss = self.calculate_loss(batch)
+        outputs = self(batch)
+        loss = self.calculate_loss(outputs, batch)
+
         self.log('loss/test', loss)
 
     def decode(self, inputs):
