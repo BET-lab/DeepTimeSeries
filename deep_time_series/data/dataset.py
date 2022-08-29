@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from torch.utils.data import Dataset, IterableDataset
+from torch.utils.data import Dataset
 
 from .chunk import ChunkExtractor
 from ..plotting import plot_chunks
@@ -36,16 +36,16 @@ class TimeSeriesDataset(Dataset):
     def __init__(self,
         data_frames: pd.DataFrame | list[pd.DataFrame],
         chunk_specs,
-        feature_transformers,
-        fit_feature_transformers=True,
+        column_transformer,
+        fit_column_transformer=True,
         return_time_index=False,
     ):
         self.data_frames = _merge_data_frames(data_frames=data_frames)
         # Make chunk_specs from encoding, decoding and label specs.
         self.chunk_specs = chunk_specs
 
-        self.feature_transformers = feature_transformers
-        self.fit_feature_transformers = fit_feature_transformers
+        self.column_transformer = column_transformer
+        self.fit_column_transformer = fit_column_transformer
         self.return_time_index = return_time_index
 
         self._preprocess()
@@ -53,10 +53,10 @@ class TimeSeriesDataset(Dataset):
     def _preprocess(self):
         self.data_frames.sort_values(by='__time_index', inplace=True)
 
-        if self.fit_feature_transformers:
-            self.feature_transformers.fit(self.data_frames)
+        if self.fit_column_transformer:
+            self.column_transformer.fit(self.data_frames)
 
-        self.scaled_df = self.feature_transformers.transform(self.data_frames)
+        self.scaled_df = self.column_transformer.transform(self.data_frames)
 
         splitted_dfs = [
             df for _, df in self.scaled_df.groupby('__time_series_id')
@@ -102,7 +102,7 @@ class TimeSeriesDataset(Dataset):
             for name, series in zip(names, values.T):
                 data[name] = series
             df = pd.DataFrame(data=data)
-            df = self.feature_transformers.inverse_transform(df)
+            df = self.column_transformer.inverse_transform(df)
             output[tag] = df
 
         return output

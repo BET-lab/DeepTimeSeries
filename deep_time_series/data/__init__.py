@@ -6,7 +6,7 @@ from .chunk import (
 )
 
 from .transform import (
-    FeatureTransformers
+    ColumnTransformer
 )
 
 from .dataset import (

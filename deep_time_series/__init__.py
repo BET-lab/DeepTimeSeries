@@ -18,5 +18,5 @@ from .data.dataset import (
 )
 
 from .data.transform import (
-    FeatureTransformers,
+    ColumnTransformer,
 )

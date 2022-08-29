@@ -1,10 +1,32 @@
+import copy
 import numpy as np
 import pandas as pd
 
 
-class FeatureTransformers:
-    def __init__(self, transformer_dict):
-        self.transformer_dict = transformer_dict
+class ColumnTransformer:
+    def __init__(
+        self,
+        transformer_dict=None,
+        transformer_tuples=None,
+    ):
+        if transformer_dict is None and transformer_tuples is None:
+            raise Exception(
+                'One of transformer_dict or transformer_tuples has to be given.'
+            )
+
+        if (transformer_dict is not None) and (transformer_tuples is not None):
+            raise Exception(
+                'Both transformer_dict or transformer_tuples are set.'
+            )
+
+        if transformer_dict is not None:
+            self.transformer_dict = transformer_dict
+
+        if transformer_tuples is not None:
+            self.transformer_dict = {}
+            for transformer, names in transformer_tuples:
+                for name in names:
+                    self.transformer_dict[name] = copy.deepcopy(transformer)
 
     def _apply_to_single_feature(self, series, func):
         values = series.values.reshape(-1, 1)
