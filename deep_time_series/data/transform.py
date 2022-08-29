@@ -2,46 +2,6 @@ import numpy as np
 import pandas as pd
 
 
-class CategoryMapper:
-    def __init__(self):
-        self.map = {}
-        self.inverse_map = {}
-        self.dtype = None
-
-    def fit(self, x):
-        assert len(x.shape) == 2
-        assert x.shape[1] == 1
-
-        x = x.reshape(-1)
-        self.map = {v: k for k, v in enumerate(np.unique(x))}
-        self.inverse_map = {v: k for k, v in self.map.items()}
-        self.dtype = x.dtype
-
-    def transform(self, x):
-        assert len(x.shape) == 2
-        assert x.shape[1] == 1
-
-        x = x.reshape(-1)
-
-        x = np.array([self.map[v] for v in x], dtype=np.int64)
-
-        return x
-
-    def inverse_transform(self, x):
-        assert len(x.shape) == 2
-        assert x.shape[1] == 1
-
-        x = x.reshape(-1)
-
-        x = np.array([self.inverse_map[v] for v in x], dtype=self.dtype)
-
-        return x
-
-    def fit_transform(self, x):
-        self.fit(x)
-        return self.transform(x)
-
-
 class FeatureTransformers:
     def __init__(self, transformer_dict):
         self.transformer_dict = transformer_dict
