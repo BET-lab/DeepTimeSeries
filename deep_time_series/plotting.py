@@ -2,13 +2,17 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 
-def plot_chunks(range_chunk_specs, encoding_length, decoding_length):
-    ys = [0, 0]
-    widths = [encoding_length, decoding_length]
-    lefts = [0, encoding_length]
-    tags = ['encoding', 'decoding']
+def plot_chunks(chunk_specs):
+    # ys = [0, 0]
+    # widths = [encoding_length, decoding_length]
+    # lefts = [0, encoding_length]
+    # tags = ['encoding', 'decoding']
+    ys = []
+    widths = []
+    lefts = []
+    tags = []
 
-    for y, spec in enumerate(range_chunk_specs, start=1):
+    for y, spec in enumerate(chunk_specs, start=1):
         ys.append(y)
         widths.append(spec.range[1]-spec.range[0])
         lefts.append(spec.range[0])
