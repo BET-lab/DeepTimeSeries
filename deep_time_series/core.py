@@ -344,7 +344,7 @@ class ForecastingModule(pl.LightningModule):
 
     def training_step(
         self,
-        batch: dict[str, Any],batch_idx: int
+        batch: dict[str, Any], batch_idx: int
     ) -> dict[str, Any]:
         outputs = self(batch)
         loss = self.calculate_loss(outputs, batch)
