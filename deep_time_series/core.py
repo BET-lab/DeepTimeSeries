@@ -33,20 +33,20 @@ class MetricModule(nn.Module):
         })
 
     def forward(self, outputs, batch, stage):
-        return self.__metric_dict['_'+stage](
+        return self.__metric_dict[f'_{stage}'](
             outputs[self.head_tag], batch[self.label_tag]
         )
 
     def compute(self, stage):
-        return self.__metric_dict['_'+stage].compute()
+        return self.__metric_dict[f'_{stage}'].compute()
 
     def update(self, outputs, batch, stage):
-        self.__metric_dict['_'+stage].update(
+        self.__metric_dict[f'_{stage}'].update(
             outputs[self.head_tag], batch[self.label_tag]
         )
 
     def reset(self, stage):
-        self.__metric_dict['_'+stage].reset()
+        self.__metric_dict[f'_{stage}'].reset()
 
 
 class BaseHead(nn.Module):
