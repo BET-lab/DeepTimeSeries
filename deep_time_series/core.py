@@ -6,14 +6,54 @@ import torch.nn as nn
 import torch.distributions
 
 import pytorch_lightning as pl
+from torchmetrics import Metric, MetricCollection
 
 from .util import merge_dicts
+
+
+class MetricModule(nn.Module):
+    def __init__(self, tag: str, metrics):
+        super().__init__()
+
+        self.tag = tag
+
+        if tag.startswith('head.'):
+            self.head_tag = tag
+            self.label_tag = f'label.{tag[5:]}'
+        else:
+            self.head_tag = f'head.{tag}'
+            self.label_tag = f'label.{tag}'
+
+        metrics = MetricCollection(metrics)
+
+        self.__metric_dict = nn.ModuleDict({
+            '_train': metrics.clone(prefix=f'train/{tag}.'),
+            '_val': metrics.clone(prefix=f'val/{tag}.'),
+            '_test': metrics.clone(prefix=f'test/{tag}.')
+        })
+
+    def forward(self, outputs, batch, stage):
+        return self.__metric_dict['_'+stage](
+            outputs[self.head_tag], batch[self.label_tag]
+        )
+
+    def compute(self, stage):
+        return self.__metric_dict['_'+stage].compute()
+
+    def update(self, outputs, batch, stage):
+        self.__metric_dict['_'+stage].update(
+            outputs[self.head_tag], batch[self.label_tag]
+        )
+
+    def reset(self, stage):
+        self.__metric_dict['_'+stage].reset()
 
 
 class BaseHead(nn.Module):
     SPECIAL_ATTRIBUTES = (
         'tag',
         'loss_weight',
+        'metrics'
     )
 
     def __init__(self):
@@ -21,6 +61,7 @@ class BaseHead(nn.Module):
         super().__init__()
         self.__tag = None
         self.__loss_weight = None
+        self.__metrics = None
 
     def __setattr__(self, name, value):
         if name in BaseHead.SPECIAL_ATTRIBUTES:
@@ -49,6 +90,24 @@ class BaseHead(nn.Module):
             value = f'head.{value}'
 
         self.__tag = value
+
+    @property
+    def metrics(self) -> MetricModule:
+        if self.__metrics is None:
+            raise NotImplementedError(
+                f'Define {self.__class__.__name__}.metrics'
+            )
+        else:
+            return self.__metrics
+
+    @metrics.setter
+    def metrics(self, value: Metric | list[Metric] | dict[str, Metric]):
+        metric_module = MetricModule(tag=self.tag, metrics=value)
+        self.__metrics = metric_module
+
+    @property
+    def has_metrics(self):
+        return self.__metrics is not None
 
     @property
     def loss_weight(self) -> float:
@@ -107,6 +166,7 @@ class Head(BaseHead):
         output_module: nn.Module,
         loss_fn: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
         loss_weight: float = 1.0,
+        metrics: Metric | list[Metric] | dict[str, Metric] = None,
     ):
         super().__init__()
 
@@ -114,6 +174,9 @@ class Head(BaseHead):
         self.output_module = output_module
         self.loss_fn = loss_fn
         self.loss_weight = loss_weight
+
+        if metrics is not None:
+            self.metrics = metrics
 
         self._ys = []
 
@@ -145,11 +208,14 @@ class DistributionHead(BaseHead):
         in_features: int,
         out_features: int,
         loss_weight: float = 1.0,
+        metrics: Metric | list[Metric] | dict[str, Metric] = None,
     ):
         super().__init__()
 
         self.tag = tag
         self.loss_weight = loss_weight
+        if metrics is not None:
+            self.metrics = metrics
 
         linears = {}
         transforms = {}
@@ -342,6 +408,48 @@ class ForecastingModule(pl.LightningModule):
 
         return loss
 
+    def forward_metrics(
+        self,
+        outputs: dict[str, Any],
+        batch: dict[str, Any],
+        stage: str,
+    ) -> dict[str, Any]:
+        metrics = {}
+        for head in self.heads:
+            if not head.has_metrics:
+                continue
+            metrics.update(
+                head.metrics(outputs=outputs, batch=batch, stage=stage)
+            )
+
+        return metrics
+
+    def update_metrics(
+        self,
+        outputs: dict[str, Any],
+        batch: dict[str, Any],
+        stage: str,
+    ) -> None:
+        for head in self.heads:
+            if not head.has_metrics:
+                continue
+            head.metrics.update(outputs=outputs, batch=batch, stage=stage)
+
+    def compute_metrics(self, stage: str) -> dict[str, Any]:
+        metrics = {}
+        for head in self.heads:
+            if not head.has_metrics:
+                continue
+            metrics.update(head.metrics.compute(stage=stage))
+
+        return metrics
+
+    def reset_metrics(self, stage: str) -> None:
+        for head in self.heads:
+            if not head.has_metrics:
+                continue
+            head.metrics.reset(stage=stage)
+
     def training_step(
         self,
         batch: dict[str, Any], batch_idx: int
@@ -349,19 +457,43 @@ class ForecastingModule(pl.LightningModule):
         outputs = self(batch)
         loss = self.calculate_loss(outputs, batch)
 
-        self.log('loss/training', loss)
+        step_outputs = merge_dicts([
+            {'loss': loss}, outputs, batch,
+        ])
 
-        return loss
+        return step_outputs
+
+    def training_step_end(self, step_outputs):
+        metrics = self.forward_metrics(
+            step_outputs, step_outputs, stage='train'
+        )
+        self.log('train/loss', step_outputs['loss'])
+        self.log_dict(metrics)
+
+    def training_epoch_end(self, epoch_outputs) -> None:
+        metrics = self.compute_metrics(stage='train')
+        self.log_dict(metrics)
+        self.reset_metrics(stage='train')
 
     def validation_step(
         self,
         batch: dict[str, Any], batch_idx: int
     ) -> dict[str, Any]:
         outputs = self(batch)
-        loss = self.calculate_loss(outputs, batch)
 
-        self.log('loss/validation', loss)
-        self.log('hp_metric', loss)
+        step_outputs = merge_dicts([outputs, batch])
+
+        return step_outputs
+
+    def validation_step_end(self, step_outputs):
+        self.update_metrics(
+            step_outputs, step_outputs, stage='val'
+        )
+
+    def validation_epoch_end(self, epoch_outputs) -> None:
+        metrics = self.compute_metrics(stage='val')
+        self.log_dict(metrics)
+        self.reset_metrics(stage='val')
 
     def test_step(self, batch, batch_idx):
         outputs = self(batch)

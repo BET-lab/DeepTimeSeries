@@ -1,4 +1,7 @@
+from re import L, S
 import sys
+
+from deep_time_series.core import MetricModule
 sys.path.append('..')
 
 import pytest
@@ -6,10 +9,14 @@ import pytest
 import logging
 logger = logging.getLogger('test')
 
+import numpy as np
 import torch
 import torch.nn as nn
+
+from torchmetrics import MeanAbsoluteError,  MeanSquaredError
+
 from deep_time_series import (
-    BaseHead, Head, DistributionHead
+    BaseHead, Head, DistributionHead, MetricModule
 )
 
 
@@ -50,12 +57,75 @@ def test_base_head_loss_weight_assignment():
         head.loss_weight = -3
 
 
+def test_metric_module():
+    metric_module = MetricModule(
+        tag='my_tag',
+        metrics=[
+            MeanAbsoluteError(),
+            MeanSquaredError(),
+        ]
+    )
+
+    assert metric_module.head_tag == 'head.my_tag'
+    assert metric_module.label_tag == 'label.my_tag'
+
+    outputs = {
+        'head.my_tag': torch.zeros(size=(10, 5))
+    }
+
+    batch = {
+        'label.my_tag': 2*torch.ones(size=(10, 5))
+    }
+
+    metric_module.update(outputs=outputs, batch=batch, stage='train')
+    metrics = metric_module.compute(stage='train')
+
+    assert torch.allclose(
+        metrics['train/my_tag.MeanAbsoluteError'], torch.FloatTensor([2.0]))
+
+    assert torch.allclose(
+        metrics['train/my_tag.MeanSquaredError'], torch.FloatTensor([4.0]))
+
+    metric_module.reset(stage='val')
+    metrics = metric_module.compute(stage='val')
+
+    assert torch.all(torch.isnan(metrics['val/my_tag.MeanAbsoluteError']))
+    assert torch.all(torch.isnan(metrics['val/my_tag.MeanSquaredError']))
+
+    metric_module.reset(stage='test')
+    metrics = metric_module.compute(stage='test')
+
+    assert torch.all(torch.isnan(metrics['test/my_tag.MeanAbsoluteError']))
+    assert torch.all(torch.isnan(metrics['test/my_tag.MeanSquaredError']))
+
+    metric_module.reset(stage='train')
+    metrics = metric_module.compute(stage='train')
+
+    assert torch.all(torch.isnan(metrics['train/my_tag.MeanAbsoluteError']))
+    assert torch.all(torch.isnan(metrics['train/my_tag.MeanSquaredError']))
+
+    head = BaseHead()
+    head.tag = 'my_tag'
+
+    assert not head.has_metrics
+
+    head.metrics = [
+        MeanAbsoluteError(),
+        MeanSquaredError(),
+    ]
+
+    assert head.has_metrics
+
+    logger.info(head.metrics(outputs, batch, stage='train'))
+
+
 def test_head():
     head = Head(
         tag='my_tag',
         output_module=nn.Linear(5, 3),
         loss_fn=nn.MSELoss(),
         loss_weight=0.3,
+        metrics=[MeanAbsoluteError(), MeanSquaredError()]
     )
 
     assert head.tag == 'head.my_tag'
@@ -100,6 +170,11 @@ def test_head():
 
     assert torch.allclose(loss, (outputs['head.my_tag']**2).mean())
 
+    head.metrics.update(outputs, batch, stage='train')
+    metrics = head.metrics.compute(stage='train')
+
+    logger.info(metrics)
+
 
 def test_distribution_head():
     head = DistributionHead(
@@ -108,6 +183,7 @@ def test_distribution_head():
         in_features=5,
         out_features=3,
         loss_weight=0.3,
+        metrics=[MeanAbsoluteError(), MeanSquaredError()],
     )
 
     assert head.tag == 'head.my_tag'
@@ -141,7 +217,7 @@ def test_distribution_head():
         torch.distributions.NegativeBinomial,
         torch.distributions.Normal,
         torch.distributions.OneHotCategorical,
-        torch.distributions.Pareto,
+        # torch.distributions.Pareto,
         torch.distributions.Poisson,
         torch.distributions.StudentT,
         # torch.distributions.Uniform,
@@ -188,6 +264,7 @@ def test_distribution_head():
             in_features=5,
             out_features=3,
             loss_weight=0.3,
+            metrics=[MeanAbsoluteError(), MeanSquaredError()],
         )
 
         for i in range(10):
@@ -246,3 +323,8 @@ def test_distribution_head():
             loss = head.calculate_loss(outputs, batch)
 
             logger.info(f'{loss = }')
+
+        head.metrics.update(outputs, batch, stage='train')
+        metrics = head.metrics.compute(stage='train')
+
+        logger.info(metrics)

@@ -1,5 +1,6 @@
 from .core import (
     ForecastingModule,
+    MetricModule,
     BaseHead,
     Head,
     DistributionHead,
