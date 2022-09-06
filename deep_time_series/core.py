@@ -146,7 +146,7 @@ class BaseHead(nn.Module):
 
     def reset_outputs(self):
         raise NotImplementedError(
-            f'Define {self.__class__.__name__}.get_outputs()'
+            f'Define {self.__class__.__name__}.reset_outputs()'
         )
 
     def calculate_loss(
