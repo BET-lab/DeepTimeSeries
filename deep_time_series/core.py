@@ -397,6 +397,24 @@ class ForecastingModule(pl.LightningModule):
             f'Define {self.__class__.__name__}.decode()'
         )
 
+    def decode(self, inputs):
+        if self.training:
+            return self.decode_train(inputs)
+        else:
+            return self.decode_eval(inputs)
+
+    def forward(self, inputs: dict[str, Any]) -> dict[str, Any]:
+        encoder_outputs = self.encode(inputs)
+        decoder_inputs = merge_dicts(
+            [inputs, encoder_outputs]
+        )
+        outputs = self.decode(decoder_inputs)
+
+        return outputs
+
+    def make_chunk_specs(self):
+        pass
+
     def calculate_loss(
         self,
         outputs: dict[str, Any],
@@ -418,7 +436,10 @@ class ForecastingModule(pl.LightningModule):
         for head in self.heads:
             if not head.has_metrics:
                 continue
+            # It's a dictionary's update method.
+            # Don't confuse with update of TorchMetric.
             metrics.update(
+                # __call__ of TorchMetric.
                 head.metrics(outputs=outputs, batch=batch, stage=stage)
             )
 
@@ -457,22 +478,19 @@ class ForecastingModule(pl.LightningModule):
         outputs = self(batch)
         loss = self.calculate_loss(outputs, batch)
 
-        step_outputs = merge_dicts([
-            {'loss': loss}, outputs, batch,
-        ])
-
-        return step_outputs
-
-    def training_step_end(self, step_outputs):
+        # Update and evaluate metric.
         metrics = self.forward_metrics(
-            step_outputs, step_outputs, stage='train'
+            outputs, batch, stage='train'
         )
-        self.log('train/loss', step_outputs['loss'])
+
+        self.log('train/loss', loss)
+        # Log instant metrics.
         self.log_dict(metrics)
+
+        return loss
 
     def training_epoch_end(self, epoch_outputs) -> None:
-        metrics = self.compute_metrics(stage='train')
-        self.log_dict(metrics)
+        # Don't log epoch averaged metrics. Just reset the states.
         self.reset_metrics(stage='train')
 
     def validation_step(
@@ -480,15 +498,15 @@ class ForecastingModule(pl.LightningModule):
         batch: dict[str, Any], batch_idx: int
     ) -> dict[str, Any]:
         outputs = self(batch)
+        loss = self.calculate_loss(outputs, batch)
 
-        step_outputs = merge_dicts([outputs, batch])
-
-        return step_outputs
-
-    def validation_step_end(self, step_outputs):
+        # Don't log metrics yet.
         self.update_metrics(
-            step_outputs, step_outputs, stage='val'
+            outputs, batch, stage='val'
         )
+
+        # loss will be epoch averaged.
+        self.log('val/loss', loss)
 
     def validation_epoch_end(self, epoch_outputs) -> None:
         metrics = self.compute_metrics(stage='val')
@@ -499,22 +517,15 @@ class ForecastingModule(pl.LightningModule):
         outputs = self(batch)
         loss = self.calculate_loss(outputs, batch)
 
-        self.log('loss/test', loss)
-
-    def decode(self, inputs):
-        if self.training:
-            return self.decode_train(inputs)
-        else:
-            return self.decode_eval(inputs)
-
-    def forward(self, inputs: dict[str, Any]) -> dict[str, Any]:
-        encoder_outputs = self.encode(inputs)
-        decoder_inputs = merge_dicts(
-            [inputs, encoder_outputs]
+        # Don't log metrics yet.
+        self.update_metrics(
+            outputs, batch, stage='test'
         )
-        outputs = self.decode(decoder_inputs)
 
-        return outputs
+        # loss will be epoch averaged.
+        self.log('test/loss', loss)
 
-    def make_chunk_specs(self):
-        pass
+    def test_epoch_end(self, epoch_outputs) -> None:
+        metrics = self.compute_metrics(stage='test')
+        self.log_dict(metrics)
+        self.reset_metrics(stage='test')
