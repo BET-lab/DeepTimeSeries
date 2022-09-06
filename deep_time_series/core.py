@@ -495,8 +495,10 @@ class ForecastingModule(pl.LightningModule):
 
     def validation_step(
         self,
-        batch: dict[str, Any], batch_idx: int
-    ) -> dict[str, Any]:
+        batch: dict[str, Any],
+        batch_idx: int,
+        dataloader_idx: int = 0,
+    ):
         outputs = self(batch)
         loss = self.calculate_loss(outputs, batch)
 
@@ -513,7 +515,12 @@ class ForecastingModule(pl.LightningModule):
         self.log_dict(metrics)
         self.reset_metrics(stage='val')
 
-    def test_step(self, batch, batch_idx):
+    def test_step(
+        self,
+        batch: dict[str, Any],
+        batch_idx: int,
+        dataloader_idx: int = 0,
+    ):
         outputs = self(batch)
         loss = self.calculate_loss(outputs, batch)
 
