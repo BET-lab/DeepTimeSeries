@@ -261,10 +261,10 @@ class DistributionHead(BaseHead):
         self._outputs = defaultdict(list)
 
     def calculate_loss(
-            self,
-            outputs,
-            batch
-        ) -> torch.Tensor:
+        self,
+        outputs,
+        batch
+    ) -> torch.Tensor:
         kwargs = {
             k: outputs[f'{self.tag}.{k}']
             for k in self.linears.keys()
