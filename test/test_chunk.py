@@ -1,7 +1,7 @@
 import sys
 from typing import Type
 
-from deep_time_series.data.chunk import (
+from deep_time_series.chunk import (
     EncodingChunkSpec,
     DecodingChunkSpec,
     LabelChunkSpec,
@@ -17,7 +17,7 @@ logger = logging.getLogger('test')
 import numpy as np
 import pandas as pd
 
-from deep_time_series.data import BaseChunkSpec
+from deep_time_series import BaseChunkSpec
 
 
 def test_chunk_spec():

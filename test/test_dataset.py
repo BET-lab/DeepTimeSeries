@@ -1,7 +1,7 @@
 import sys
 from typing import Type
 
-from deep_time_series.data.dataset import (
+from deep_time_series.dataset import (
     _merge_data_frames,
     TimeSeriesDataset,
 )

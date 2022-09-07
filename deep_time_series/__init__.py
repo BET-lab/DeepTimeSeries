@@ -6,7 +6,7 @@ from .core import (
     DistributionHead,
 )
 
-from .data.chunk import (
+from .chunk import (
     BaseChunkSpec,
     EncodingChunkSpec,
     DecodingChunkSpec,
@@ -14,10 +14,10 @@ from .data.chunk import (
     ChunkExtractor,
 )
 
-from .data.dataset import (
+from .dataset import (
     TimeSeriesDataset,
 )
 
-from .data.transform import (
+from .transform import (
     ColumnTransformer,
 )
