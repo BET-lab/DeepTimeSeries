@@ -5,7 +5,7 @@ import torch.nn as nn
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 
 from ..core import ForecastingModule
-from ..data import (
+from ..chunk import (
     EncodingChunkSpec,
     DecodingChunkSpec,
     LabelChunkSpec,
