@@ -144,9 +144,9 @@ class BaseHead(nn.Module):
             f'Define {self.__class__.__name__}.get_outputs()'
         )
 
-    def reset_outputs(self):
+    def reset(self):
         raise NotImplementedError(
-            f'Define {self.__class__.__name__}.reset_outputs()'
+            f'Define {self.__class__.__name__}.reset()'
         )
 
     def calculate_loss(
@@ -190,7 +190,7 @@ class Head(BaseHead):
             self.tag: torch.cat(self._ys, dim=1)
         }
 
-    def reset_outputs(self):
+    def reset(self):
         self._ys = []
 
     def calculate_loss(
@@ -257,7 +257,7 @@ class DistributionHead(BaseHead):
 
         return outputs
 
-    def reset_outputs(self):
+    def reset(self):
         self._outputs = defaultdict(list)
 
     def calculate_loss(

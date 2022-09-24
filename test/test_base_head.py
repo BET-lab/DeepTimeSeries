@@ -143,7 +143,7 @@ def test_head():
 
     assert torch.allclose(outputs['head.my_tag'], y)
 
-    head.reset_outputs()
+    head.reset()
 
     for i in range(10):
         y = head(x)
@@ -152,7 +152,7 @@ def test_head():
 
     assert outputs['head.my_tag'].shape == torch.Size([2, 10, 3])
 
-    head.reset_outputs()
+    head.reset()
     with pytest.raises(RuntimeError):
         outputs = head.get_outputs()
 
@@ -160,7 +160,7 @@ def test_head():
         'label.my_tag': torch.zeros(size=(2, 10, 3))
     }
 
-    head.reset_outputs()
+    head.reset()
     for i in range(10):
         y = head(x)
 
