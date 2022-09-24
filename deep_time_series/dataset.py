@@ -102,19 +102,15 @@ class TimeSeriesDataset(Dataset):
     def __init__(self,
         data_frames: pd.DataFrame | list[pd.DataFrame],
         chunk_specs,
-        # column_transformer,
-        # fit_column_transformer=True,
         return_time_index=False,
     ):
         if isinstance(data_frames, pd.DataFrame):
             data_frames = [data_frames]
         self.data_frames = data_frames
-        # self.data_frames = _merge_data_frames(data_frames=data_frames)
+
         # Make chunk_specs from encoding, decoding and label specs.
         self.chunk_specs = chunk_specs
 
-        # self.column_transformer = column_transformer
-        # self.fit_column_transformer = fit_column_transformer
         self.return_time_index = return_time_index
 
         self._preprocess()
