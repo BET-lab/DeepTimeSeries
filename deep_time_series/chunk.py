@@ -147,7 +147,7 @@ class ChunkExtractor:
         self.chunk_max_t = max(spec.range[1] for spec in chunk_specs)
         self.chunk_length = self.chunk_max_t - self.chunk_min_t
 
-        self.time_index_values = df['__time_index'].values
+        self.time_index_values = np.arange(len(df))
 
         self._preprocess(df)
 

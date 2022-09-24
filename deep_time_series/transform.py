@@ -3,6 +3,15 @@ import numpy as np
 import pandas as pd
 
 
+def _merge_data_frames(
+    data_frames: pd.DataFrame | list[pd.DataFrame]
+) -> pd.DataFrame:
+    if isinstance(data_frames, pd.DataFrame):
+        data_frames = [data_frames]
+
+    return pd.concat(data_frames).reset_index(drop=True)
+
+
 class ColumnTransformer:
     def __init__(
         self,
@@ -43,11 +52,15 @@ class ColumnTransformer:
 
     def _get_valid_names(self, names):
         valid_name_set = set(self.transformer_dict.keys()) & set(names)
-        return [
-            name for name in names if name in valid_name_set
-        ]
+        # Do not use list(valid_name_set) to preserve order of elements.
+        return [name for name in names if name in valid_name_set]
 
-    def fit(self, df):
+    def fit(
+        self,
+        data_frames: pd.DataFrame | list[pd.DataFrame]
+    ) -> None:
+        df = _merge_data_frames(data_frames)
+
         for name in self._get_valid_names(df.columns):
             transformer = self.transformer_dict[name]
 
@@ -55,38 +68,63 @@ class ColumnTransformer:
                 df[name], transformer.fit
             )
 
-    def transform(self, df):
-        data = {}
-        for name in self._get_valid_names(df.columns):
-            transformer = self.transformer_dict[name]
+    def transform(
+        self,
+        data_frames: pd.DataFrame | list[pd.DataFrame]
+    ) -> pd.DataFrame | list[pd.DataFrame]:
+        single_df = isinstance(data_frames, pd.DataFrame)
 
-            data[name] = self._apply_to_single_feature(
-                df[name], transformer.transform
-            )
+        if single_df:
+            data_frames = [data_frames]
 
-        self._append_index_and_id(data, df)
-        return pd.DataFrame(data=data, index=df.index)
+        dfs = []
+        for df in data_frames:
+            data = {}
+            for name in self._get_valid_names(df.columns):
+                transformer = self.transformer_dict[name]
 
-    def fit_transform(self, df):
-        data = {}
-        for name in self._get_valid_names(df.columns):
-            transformer = self.transformer_dict[name]
+                data[name] = self._apply_to_single_feature(
+                    df[name], transformer.transform
+                )
 
-            data[name] = self._apply_to_single_feature(
-                df[name], transformer.fit_transform
-            )
+            # self._append_index_and_id(data, df)
+            dfs.append(pd.DataFrame(data=data, index=df.index))
 
-        self._append_index_and_id(data, df)
-        return pd.DataFrame(data=data, index=df.index)
+        if single_df:
+            return dfs[0]
+        else:
+            return dfs
 
-    def inverse_transform(self, df):
-        data = {}
-        for name in self._get_valid_names(df.columns):
-            transformer = self.transformer_dict[name]
+    def fit_transform(
+        self,
+        data_frames: pd.DataFrame | list[pd.DataFrame]
+    ) -> pd.DataFrame | list[pd.DataFrame]:
+        self.fit(data_frames)
+        return self.transform(data_frames)
 
-            data[name] = self._apply_to_single_feature(
-                df[name], transformer.inverse_transform
-            )
+    def inverse_transform(
+        self,
+        data_frames: pd.DataFrame | list[pd.DataFrame]
+    ) -> pd.DataFrame | list[pd.DataFrame]:
+        single_df = isinstance(data_frames, pd.DataFrame)
 
-        self._append_index_and_id(data, df)
-        return pd.DataFrame(data=data, index=df.index)
+        if single_df:
+            data_frames = [data_frames]
+
+        dfs = []
+        for df in data_frames:
+            data = {}
+            for name in self._get_valid_names(df.columns):
+                transformer = self.transformer_dict[name]
+
+                data[name] = self._apply_to_single_feature(
+                    df[name], transformer.inverse_transform
+                )
+
+            # self._append_index_and_id(data, df)
+            dfs.append(pd.DataFrame(data=data, index=df.index))
+
+        if single_df:
+            return dfs[0]
+        else:
+            return dfs
