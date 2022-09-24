@@ -1,74 +1,132 @@
+from collections import defaultdict
+
 import numpy as np
 import pandas as pd
 
+import torch
 from torch.utils.data import Dataset
 
-from .chunk import ChunkExtractor
+from deep_time_series.transform import ColumnTransformer
+
+from .chunk import BaseChunkSpec, ChunkExtractor
 from .plotting import plot_chunks
 
 
-def _merge_data_frames(
-    data_frames: pd.DataFrame | list[pd.DataFrame]
-):
-    if isinstance(data_frames, pd.DataFrame):
-        data_frames = [data_frames]
+class Rescaler:
+    def __init__(
+        self,
+        chunk_specs: BaseChunkSpec,
+        column_transformer: ColumnTransformer,
+    ):
+        self.tag_to_names = {
+            chunk_spec.tag.split('.')[1]: chunk_spec.names
+            for chunk_spec in chunk_specs
+        }
+        self.column_transformer = column_transformer
 
-    data_frames = [df.copy() for df in data_frames]
+    def __call__(
+        self,
+        data: dict[str, torch.Tensor],
+        sample_index_name='sample_index',
+        time_index_name='time_index',
+        neglect_suffix=False,
+    ):
+        outputs = {}
+        for k, v in data.items():
+            if isinstance(v, torch.Tensor):
+                v = v.cpu().numpy()
 
-    for i, df in enumerate(data_frames):
-        if '__time_index' in df.columns:
-            raise ValueError(
-                f'"__time_index" column exists in data_frames[{i}]'
+            tokens = k.split('.')
+            # Neglect items with suffix.
+            if len(tokens) != 2 and (not neglect_suffix):
+                continue
+
+            # Extract core tag.
+            tag = tokens[1]
+
+            # Neglect unexpected tags.
+            if tag not in self.tag_to_names:
+                continue
+
+            names = self.tag_to_names[tag]
+
+            dfs = []
+            for i, y in enumerate(v):
+                df = pd.DataFrame(data={
+                    name: values for name, values in zip(names, y.T)
+                })
+                df = self.column_transformer.inverse_transform(df)
+
+                df[sample_index_name] = i
+                df[time_index_name] = np.arange(len(df))
+                dfs.append(df)
+
+            df = pd.concat(dfs)
+            df = df.set_index([sample_index_name, time_index_name])
+
+            outputs[k] = df
+
+        return outputs
+
+    def rescale_batches(
+        self,
+        data_list: list[dict[str, torch.Tensor]],
+        batch_index_name='batch_index',
+        sample_index_name='sample_index',
+        time_index_name='time_index',
+        neglect_suffix=False,
+    ):
+        batch_outputs = defaultdict(list)
+        for i, data in enumerate(data_list):
+            outputs = self(
+                data=data,
+                sample_index_name=sample_index_name,
+                time_index_name=time_index_name,
+                neglect_suffix=neglect_suffix
             )
 
-        if '__time_series_id' in df.columns:
-            raise ValueError(
-                f'"__time_series_id" column exists in data_frames[{i}]'
+            for k, v in outputs.items():
+                v['batch_index'] = i
+                batch_outputs[k].append(v)
+
+        for k, v in batch_outputs.items():
+            batch_outputs[k] = pd.concat(v).reset_index().set_index(
+                [batch_index_name, sample_index_name, time_index_name]
             )
 
-        df['__time_index'] = np.arange(len(df.index))
-        df['__time_series_id'] = i
+        return dict(batch_outputs)
 
-    return pd.concat(data_frames).reset_index(drop=True)
 
 
 class TimeSeriesDataset(Dataset):
     def __init__(self,
         data_frames: pd.DataFrame | list[pd.DataFrame],
         chunk_specs,
-        column_transformer,
-        fit_column_transformer=True,
+        # column_transformer,
+        # fit_column_transformer=True,
         return_time_index=False,
     ):
-        self.data_frames = _merge_data_frames(data_frames=data_frames)
+        if isinstance(data_frames, pd.DataFrame):
+            data_frames = [data_frames]
+        self.data_frames = data_frames
+        # self.data_frames = _merge_data_frames(data_frames=data_frames)
         # Make chunk_specs from encoding, decoding and label specs.
         self.chunk_specs = chunk_specs
 
-        self.column_transformer = column_transformer
-        self.fit_column_transformer = fit_column_transformer
+        # self.column_transformer = column_transformer
+        # self.fit_column_transformer = fit_column_transformer
         self.return_time_index = return_time_index
 
         self._preprocess()
 
     def _preprocess(self):
-        self.data_frames.sort_values(by='__time_index', inplace=True)
-
-        if self.fit_column_transformer:
-            self.column_transformer.fit(self.data_frames)
-
-        self.scaled_df = self.column_transformer.transform(self.data_frames)
-
-        splitted_dfs = [
-            df for _, df in self.scaled_df.groupby('__time_series_id')
-        ]
-
         self.chunk_extractors = [
-            ChunkExtractor(df, self.chunk_specs) for df in splitted_dfs
+            ChunkExtractor(df, self.chunk_specs) for df in self.data_frames
         ]
 
         self.lengths = [
             len(df) - self.chunk_extractors[0].chunk_length + 1
-            for df in splitted_dfs
+            for df in self.data_frames
         ]
 
         self.min_start_time_index = \

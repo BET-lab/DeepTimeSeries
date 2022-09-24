@@ -2,7 +2,6 @@ import sys
 from typing import Type
 
 from deep_time_series.dataset import (
-    _merge_data_frames,
     TimeSeriesDataset,
 )
 
@@ -33,10 +32,7 @@ def test_dataset():
         }
     )
 
-    merged_df = _merge_data_frames(df)
-
-    assert '__time_index' in merged_df.columns
-    assert '__time_series_id' in merged_df.columns
+    logger.debug(df)
 
     spec = EncodingChunkSpec(
         tag='my_tag',
@@ -57,15 +53,21 @@ def test_dataset():
         ]
     )
 
+    df = column_transformer.fit_transform(df)
+    logger.debug(df)
+
     dataset = TimeSeriesDataset(
         data_frames=df,
         chunk_specs=[spec],
-        column_transformer=column_transformer,
     )
 
     assert np.allclose(dataset[0]['encoding.my_tag'], df.values[:4])
 
-    assert len(dataset) == 17
+    logger.debug(f'{len(df)} = len(df)')
+    logger.debug(dataset.chunk_extractors[0].chunk_length)
+    logger.debug(dataset.lengths)
+
+    assert len(dataset) == 20 - 4 + 1
 
     specs = [
         EncodingChunkSpec(
@@ -94,11 +96,16 @@ def test_dataset():
         ]
     )
 
+    df = column_transformer.fit_transform(df)
+
     dataset = TimeSeriesDataset(
         data_frames=df,
         chunk_specs=specs,
-        column_transformer=column_transformer,
     )
+
+    logger.debug(f'{len(df)} = len(df)')
+    logger.debug(dataset.chunk_extractors[0].chunk_length)
+    logger.debug(dataset.lengths)
 
     assert len(dataset) == 16
 
@@ -108,7 +115,6 @@ def test_dataset():
     dataset = TimeSeriesDataset(
         data_frames=df,
         chunk_specs=specs,
-        column_transformer=column_transformer,
         return_time_index=True,
     )
 
@@ -136,7 +142,6 @@ def test_dataset():
         dataset = TimeSeriesDataset(
             data_frames=df,
             chunk_specs=specs,
-            column_transformer=column_transformer,
         )
 
     logger.info(str(e.value))
