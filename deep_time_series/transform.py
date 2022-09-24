@@ -45,11 +45,6 @@ class ColumnTransformer:
         else:
             return return_value
 
-    def _append_index_and_id(self, data, df):
-        for name in ['__time_index', '__time_series_id']:
-            if name in df.columns:
-                data[name] = df[name]
-
     def _get_valid_names(self, names):
         valid_name_set = set(self.transformer_dict.keys()) & set(names)
         # Do not use list(valid_name_set) to preserve order of elements.
@@ -87,7 +82,6 @@ class ColumnTransformer:
                     df[name], transformer.transform
                 )
 
-            # self._append_index_and_id(data, df)
             dfs.append(pd.DataFrame(data=data, index=df.index))
 
         if single_df:
@@ -96,15 +90,13 @@ class ColumnTransformer:
             return dfs
 
     def fit_transform(
-        self,
-        data_frames: pd.DataFrame | list[pd.DataFrame]
+        self, data_frames: pd.DataFrame | list[pd.DataFrame]
     ) -> pd.DataFrame | list[pd.DataFrame]:
         self.fit(data_frames)
         return self.transform(data_frames)
 
     def inverse_transform(
-        self,
-        data_frames: pd.DataFrame | list[pd.DataFrame]
+        self, data_frames: pd.DataFrame | list[pd.DataFrame]
     ) -> pd.DataFrame | list[pd.DataFrame]:
         single_df = isinstance(data_frames, pd.DataFrame)
 
@@ -121,7 +113,6 @@ class ColumnTransformer:
                     df[name], transformer.inverse_transform
                 )
 
-            # self._append_index_and_id(data, df)
             dfs.append(pd.DataFrame(data=data, index=df.index))
 
         if single_df:
