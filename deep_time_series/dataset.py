@@ -15,11 +15,9 @@ class TimeSeriesDataset(Dataset):
     ):
         if isinstance(data_frames, pd.DataFrame):
             data_frames = [data_frames]
+
         self.data_frames = data_frames
-
-        # Make chunk_specs from encoding, decoding and label specs.
         self.chunk_specs = chunk_specs
-
         self.return_time_index = return_time_index
 
         self._preprocess()
