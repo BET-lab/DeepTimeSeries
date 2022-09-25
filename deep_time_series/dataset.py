@@ -53,22 +53,5 @@ class TimeSeriesDataset(Dataset):
 
         return chunk_dict
 
-    def convert_item_to_df(self, item):
-        tag_to_names_dict = {
-            spec.tag: spec.names
-            for spec in self.chunk_specs
-        }
-        output = {}
-        for tag, values in item.items():
-            data = {}
-            names = tag_to_names_dict[tag]
-            for name, series in zip(names, values.T):
-                data[name] = series
-            df = pd.DataFrame(data=data)
-            df = self.column_transformer.inverse_transform(df)
-            output[tag] = df
-
-        return output
-
     def plot_chunks(self):
         plot_chunks(self.chunk_specs)
