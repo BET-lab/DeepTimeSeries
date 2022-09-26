@@ -11,7 +11,7 @@ class TimeSeriesDataset(Dataset):
     def __init__(self,
         data_frames: pd.DataFrame | list[pd.DataFrame],
         chunk_specs: list[BaseChunkSpec],
-        return_time_index: bool = False,
+        return_time_index: bool = True,
     ):
         if isinstance(data_frames, pd.DataFrame):
             data_frames = [data_frames]
