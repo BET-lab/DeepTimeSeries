@@ -1,5 +1,9 @@
-import numpy as np
+from typing import Type
 
+import numpy as np
+import xarray as xr
+
+import torch
 
 class BaseChunkSpec:
     PREFIX = ''
@@ -185,3 +189,70 @@ class ChunkExtractor:
                 chunk_dict[f'{spec.tag}.time_index'] = times[slice(*range_)]
 
         return chunk_dict
+
+
+class ChunkInverter:
+    def __init__(self, chunk_specs: list[BaseChunkSpec]):
+        """Class to convert tensor to DataFrame."""
+        self.chunk_specs = chunk_specs
+
+        # Core tag to names dict.
+        self.core_tag_dict = {}
+        for spec in chunk_specs:
+            core_tag = spec.tag.split('.')[1]
+
+            if core_tag not in self.core_tag_dict:
+                self.core_tag_dict[core_tag] = spec.names
+            else:
+                a = np.array(self.core_tag_dict[core_tag])
+                b = np.array(spec.names)
+                assert np.all(a ==  b)
+
+        self.tag_dict = {spec.tag: spec.names for spec in chunk_specs}
+
+    def _convert_to_numpy(self, tensor: torch.Tensor | np.ndarray):
+        if isinstance(tensor, np.ndarray):
+            return tensor
+        elif isinstance(tensor, torch.Tensor):
+            return tensor.cpu().numpy()
+        else:
+            raise TypeError(f'Invalid type for tensor {type(tensor)}')
+
+    def _infer_shape(self, tensor: np.ndarray):
+        pass
+
+    def invert(self, tag: str, tensor: torch.Tensor | np.ndarray):
+        if tag in self.tag_dict:
+            names = self.tag_dict[tag]
+        elif tag in self.core_tag_dict:
+            names = self.core_tag_dict[tag]
+        elif tag.split('.')[1] in self.core_tag_dict:
+            names = self.core_tag_dict[tag.split('.')[1]]
+        else:
+            raise ValueError(f'"{tag}" not in chunk_specs.')
+
+        data = self._convert_to_numpy(tensor)
+
+        da = xr.DataArray(
+            data=data,
+            dims=('batch_index', 'time_index', 'feature'),
+            name='',
+        )
+
+        # TODO: support for multi-dimensional features (like video).
+
+        df = da.to_dataframe().unstack(2)
+        df.columns = names
+
+        return df
+
+    def invert_dict(
+        self,
+        data: dict[str, torch.Tensor | np.ndarray],
+    ):
+        outputs = {}
+        for tag, tensor in data.items():
+            print(tag)
+            outputs[tag] = self.invert(tag, tensor)
+
+        return outputs

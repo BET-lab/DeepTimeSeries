@@ -2,6 +2,7 @@ import sys
 from typing import Type
 
 from deep_time_series.chunk import (
+    ChunkInverter,
     EncodingChunkSpec,
     DecodingChunkSpec,
     LabelChunkSpec,
@@ -16,6 +17,8 @@ logger = logging.getLogger('test')
 
 import numpy as np
 import pandas as pd
+
+import torch
 
 from deep_time_series import BaseChunkSpec
 
@@ -130,3 +133,51 @@ def test_chunk_extractor():
         chunk_extractor = ChunkExtractor(df, [chunk_spec] * 2)
 
     logger.info(str(e.value))
+
+
+def test_chunk_inverter():
+    chunk_spec = EncodingChunkSpec(
+        tag='my_tag',
+        names=['a', 'b'],
+        range_=(2, 10),
+        dtype=np.float32
+    )
+
+    chunk_specs = [chunk_spec]
+
+    ci = ChunkInverter(chunk_specs=chunk_specs)
+
+
+    assert isinstance(
+        ci._convert_to_numpy(np.array([1, 2])), np.ndarray
+    )
+
+    value = torch.FloatTensor([1.0, 2.0])
+    logger.debug(type(value))
+
+    assert isinstance(
+        ci._convert_to_numpy(value), np.ndarray
+    )
+
+    # Only 2 features.
+    data = {
+        'my_tag': torch.rand(size=(3, 7, 2)),
+        'head.my_tag': torch.rand(size=(3, 7, 2)),
+        'label.my_tag': torch.rand(size=(3, 7, 2)),
+    }
+
+    # names of 'encoding.my_tag' used as the core tag is 'my_tag'.
+    df = ci.invert('my_tag', data['my_tag'])
+    # names of 'encoding.my_tag' used as the core tag is 'my_tag'.
+    df = ci.invert('head.my_tag', data['my_tag'])
+    # names of 'encoding.my_tag' used as the core tag is 'my_tag'.
+    df = ci.invert('label.my_tag', data['my_tag'])
+
+    # names of 'encoding.my_tag' used as the tag is 'encoding.my_tag'.
+    # Exact matching is occured here only.
+    df = ci.invert('label.my_tag', data['my_tag'])
+
+    # Suffixes also ignored.
+    df = ci.invert('label.my_tag.loc', data['my_tag'])
+
+    dfs = ci.invert_dict(data)
