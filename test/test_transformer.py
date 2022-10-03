@@ -3,7 +3,6 @@ from typing import Type
 
 from deep_time_series.transform import (
     _merge_data_frames,
-    _split_data_frames,
     ColumnTransformer
 )
 
@@ -36,11 +35,6 @@ def test_transform():
 
     assert len(dfs) == 20
     logger.debug(dfs.columns)
-
-    dfs = _split_data_frames(dfs)
-
-    assert len(dfs) == 2
-    logger.debug(len(dfs))
 
     transform = ColumnTransformer(
         transformer_tuples=[
