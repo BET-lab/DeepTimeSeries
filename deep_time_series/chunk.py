@@ -5,6 +5,7 @@ import xarray as xr
 
 import torch
 
+
 class BaseChunkSpec:
     PREFIX = ''
 
