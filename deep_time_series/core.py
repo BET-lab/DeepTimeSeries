@@ -12,7 +12,11 @@ from .util import merge_dicts
 
 
 class MetricModule(nn.Module):
-    def __init__(self, tag: str, metrics):
+    def __init__(
+        self,
+        tag: str,
+        metrics: Metric | list[Metric] | dict[str, Metric]
+    ):
         super().__init__()
 
         self.tag = tag
@@ -26,31 +30,31 @@ class MetricModule(nn.Module):
 
         metrics = MetricCollection(metrics)
 
-        self.__metric_dict = nn.ModuleDict({
+        self._metric_dict = nn.ModuleDict({
             '_train': metrics.clone(prefix=f'train/{tag}.'),
             '_val': metrics.clone(prefix=f'val/{tag}.'),
             '_test': metrics.clone(prefix=f'test/{tag}.')
         })
 
     def forward(self, outputs, batch, stage):
-        return self.__metric_dict[f'_{stage}'](
+        return self._metric_dict[f'_{stage}'](
             outputs[self.head_tag], batch[self.label_tag]
         )
 
     def compute(self, stage):
-        return self.__metric_dict[f'_{stage}'].compute()
+        return self._metric_dict[f'_{stage}'].compute()
 
     def update(self, outputs, batch, stage):
-        self.__metric_dict[f'_{stage}'].update(
+        self._metric_dict[f'_{stage}'].update(
             outputs[self.head_tag], batch[self.label_tag]
         )
 
     def reset(self, stage):
-        self.__metric_dict[f'_{stage}'].reset()
+        self._metric_dict[f'_{stage}'].reset()
 
 
 class BaseHead(nn.Module):
-    SPECIAL_ATTRIBUTES = (
+    _SPECIAL_ATTRIBUTES = (
         'tag',
         'loss_weight',
         'metrics'
@@ -59,12 +63,12 @@ class BaseHead(nn.Module):
     def __init__(self):
         """Base class of all Head classes."""
         super().__init__()
-        self.__tag = None
-        self.__loss_weight = None
-        self.__metrics = None
+        self._tag = None
+        self._loss_weight = None
+        self._metrics = None
 
     def __setattr__(self, name, value):
-        if name in BaseHead.SPECIAL_ATTRIBUTES:
+        if name in BaseHead._SPECIAL_ATTRIBUTES:
             return object.__setattr__(self, name, value)
         else:
             return super().__setattr__(name, value)
@@ -72,12 +76,12 @@ class BaseHead(nn.Module):
     @property
     def tag(self) -> str:
         """Tag for a head. Prefix 'head.' is added automatically."""
-        if self.__tag is None:
+        if self._tag is None:
             raise NotImplementedError(
                 f'Define {self.__class__.__name__}.tag'
             )
         else:
-            return self.__tag
+            return self._tag
 
     @tag.setter
     def tag(self, value: str):
@@ -89,32 +93,32 @@ class BaseHead(nn.Module):
         if not value.startswith('head.'):
             value = f'head.{value}'
 
-        self.__tag = value
+        self._tag = value
 
     @property
     def metrics(self) -> MetricModule:
-        if self.__metrics is None:
+        if self._metrics is None:
             raise NotImplementedError(
                 f'Define {self.__class__.__name__}.metrics'
             )
         else:
-            return self.__metrics
+            return self._metrics
 
     @metrics.setter
     def metrics(self, value: Metric | list[Metric] | dict[str, Metric]):
         metric_module = MetricModule(tag=self.tag, metrics=value)
-        self.__metrics = metric_module
+        self._metrics = metric_module
 
     @property
     def has_metrics(self):
-        return self.__metrics is not None
+        return self._metrics is not None
 
     @property
     def loss_weight(self) -> float:
         """Loss weight for loss calculations."""
-        if self.__loss_weight is None:
-            self.__loss_weight = 1.0
-        return self.__loss_weight
+        if self._loss_weight is None:
+            self._loss_weight = 1.0
+        return self._loss_weight
 
     @loss_weight.setter
     def loss_weight(self, value: float):
@@ -125,7 +129,7 @@ class BaseHead(nn.Module):
         elif value < 0:
             raise ValueError('loss_weight < 0')
 
-        self.__loss_weight = value
+        self._loss_weight = value
 
     @property
     def label_tag(self) -> str:
@@ -276,7 +280,7 @@ class DistributionHead(BaseHead):
 
 
 class ForecastingModule(pl.LightningModule):
-    SPECIAL_ATTRIBUTES = (
+    _SPECIAL_ATTRIBUTES = (
         'encoding_length',
         'decoding_length',
         'head',
@@ -288,13 +292,13 @@ class ForecastingModule(pl.LightningModule):
         """
         super().__init__()
 
-        self.__encoding_length = None
-        self.__decoding_length = None
+        self._encoding_length = None
+        self._decoding_length = None
 
-        self.__heads = None
+        self._heads = None
 
     def __setattr__(self, name, value):
-        if name in ForecastingModule.SPECIAL_ATTRIBUTES:
+        if name in ForecastingModule._SPECIAL_ATTRIBUTES:
             return object.__setattr__(self, name, value)
         else:
             return super().__setattr__(name, value)
@@ -302,12 +306,12 @@ class ForecastingModule(pl.LightningModule):
     @property
     def encoding_length(self) -> int:
         """Encoding length."""
-        if self.__encoding_length is None:
+        if self._encoding_length is None:
             raise NotImplementedError(
                 f'Define {self.__class__.__name__}.encoding_length'
             )
         else:
-            return self.__encoding_length
+            return self._encoding_length
 
     @encoding_length.setter
     def encoding_length(self, value: int):
@@ -319,16 +323,16 @@ class ForecastingModule(pl.LightningModule):
             raise ValueError(
                 'Encoding length <= 0.'
             )
-        self.__encoding_length = value
+        self._encoding_length = value
 
     @property
     def decoding_length(self) -> int:
-        if self.__decoding_length is None:
+        if self._decoding_length is None:
             raise NotImplementedError(
                 f'Define {self.__class__.__name__}.decoding_length'
             )
         else:
-            return self.__decoding_length
+            return self._decoding_length
 
     @decoding_length.setter
     def decoding_length(self, value: int):
@@ -340,16 +344,16 @@ class ForecastingModule(pl.LightningModule):
             raise ValueError(
                 'Decoding length <= 0.'
             )
-        self.__decoding_length = value
+        self._decoding_length = value
 
     @property
     def heads(self) -> list[BaseHead]:
-        if self.__heads is None:
+        if self._heads is None:
             raise NotImplementedError(
                 f'Define {self.__class__.__name__}.heads'
             )
         else:
-            return self.__heads
+            return self._heads
 
     @heads.setter
     def heads(self, heads: list[BaseHead]):
@@ -362,18 +366,18 @@ class ForecastingModule(pl.LightningModule):
                 f'Invalid type for "heads". {[type(v) for v in heads]}'
             )
 
-        self.__heads = nn.ModuleList(heads)
+        self._heads = nn.ModuleList(heads)
 
     @property
     def head(self) -> BaseHead:
-        if self.__heads is None:
+        if self._heads is None:
             raise NotImplementedError(
                 f'Define {self.__class__.__name__}.heads'
             )
-        elif len(self.__heads) != 1:
+        elif len(self._heads) != 1:
             raise Exception('Multi-head model cannot use head.')
         else:
-            return self.__heads[0]
+            return self._heads[0]
 
     @head.setter
     def head(self, head: BaseHead):
