@@ -1,86 +1,122 @@
 import numpy as np
 import torch
 import torch.nn as nn
-from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
+from torchmetrics import MeanSquaredError
 
-from ..core import ForecastingModule
+from ..core import (
+    ForecastingModule,
+    Head,
+)
+
 from ..chunk import (
     EncodingChunkSpec,
     DecodingChunkSpec,
     LabelChunkSpec,
 )
 
+from ..layer import (
+    Unsqueesze,
+)
+
+
 class MLP(ForecastingModule):
     def __init__(
         self,
-        n_features,
         hidden_size,
         encoding_length,
+        decoding_length,
+        target_names,
+        non_target_names,
         n_hidden_layers,
-        activation,
-        n_outputs,
-        dropout_rate,
-        lr,
-        loss_fn,
-        head=None,
+        activation=nn.ReLU,
+        dropout_rate=0.0,
+        lr=1e-3,
+        optimizer: torch.optim.Optimizer = torch.optim.Adam,
+        optimizer_options=None,
+        loss_fn=nn.MSELoss(),
+        metrics=MeanSquaredError(),
     ):
         super().__init__()
         self.save_hyperparameters()
 
-        size = hidden_size * encoding_length
+        if optimizer_options is None:
+            self.hparams.optimizer_options = {}
+
+        n_outputs = len(target_names)
+        n_features = len(non_target_names) + n_outputs
+
+        self.use_non_targets = n_outputs != n_features
+
+        self.encoding_length = encoding_length
+        self.decoding_length = decoding_length
+
         layers = [
-            nn.Linear(n_features*encoding_length, size), activation
+            nn.Flatten(),
+            nn.Linear(n_features*encoding_length, hidden_size),
+            activation()
         ]
         for i in range(n_hidden_layers):
             if dropout_rate > 1e-6:
                 layers.append(nn.Dropout(p=dropout_rate))
-            layers.append(nn.Linear(size, size))
-            layers.append(activation)
+            layers.append(nn.Linear(hidden_size, hidden_size))
+            layers.append(activation())
 
         if dropout_rate > 1e-6:
             layers.append(nn.Dropout(p=dropout_rate))
 
-        if head is None:
-            self.head = nn.Linear(size, n_outputs)
-        else:
-            self.head = head
+        layers.append(Unsqueesze(1))
+
+        self.head = Head(
+            tag='targets',
+            output_module=nn.Linear(hidden_size, n_outputs),
+            loss_fn=loss_fn,
+            metrics=MeanSquaredError(),
+        )
 
         self.body = nn.Sequential(*layers)
 
     def encode(self, inputs):
-       # (B, L, F).
-        x = torch.cat([
-            inputs['encoding.targets'],
-            inputs['encoding.covariates']
-        ], dim=2)
+        # (B, L, F).
+        if self.use_non_targets:
+            x = torch.cat([
+                inputs['encoding.targets'],
+                inputs['encoding.covariates']
+            ], dim=2)
+        else:
+            x = inputs['encoding.targets']
 
         return {'x': x}
 
-    def decode_eval(self, inputs):
+    def decode(self, inputs):
         # F = T + C.
         # (B, L, F)
         x = inputs['x']
 
         # (B, L, C).
-        c = inputs['decoding.covariates']
+        if self.use_non_targets:
+            c = inputs['decoding.covariates']
 
-        B = c.size(0)
-        L = c.size(1)
+        B = x.size(0)
+        L = x.size(1)
 
-        EL = self.hparams.encoding_length
+        EL = self.encoding_length
 
-        ys = []
-        for i in range(L):
+        for i in range(self.decoding_length):
             # (B, L*F)
-            x = x.view(B, -1)
+            # x = x.view(B, -1)
             # (B, 1, n_outputs).
             y = self.body(x)
-            y = y.unsqueeze(1)
+            # y = y.unsqueeze(1)
             y = self.head(y)
-            ys.append(y)
 
+            if i+1 == self.decoding_length:
+                break
             # (B, 1, F).
-            z = torch.cat([y, c[:, i:i+1, :]], dim=2)
+            if self.use_non_targets:
+                z = torch.cat([y, c[:, i:i+1, :]], dim=2)
+            else:
+                z = y
+            # z = y
             # (B, EL, F).
             x = x.view(B, EL, -1)
             # (B, L, F).
@@ -88,39 +124,51 @@ class MLP(ForecastingModule):
                 x[:, 1:, :], z
             ], dim=1)
 
-        y = torch.cat(ys, dim=1)
+        outputs = self.head.get_outputs()
+        self.head.reset()
 
-        return {
-            'label.targets': y,
-        }
+        return outputs
 
-    def make_chunk_specs(self, target_names, covariate_names):
+    def make_chunk_specs(self):
+        E = self.encoding_length
+        D = self.decoding_length
+
         chunk_specs = [
             EncodingChunkSpec(
                 tag='targets',
-                names=target_names,
+                names=self.hparams.target_names,
+                range_=(0, E),
                 dtype=np.float32
-            ),
-            EncodingChunkSpec(
-                tag='covariates',
-                names=covariate_names,
-                dtype=np.float32,
-                shift=1,
-            ),
-            DecodingChunkSpec(
-                tag='covariates',
-                names=covariate_names,
-                dtype=np.float32,
-                shift=1
             ),
             LabelChunkSpec(
                 tag='targets',
-                names=target_names,
+                names=self.hparams.target_names,
+                range_=(E, E+D),
                 dtype=np.float32,
             ),
         ]
 
+        if self.use_non_targets:
+            chunk_specs += [
+                EncodingChunkSpec(
+                    tag='covariates',
+                    names=self.hparams.non_target_names,
+                    range_=(1, E+1),
+                    dtype=np.float32,
+                ),
+                DecodingChunkSpec(
+                    tag='covariates',
+                    names=self.hparams.non_target_names,
+                    range_=(E+1, E+D),
+                    dtype=np.float32,
+                ),
+            ]
+
         return chunk_specs
 
     def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=self.hparams.lr)
+        return self.hparams.optimizer(
+            self.parameters(),
+            lr=self.hparams.lr,
+            **self.hparams.optimizer_options,
+        )
