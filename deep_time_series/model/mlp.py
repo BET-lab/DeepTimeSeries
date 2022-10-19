@@ -33,14 +33,17 @@ class MLP(ForecastingModule):
         lr=1e-3,
         optimizer: torch.optim.Optimizer = torch.optim.Adam,
         optimizer_options=None,
-        loss_fn=nn.MSELoss(),
-        metrics=MeanSquaredError(),
+        loss_fn=None,
+        metrics=None,
     ):
         super().__init__()
         self.save_hyperparameters()
 
         if optimizer_options is None:
             self.hparams.optimizer_options = {}
+
+        if loss_fn is None:
+            loss_fn = nn.MSELoss()
 
         n_outputs = len(target_names)
         n_features = len(non_target_names) + n_outputs
@@ -70,7 +73,7 @@ class MLP(ForecastingModule):
             tag='targets',
             output_module=nn.Linear(hidden_size, n_outputs),
             loss_fn=loss_fn,
-            metrics=MeanSquaredError(),
+            metrics=metrics,
         )
 
         self.body = nn.Sequential(*layers)
@@ -80,7 +83,7 @@ class MLP(ForecastingModule):
         if self.use_non_targets:
             x = torch.cat([
                 inputs['encoding.targets'],
-                inputs['encoding.covariates']
+                inputs['encoding.non_targets']
             ], dim=2)
         else:
             x = inputs['encoding.targets']
@@ -94,7 +97,7 @@ class MLP(ForecastingModule):
 
         # (B, L, C).
         if self.use_non_targets:
-            c = inputs['decoding.covariates']
+            c = inputs['decoding.non_targets']
 
         B = x.size(0)
         L = x.size(1)
@@ -151,13 +154,13 @@ class MLP(ForecastingModule):
         if self.use_non_targets:
             chunk_specs += [
                 EncodingChunkSpec(
-                    tag='covariates',
+                    tag='non_targets',
                     names=self.hparams.non_target_names,
                     range_=(1, E+1),
                     dtype=np.float32,
                 ),
                 DecodingChunkSpec(
-                    tag='covariates',
+                    tag='non_targets',
                     names=self.hparams.non_target_names,
                     range_=(E+1, E+D),
                     dtype=np.float32,
