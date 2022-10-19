@@ -1,10 +1,15 @@
+"""
+.. warning::
+    This module has to be updated. Don't use yet.
+"""
+
 import numpy as np
 import torch
 import torch.nn as nn
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 
-from .forecasting_module import ForecastingModule
-from ..data import (
+from ..core import ForecastingModule
+from ..chunk import (
     EncodingChunkSpec,
     DecodingChunkSpec,
     LabelChunkSpec,
@@ -13,18 +18,18 @@ from ..data import (
 
 class RNN(ForecastingModule):
     def __init__(
-            self,
-            n_features,
-            hidden_size,
-            n_layers,
-            n_outputs,
-            rnn_class,
-            dropout_rate,
-            lr,
-            loss_fn,
-            teacher_forcing_rate,
-            head=None,
-        ):
+        self,
+        n_features,
+        hidden_size,
+        n_layers,
+        n_outputs,
+        rnn_class,
+        dropout_rate,
+        lr,
+        loss_fn,
+        teacher_forcing_rate,
+        head=None,
+    ):
         super().__init__()
         self.save_hyperparameters()
 

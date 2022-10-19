@@ -1,11 +1,16 @@
+"""
+.. warning::
+    This module has to be updated. Don't use yet.
+"""
+
 import math
 import numpy as np
 import torch
 import torch.nn as nn
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 
-from .forecasting_module import ForecastingModule
-from ..data import (
+from ..core import ForecastingModule
+from ..chunk import (
     EncodingChunkSpec,
     DecodingChunkSpec,
     LabelChunkSpec,
@@ -31,19 +36,19 @@ class LeftPadding1D(nn.Module):
 
 class DilatedCNN(ForecastingModule):
     def __init__(
-            self,
-            n_features,
-            hidden_size,
-            encoding_length,
-            dilation_base,
-            kernel_size,
-            activation,
-            n_outputs,
-            dropout_rate,
-            lr,
-            loss_fn,
-            head=None,
-        ):
+        self,
+        n_features,
+        hidden_size,
+        encoding_length,
+        dilation_base,
+        kernel_size,
+        activation,
+        n_outputs,
+        dropout_rate,
+        lr,
+        loss_fn,
+        head=None,
+    ):
         super().__init__()
         self.save_hyperparameters()
 

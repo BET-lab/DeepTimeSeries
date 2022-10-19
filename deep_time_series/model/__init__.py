@@ -1,13 +1,5 @@
-from .forecasting_module import (
-    ForecastingModule,
-)
-
-from .multi_step_transformer import (
-    MultiStepTransformer,
-)
-
-from .single_step_transformer import (
-    SingleStepTransformer,
+from .single_shot_transformer import (
+    SingleShotTransformer,
 )
 
 from .rnn import (
@@ -16,10 +8,6 @@ from .rnn import (
 
 from .mlp import (
     MLP,
-)
-
-from .mlp2 import (
-    MLP2,
 )
 
 from .dilated_cnn import (
