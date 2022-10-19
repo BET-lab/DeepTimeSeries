@@ -1,5 +1,5 @@
-from .multi_step_transformer import (
-    MultiStepTransformer,
+from .single_shot_transformer import (
+    SingleShotTransformer,
 )
 
 from .rnn import (

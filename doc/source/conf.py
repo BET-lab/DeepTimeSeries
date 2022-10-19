@@ -14,7 +14,7 @@ import sys
 sys.path.insert(0, os.path.abspath('../..'))
 
 project = 'DeepTimeSeries'
-copyright = '2022, Sangwon Lee'
+copyright = '2022, BET-lab and dartwork'
 author = 'Sangwon Lee'
 
 # -- General configuration ---------------------------------------------------
@@ -26,6 +26,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
+    'sphinx.ext.viewcode',
 ]
 
 templates_path = ['_templates']

@@ -1,7 +1,7 @@
-DeepTimeSeries user guide
+DeepTimeSeries User Guide
 =========================
 
-DeepTimeSeries의 사용자가 알아야 할 내용들을 제공합니다.
+This page provides information that users of DeepTimeSeries need to know.
 
 .. toctree::
     :maxdepth: 1

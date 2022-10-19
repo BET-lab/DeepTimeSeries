@@ -1,3 +1,8 @@
+"""
+.. warning::
+    This module has to be updated. Don't use yet.
+"""
+
 import math
 import numpy as np
 import torch
