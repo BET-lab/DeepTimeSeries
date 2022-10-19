@@ -1,0 +1,25 @@
+ChunkInverter
+=============
+
+.. currentmodule:: deep_time_series.chunk
+
+.. autoclass:: ChunkInverter
+   :members:
+   :show-inheritance:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~ChunkInverter.invert
+      ~ChunkInverter.invert_dict
+   
+   
+
+   
+   
+   

@@ -1,0 +1,6 @@
+logical\_and\_for\_set\_list
+============================
+
+.. currentmodule:: deep_time_series.util
+
+.. autofunction:: logical_and_for_set_list

@@ -1,0 +1,6 @@
+plot\_chunks
+============
+
+.. currentmodule:: deep_time_series.plotting
+
+.. autofunction:: plot_chunks

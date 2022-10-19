@@ -1,0 +1,30 @@
+PositionalEncoding
+==================
+
+.. currentmodule:: deep_time_series.model.single_shot_transformer
+
+.. autoclass:: PositionalEncoding
+   :members:
+   :show-inheritance:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~PositionalEncoding.forward
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PositionalEncoding.training
+   
+   

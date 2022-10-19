@@ -1,0 +1,34 @@
+RNN
+===
+
+.. currentmodule:: deep_time_series.model.rnn
+
+.. autoclass:: RNN
+   :members:
+   :show-inheritance:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~RNN.configure_optimizers
+      ~RNN.decode_eval
+      ~RNN.decode_train
+      ~RNN.encode
+      ~RNN.make_chunk_specs
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~RNN.training
+   
+   

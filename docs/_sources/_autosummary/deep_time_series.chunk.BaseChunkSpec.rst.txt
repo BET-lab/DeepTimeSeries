@@ -1,0 +1,33 @@
+BaseChunkSpec
+=============
+
+.. currentmodule:: deep_time_series.chunk
+
+.. autoclass:: BaseChunkSpec
+   :members:
+   :show-inheritance:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~BaseChunkSpec.PREFIX
+      ~BaseChunkSpec.dtype
+      ~BaseChunkSpec.names
+      ~BaseChunkSpec.range
+      ~BaseChunkSpec.tag
+   
+   

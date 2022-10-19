@@ -1,0 +1,33 @@
+DilatedCNN
+==========
+
+.. currentmodule:: deep_time_series.model.dilated_cnn
+
+.. autoclass:: DilatedCNN
+   :members:
+   :show-inheritance:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~DilatedCNN.configure_optimizers
+      ~DilatedCNN.decode_eval
+      ~DilatedCNN.encode
+      ~DilatedCNN.make_chunk_specs
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DilatedCNN.training
+   
+   

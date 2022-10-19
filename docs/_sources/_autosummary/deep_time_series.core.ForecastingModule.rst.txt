@@ -1,0 +1,50 @@
+ForecastingModule
+=================
+
+.. currentmodule:: deep_time_series.core
+
+.. autoclass:: ForecastingModule
+   :members:
+   :show-inheritance:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~ForecastingModule.calculate_loss
+      ~ForecastingModule.compute_metrics
+      ~ForecastingModule.decode
+      ~ForecastingModule.decode_eval
+      ~ForecastingModule.decode_train
+      ~ForecastingModule.encode
+      ~ForecastingModule.forward
+      ~ForecastingModule.forward_metrics
+      ~ForecastingModule.make_chunk_specs
+      ~ForecastingModule.reset_metrics
+      ~ForecastingModule.test_epoch_end
+      ~ForecastingModule.test_step
+      ~ForecastingModule.training_epoch_end
+      ~ForecastingModule.training_step
+      ~ForecastingModule.update_metrics
+      ~ForecastingModule.validation_epoch_end
+      ~ForecastingModule.validation_step
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ForecastingModule.decoding_length
+      ~ForecastingModule.encoding_length
+      ~ForecastingModule.head
+      ~ForecastingModule.heads
+      ~ForecastingModule.training
+   
+   

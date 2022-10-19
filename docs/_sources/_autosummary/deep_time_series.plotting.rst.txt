@@ -1,0 +1,32 @@
+plotting
+========
+
+.. automodule:: deep_time_series.plotting
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: base.rst
+      :nosignatures:
+   
+      plot_chunks
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
