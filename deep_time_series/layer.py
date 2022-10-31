@@ -12,19 +12,31 @@ class Unsqueesze(nn.Module):
         return x.unsqueeze(self.dim)
 
 
+class Permute(nn.Module):
+    def __init__(self, *dims):
+        super().__init__()
+        self.dims = dims
+
+    def forward(self, x):
+        return x.permute(*self.dims)
+
+
 class LeftPadding1D(nn.Module):
     def __init__(self, padding_size):
         super().__init__()
         self.padding_size = padding_size
 
     def forward(self, x):
-        # x: (B, C, L).
+        # x: (B, L, C).
         B = x.size(0)
-        C = x.size(1)
+        C = x.size(2)
 
-        padding = torch.zeros(B, C, self.padding_size).to(x.device)
+        padding = torch.zeros(
+            B, self.padding_size, C,
+            dtype=x.dtype, device=x.device
+        )
 
-        y = torch.cat([padding, x], axis=2)
+        y = torch.cat([padding, x], axis=1)
 
         return y
 
