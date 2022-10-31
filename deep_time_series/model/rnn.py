@@ -1,14 +1,12 @@
-"""
-.. warning::
-    This module has to be updated. Don't use yet.
-"""
-
 import numpy as np
 import torch
 import torch.nn as nn
-from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 
-from ..core import ForecastingModule
+from ..core import (
+    ForecastingModule,
+    Head,
+)
+
 from ..chunk import (
     EncodingChunkSpec,
     DecodingChunkSpec,
@@ -19,19 +17,37 @@ from ..chunk import (
 class RNN(ForecastingModule):
     def __init__(
         self,
-        n_features,
         hidden_size,
+        encoding_length,
+        decoding_length,
+        target_names,
+        nontarget_names,
         n_layers,
-        n_outputs,
         rnn_class,
-        dropout_rate,
-        lr,
-        loss_fn,
-        teacher_forcing_rate,
+        dropout_rate=0.0,
+        lr=1e-3,
+        optimizer: torch.optim.Optimizer = torch.optim.Adam,
+        optimizer_options=None,
+        loss_fn=None,
+        metrics=None,
         head=None,
     ):
         super().__init__()
         self.save_hyperparameters()
+
+        self.encoding_length = encoding_length
+        self.decoding_length = decoding_length
+
+        if optimizer_options is None:
+            self.hparams.optimizer_options = {}
+
+        if loss_fn is None:
+            loss_fn = nn.MSELoss()
+
+        n_outputs = len(target_names)
+        n_features = len(nontarget_names) + n_outputs
+
+        self.use_nontargets = n_outputs != n_features
 
         self.encoder = rnn_class(
             input_size=n_features,
@@ -41,122 +57,106 @@ class RNN(ForecastingModule):
             dropout=dropout_rate,
         )
 
+        # Use same model instance used in encoding process.
         self.decoder = self.encoder
 
-        if head is None:
-            self.head = nn.Linear(hidden_size, n_outputs)
-        else:
+        if head is not None:
             self.head = head
+        else:
+            self.head = Head(
+                tag='targets',
+                output_module=nn.Linear(hidden_size, n_outputs),
+                loss_fn=loss_fn,
+                metrics=metrics,
+            )
 
     def encode(self, inputs):
-        # L: encoding length.
-        # all_input: (B, L, F).
-        all_input = torch.cat([
-            inputs['encoding.targets'],
-            inputs['encoding.covariates']
-        ], dim=2)
-
-        # Don't use last time step.
-        # (B, L-1, F).
-        x = all_input[:, :-1, :]
-        # (B, 1, F).
-        last_x = all_input[:, -1:, :]
+        # (B, L, F).
+        if self.use_nontargets:
+            x = torch.cat([
+                inputs['encoding.targets'],
+                inputs['encoding.nontargets']
+            ], dim=2)
+        else:
+            x = inputs['encoding.targets']
 
         # (B, L, H).
         # For LSTM, hidden_state is a tuple: (h_0, c_0).
-        y, hidden_state = self.encoder(x)
+        h, memory = self.encoder(x)
 
         return {
-            'y': y,
-            'memory': hidden_state,
-            'last_x': last_x,
+            'h': h[:, -1:, :],
+            'memory': memory,
         }
 
-    def decode_train(self, inputs):
-        if np.random.random() > self.hparams.teacher_forcing_rate:
-            return self.decode_eval(inputs)
+    def decode(self, inputs):
+        self.head.reset()
+        y = self.head(inputs['h'])
 
-        all_input = torch.cat([
-            inputs['decoding.targets'],
-            inputs['decoding.covariates']
-        ], dim=2)
+        if self.use_nontargets:
+            c = inputs['decoding.nontargets']
+            x = torch.cat([y, c[:, 0:1, :]], dim=2)
+        else:
+            x = y
 
-        # Don't use last time.
-        # (B, L-1, F).
-        x = all_input[:, :-1, :]
+        memory = inputs['memory']
 
-        # Concat last of encoding input.
-        # (B, 1, F).
-        last_x = inputs['last_x']
-        # (B, L, F).
-        x = torch.cat([last_x, x], dim=1)
+        for i in range(1, self.decoding_length):
+            h, memory = self.decoder(x, memory)
+            y = self.head(h)
 
-        hidden_state = inputs['memory']
+            if i+1 == self.decoding_length:
+                break
 
-        # (B, L, H).
-        x, hidden_state = self.decoder(x, hidden_state)
+            if self.use_nontargets:
+                x = torch.cat([y, c[:, i:i+1, :]], dim=2)
+            else:
+                x = y
 
-        # (L, B, n_outputs).
-        y = self.head(x)
+        outputs = self.head.get_outputs()
 
-        return {
-            'label.targets': y,
-            'hidden_state': hidden_state,
-        }
+        return outputs
 
-    def decode_eval(self, inputs):
-        # decoding.covariates: (B, L, F).
-        c = inputs['decoding.covariates']
-        L = c.shape[1]
+    def make_chunk_specs(self):
+        E = self.encoding_length
+        D = self.decoding_length
 
-        x = inputs['last_x']
-        hidden_state = inputs['memory']
-
-        ys = []
-        for i in range(L):
-            y, hidden_state = self.decoder(x, hidden_state)
-            y = self.head(y)
-            ys.append(y)
-            x = torch.cat([y, c[:, i:i+1, :]], dim=2)
-
-        y = torch.cat(ys, dim=1)
-
-        return {
-            'label.targets': y,
-            'hidden_state': hidden_state,
-        }
-
-    def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=self.hparams.lr)
-
-    def make_chunk_specs(self, target_names, covariate_names):
         chunk_specs = [
             EncodingChunkSpec(
                 tag='targets',
-                names=target_names,
+                names=self.hparams.target_names,
+                range_=(0, E),
                 dtype=np.float32
-            ),
-            EncodingChunkSpec(
-                tag='covariates',
-                names=covariate_names,
-                dtype=np.float32, shift=1,
-            ),
-            DecodingChunkSpec(
-                tag='targets',
-                names=target_names,
-                dtype=np.float32,
-            ),
-            DecodingChunkSpec(
-                tag='covariates',
-                names=covariate_names,
-                dtype=np.float32,
-                shift=1
             ),
             LabelChunkSpec(
                 tag='targets',
-                names=target_names,
-                dtype=np.float32
+                names=self.hparams.target_names,
+                range_=(E, E+D),
+                dtype=np.float32,
             ),
         ]
 
+        if self.use_nontargets:
+            chunk_specs += [
+                EncodingChunkSpec(
+                    tag='nontargets',
+                    names=self.hparams.nontarget_names,
+                    range_=(1, E+1),
+                    dtype=np.float32,
+                ),
+                DecodingChunkSpec(
+                    tag='nontargets',
+                    names=self.hparams.nontarget_names,
+                    range_=(E+1, E+D),
+                    dtype=np.float32,
+                ),
+            ]
+
         return chunk_specs
+
+    def configure_optimizers(self):
+        return self.hparams.optimizer(
+            self.parameters(),
+            lr=self.hparams.lr,
+            **self.hparams.optimizer_options,
+        )
