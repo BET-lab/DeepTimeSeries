@@ -69,6 +69,8 @@ class MLP(ForecastingModule):
 
         layers.append(Unsqueesze(1))
 
+        self.body = nn.Sequential(*layers)
+
         if head is not None:
             self.head = head
         else:
@@ -78,8 +80,6 @@ class MLP(ForecastingModule):
                 loss_fn=loss_fn,
                 metrics=metrics,
             )
-
-        self.body = nn.Sequential(*layers)
 
     def encode(self, inputs):
         # (B, L, F).
@@ -103,7 +103,6 @@ class MLP(ForecastingModule):
             c = inputs['decoding.nontargets']
 
         B = x.size(0)
-
         EL = self.encoding_length
 
         self.head.reset()
