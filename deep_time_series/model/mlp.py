@@ -27,7 +27,7 @@ class MLP(ForecastingModule):
         target_names,
         non_target_names,
         n_hidden_layers,
-        activation=nn.ReLU,
+        activation=nn.ELU,
         dropout_rate=0.0,
         lr=1e-3,
         optimizer: torch.optim.Optimizer = torch.optim.Adam,
