@@ -25,7 +25,7 @@ class MLP(ForecastingModule):
         encoding_length,
         decoding_length,
         target_names,
-        non_target_names,
+        nontarget_names,
         n_hidden_layers,
         activation=nn.ELU,
         dropout_rate=0.0,
@@ -46,9 +46,9 @@ class MLP(ForecastingModule):
             loss_fn = nn.MSELoss()
 
         n_outputs = len(target_names)
-        n_features = len(non_target_names) + n_outputs
+        n_features = len(nontarget_names) + n_outputs
 
-        self.use_non_targets = n_outputs != n_features
+        self.use_nontargets = n_outputs != n_features
 
         self.encoding_length = encoding_length
         self.decoding_length = decoding_length
@@ -83,10 +83,10 @@ class MLP(ForecastingModule):
 
     def encode(self, inputs):
         # (B, L, F).
-        if self.use_non_targets:
+        if self.use_nontargets:
             x = torch.cat([
                 inputs['encoding.targets'],
-                inputs['encoding.non_targets']
+                inputs['encoding.nontargets']
             ], dim=2)
         else:
             x = inputs['encoding.targets']
@@ -99,8 +99,8 @@ class MLP(ForecastingModule):
         x = inputs['x']
 
         # (B, L, C).
-        if self.use_non_targets:
-            c = inputs['decoding.non_targets']
+        if self.use_nontargets:
+            c = inputs['decoding.nontargets']
 
         B = x.size(0)
         L = x.size(1)
@@ -118,7 +118,7 @@ class MLP(ForecastingModule):
             if i+1 == self.decoding_length:
                 break
             # (B, 1, F).
-            if self.use_non_targets:
+            if self.use_nontargets:
                 z = torch.cat([y, c[:, i:i+1, :]], dim=2)
             else:
                 z = y
@@ -154,17 +154,17 @@ class MLP(ForecastingModule):
             ),
         ]
 
-        if self.use_non_targets:
+        if self.use_nontargets:
             chunk_specs += [
                 EncodingChunkSpec(
-                    tag='non_targets',
-                    names=self.hparams.non_target_names,
+                    tag='nontargets',
+                    names=self.hparams.nontarget_names,
                     range_=(1, E+1),
                     dtype=np.float32,
                 ),
                 DecodingChunkSpec(
-                    tag='non_targets',
-                    names=self.hparams.non_target_names,
+                    tag='nontargets',
+                    names=self.hparams.nontarget_names,
                     range_=(E+1, E+D),
                     dtype=np.float32,
                 ),
