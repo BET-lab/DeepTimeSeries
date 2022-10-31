@@ -39,6 +39,9 @@ class MLP(ForecastingModule):
         super().__init__()
         self.save_hyperparameters()
 
+        self.encoding_length = encoding_length
+        self.decoding_length = decoding_length
+
         if optimizer_options is None:
             self.hparams.optimizer_options = {}
 
@@ -49,9 +52,6 @@ class MLP(ForecastingModule):
         n_features = len(nontarget_names) + n_outputs
 
         self.use_nontargets = n_outputs != n_features
-
-        self.encoding_length = encoding_length
-        self.decoding_length = decoding_length
 
         layers = [
             nn.Flatten(),
