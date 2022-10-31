@@ -21,6 +21,8 @@ layer
       :nosignatures:
    
       LeftPadding1D
+      Permute
+      PositionalEncoding
       Unsqueesze
    
    

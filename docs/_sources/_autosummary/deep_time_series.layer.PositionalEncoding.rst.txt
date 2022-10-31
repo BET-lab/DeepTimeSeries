@@ -1,9 +1,9 @@
-RNN
-===
+PositionalEncoding
+==================
 
-.. currentmodule:: deep_time_series.model.rnn
+.. currentmodule:: deep_time_series.layer
 
-.. autoclass:: RNN
+.. autoclass:: PositionalEncoding
    :members:
    :show-inheritance:
    :special-members: __call__, __add__, __mul__
@@ -15,10 +15,7 @@ RNN
    .. autosummary::
       :nosignatures:
    
-      ~RNN.configure_optimizers
-      ~RNN.decode
-      ~RNN.encode
-      ~RNN.make_chunk_specs
+      ~PositionalEncoding.forward
    
    
 
@@ -28,6 +25,6 @@ RNN
 
    .. autosummary::
    
-      ~RNN.training
+      ~PositionalEncoding.training
    
    

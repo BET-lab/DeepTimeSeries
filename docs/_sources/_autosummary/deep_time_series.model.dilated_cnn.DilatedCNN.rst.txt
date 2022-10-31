@@ -16,7 +16,7 @@ DilatedCNN
       :nosignatures:
    
       ~DilatedCNN.configure_optimizers
-      ~DilatedCNN.decode_eval
+      ~DilatedCNN.decode
       ~DilatedCNN.encode
       ~DilatedCNN.make_chunk_specs
    

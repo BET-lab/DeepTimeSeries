@@ -29,6 +29,7 @@
    ~deep_time_series.chunk
    ~deep_time_series.core
    ~deep_time_series.dataset
+   ~deep_time_series.function
    ~deep_time_series.layer
    ~deep_time_series.model
    ~deep_time_series.plotting

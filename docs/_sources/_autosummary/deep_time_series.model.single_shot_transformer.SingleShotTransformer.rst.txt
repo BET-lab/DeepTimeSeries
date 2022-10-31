@@ -16,7 +16,7 @@ SingleShotTransformer
       :nosignatures:
    
       ~SingleShotTransformer.configure_optimizers
-      ~SingleShotTransformer.decode_eval
+      ~SingleShotTransformer.decode
       ~SingleShotTransformer.encode
       ~SingleShotTransformer.generate_square_subsequent_mask
       ~SingleShotTransformer.make_chunk_specs

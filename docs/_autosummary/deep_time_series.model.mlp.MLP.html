@@ -236,6 +236,11 @@
    </li>
   </ul>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="deep_time_series.function.html">
+   function
+  </a>
+ </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="deep_time_series.layer.html">
    layer
@@ -249,6 +254,16 @@
    <li class="toctree-l2">
     <a class="reference internal" href="deep_time_series.layer.LeftPadding1D.html">
      LeftPadding1D
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="deep_time_series.layer.Permute.html">
+     Permute
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="deep_time_series.layer.PositionalEncoding.html">
+     PositionalEncoding
     </a>
    </li>
    <li class="toctree-l2">
@@ -281,11 +296,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="deep_time_series.model.dilated_cnn.DilatedCNN.html">
        DilatedCNN
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="deep_time_series.model.dilated_cnn.LeftPadding1D.html">
-       LeftPadding1D
       </a>
      </li>
     </ul>
@@ -334,11 +344,6 @@
      </i>
     </label>
     <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="deep_time_series.model.single_shot_transformer.PositionalEncoding.html">
-       PositionalEncoding
-      </a>
-     </li>
      <li class="toctree-l3">
       <a class="reference internal" href="deep_time_series.model.single_shot_transformer.SingleShotTransformer.html">
        SingleShotTransformer
@@ -456,7 +461,7 @@
 <h1>MLP<a class="headerlink" href="#mlp" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="deep_time_series.model.mlp.MLP">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MLP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hidden_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoding_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_target_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_hidden_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ReLU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_rate=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr=0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer=&lt;class</span> <span class="pre">'torch.optim.adam.Adam'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_options=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/mlp.html#MLP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.mlp.MLP" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MLP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hidden_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoding_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nontarget_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_hidden_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ELU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_rate=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr=0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer=&lt;class</span> <span class="pre">'torch.optim.adam.Adam'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_options=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/mlp.html#MLP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.mlp.MLP" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="deep_time_series.core.ForecastingModule.html#deep_time_series.core.ForecastingModule" title="deep_time_series.core.ForecastingModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForecastingModule</span></code></a></p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable table autosummary">

@@ -39,7 +39,7 @@
     <script src="../_static/copybutton.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="LeftPadding1D" href="deep_time_series.model.dilated_cnn.LeftPadding1D.html" />
+    <link rel="next" title="mlp" href="deep_time_series.model.mlp.html" />
     <link rel="prev" title="dilated_cnn" href="deep_time_series.model.dilated_cnn.html" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="docsearch:language" content="en">
@@ -236,6 +236,11 @@
    </li>
   </ul>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="deep_time_series.function.html">
+   function
+  </a>
+ </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="deep_time_series.layer.html">
    layer
@@ -249,6 +254,16 @@
    <li class="toctree-l2">
     <a class="reference internal" href="deep_time_series.layer.LeftPadding1D.html">
      LeftPadding1D
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="deep_time_series.layer.Permute.html">
+     Permute
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="deep_time_series.layer.PositionalEncoding.html">
+     PositionalEncoding
     </a>
    </li>
    <li class="toctree-l2">
@@ -281,11 +296,6 @@
      <li class="toctree-l3 current active">
       <a class="current reference internal" href="#">
        DilatedCNN
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="deep_time_series.model.dilated_cnn.LeftPadding1D.html">
-       LeftPadding1D
       </a>
      </li>
     </ul>
@@ -334,11 +344,6 @@
      </i>
     </label>
     <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="deep_time_series.model.single_shot_transformer.PositionalEncoding.html">
-       PositionalEncoding
-      </a>
-     </li>
      <li class="toctree-l3">
       <a class="reference internal" href="deep_time_series.model.single_shot_transformer.SingleShotTransformer.html">
        SingleShotTransformer
@@ -456,7 +461,7 @@
 <h1>DilatedCNN<a class="headerlink" href="#dilatedcnn" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="deep_time_series.model.dilated_cnn.DilatedCNN">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DilatedCNN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dilation_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/dilated_cnn.html#DilatedCNN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.dilated_cnn.DilatedCNN" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DilatedCNN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hidden_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoding_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nontarget_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dilation_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ELU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_rate=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr=0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer=&lt;class</span> <span class="pre">'torch.optim.adam.Adam'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_options=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/dilated_cnn.html#DilatedCNN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.dilated_cnn.DilatedCNN" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="deep_time_series.core.ForecastingModule.html#deep_time_series.core.ForecastingModule" title="deep_time_series.core.ForecastingModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForecastingModule</span></code></a></p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable table autosummary">
@@ -468,7 +473,7 @@
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_optimizers</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">decode_eval</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">decode</span></code></p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">encode</span></code></p></td>
@@ -488,6 +493,11 @@
 <tbody>
 </tbody>
 </table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>optimizer</strong> (<em>Optimizer</em>) – </p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -507,10 +517,10 @@
           <p class="prev-next-title">dilated_cnn</p>
       </div>
   </a>
-  <a class='right-next' id="next-link" href="deep_time_series.model.dilated_cnn.LeftPadding1D.html" title="next page">
+  <a class='right-next' id="next-link" href="deep_time_series.model.mlp.html" title="next page">
   <div class="prev-next-info">
       <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title">LeftPadding1D</p>
+      <p class="prev-next-title">mlp</p>
   </div>
   <i class="fas fa-angle-right"></i>
   </a>

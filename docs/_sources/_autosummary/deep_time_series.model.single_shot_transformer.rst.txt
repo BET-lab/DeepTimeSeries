@@ -20,7 +20,6 @@ single\_shot\_transformer
       :template: class.rst
       :nosignatures:
    
-      PositionalEncoding
       SingleShotTransformer
    
    

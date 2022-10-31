@@ -160,17 +160,15 @@
               <article class="bd-article" role="main">
                 
   <h1>Source code for deep_time_series.model.rnn</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">.. warning::</span>
-<span class="sd">    This module has to be updated. Don&#39;t use yet.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
-<span class="kn">from</span> <span class="nn">pytorch_lightning.callbacks</span> <span class="kn">import</span> <span class="n">ModelCheckpoint</span><span class="p">,</span> <span class="n">EarlyStopping</span>
 
-<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">ForecastingModule</span>
+<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ForecastingModule</span><span class="p">,</span>
+    <span class="n">Head</span><span class="p">,</span>
+<span class="p">)</span>
+
 <span class="kn">from</span> <span class="nn">..chunk</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">EncodingChunkSpec</span><span class="p">,</span>
     <span class="n">DecodingChunkSpec</span><span class="p">,</span>
@@ -181,19 +179,37 @@
 <div class="viewcode-block" id="RNN"><a class="viewcode-back" href="../../../_autosummary/deep_time_series.model.rnn.RNN.html#deep_time_series.model.rnn.RNN">[docs]</a><span class="k">class</span> <span class="nc">RNN</span><span class="p">(</span><span class="n">ForecastingModule</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">n_features</span><span class="p">,</span>
         <span class="n">hidden_size</span><span class="p">,</span>
+        <span class="n">encoding_length</span><span class="p">,</span>
+        <span class="n">decoding_length</span><span class="p">,</span>
+        <span class="n">target_names</span><span class="p">,</span>
+        <span class="n">nontarget_names</span><span class="p">,</span>
         <span class="n">n_layers</span><span class="p">,</span>
-        <span class="n">n_outputs</span><span class="p">,</span>
         <span class="n">rnn_class</span><span class="p">,</span>
-        <span class="n">dropout_rate</span><span class="p">,</span>
-        <span class="n">lr</span><span class="p">,</span>
-        <span class="n">loss_fn</span><span class="p">,</span>
-        <span class="n">teacher_forcing_rate</span><span class="p">,</span>
+        <span class="n">dropout_rate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+        <span class="n">optimizer</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">,</span>
+        <span class="n">optimizer_options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">loss_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">metrics</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">head</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_hyperparameters</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoding_length</span> <span class="o">=</span> <span class="n">encoding_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoding_length</span> <span class="o">=</span> <span class="n">decoding_length</span>
+
+        <span class="k">if</span> <span class="n">optimizer_options</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">optimizer_options</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">loss_fn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">loss_fn</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
+
+        <span class="n">n_outputs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_names</span><span class="p">)</span>
+        <span class="n">n_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nontarget_names</span><span class="p">)</span> <span class="o">+</span> <span class="n">n_outputs</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_nontargets</span> <span class="o">=</span> <span class="n">n_outputs</span> <span class="o">!=</span> <span class="n">n_features</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">rnn_class</span><span class="p">(</span>
             <span class="n">input_size</span><span class="o">=</span><span class="n">n_features</span><span class="p">,</span>
@@ -203,125 +219,109 @@
             <span class="n">dropout</span><span class="o">=</span><span class="n">dropout_rate</span><span class="p">,</span>
         <span class="p">)</span>
 
+        <span class="c1"># Use same model instance used in encoding process.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span>
 
-        <span class="k">if</span> <span class="n">head</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">head</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">n_outputs</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">head</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">head</span> <span class="o">=</span> <span class="n">head</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">head</span> <span class="o">=</span> <span class="n">Head</span><span class="p">(</span>
+                <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
+                <span class="n">output_module</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">n_outputs</span><span class="p">),</span>
+                <span class="n">loss_fn</span><span class="o">=</span><span class="n">loss_fn</span><span class="p">,</span>
+                <span class="n">metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">,</span>
+            <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
-        <span class="c1"># L: encoding length.</span>
-        <span class="c1"># all_input: (B, L, F).</span>
-        <span class="n">all_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span>
-            <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;encoding.targets&#39;</span><span class="p">],</span>
-            <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;encoding.covariates&#39;</span><span class="p">]</span>
-        <span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-
-        <span class="c1"># Don&#39;t use last time step.</span>
-        <span class="c1"># (B, L-1, F).</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">all_input</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
-        <span class="c1"># (B, 1, F).</span>
-        <span class="n">last_x</span> <span class="o">=</span> <span class="n">all_input</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:]</span>
+        <span class="c1"># (B, L, F).</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_nontargets</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span>
+                <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;encoding.targets&#39;</span><span class="p">],</span>
+                <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;encoding.nontargets&#39;</span><span class="p">]</span>
+            <span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;encoding.targets&#39;</span><span class="p">]</span>
 
         <span class="c1"># (B, L, H).</span>
         <span class="c1"># For LSTM, hidden_state is a tuple: (h_0, c_0).</span>
-        <span class="n">y</span><span class="p">,</span> <span class="n">hidden_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">h</span><span class="p">,</span> <span class="n">memory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
-            <span class="s1">&#39;memory&#39;</span><span class="p">:</span> <span class="n">hidden_state</span><span class="p">,</span>
-            <span class="s1">&#39;last_x&#39;</span><span class="p">:</span> <span class="n">last_x</span><span class="p">,</span>
+            <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:],</span>
+            <span class="s1">&#39;memory&#39;</span><span class="p">:</span> <span class="n">memory</span><span class="p">,</span>
         <span class="p">}</span>
 
-    <span class="k">def</span> <span class="nf">decode_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">teacher_forcing_rate</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode_eval</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;h&#39;</span><span class="p">])</span>
 
-        <span class="n">all_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span>
-            <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;decoding.targets&#39;</span><span class="p">],</span>
-            <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;decoding.covariates&#39;</span><span class="p">]</span>
-        <span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_nontargets</span><span class="p">:</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;decoding.nontargets&#39;</span><span class="p">]</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">y</span>
 
-        <span class="c1"># Don&#39;t use last time.</span>
-        <span class="c1"># (B, L-1, F).</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">all_input</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">memory</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;memory&#39;</span><span class="p">]</span>
 
-        <span class="c1"># Concat last of encoding input.</span>
-        <span class="c1"># (B, 1, F).</span>
-        <span class="n">last_x</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;last_x&#39;</span><span class="p">]</span>
-        <span class="c1"># (B, L, F).</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">last_x</span><span class="p">,</span> <span class="n">x</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoding_length</span><span class="p">):</span>
+            <span class="n">h</span><span class="p">,</span> <span class="n">memory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">memory</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
 
-        <span class="n">hidden_state</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;memory&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoding_length</span><span class="p">:</span>
+                <span class="k">break</span>
 
-        <span class="c1"># (B, L, H).</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">hidden_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">hidden_state</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_nontargets</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="p">[:,</span> <span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">y</span>
 
-        <span class="c1"># (L, B, n_outputs).</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">get_outputs</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">&#39;label.targets&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
-            <span class="s1">&#39;hidden_state&#39;</span><span class="p">:</span> <span class="n">hidden_state</span><span class="p">,</span>
-        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">outputs</span>
 
-    <span class="k">def</span> <span class="nf">decode_eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
-        <span class="c1"># decoding.covariates: (B, L, F).</span>
-        <span class="n">c</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;decoding.covariates&#39;</span><span class="p">]</span>
-        <span class="n">L</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">make_chunk_specs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding_length</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoding_length</span>
 
-        <span class="n">x</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;last_x&#39;</span><span class="p">]</span>
-        <span class="n">hidden_state</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;memory&#39;</span><span class="p">]</span>
-
-        <span class="n">ys</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
-            <span class="n">y</span><span class="p">,</span> <span class="n">hidden_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">hidden_state</span><span class="p">)</span>
-            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-            <span class="n">ys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="p">[:,</span> <span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-
-        <span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">ys</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">&#39;label.targets&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
-            <span class="s1">&#39;hidden_state&#39;</span><span class="p">:</span> <span class="n">hidden_state</span><span class="p">,</span>
-        <span class="p">}</span>
-
-    <span class="k">def</span> <span class="nf">configure_optimizers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">make_chunk_specs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_names</span><span class="p">,</span> <span class="n">covariate_names</span><span class="p">):</span>
         <span class="n">chunk_specs</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">EncodingChunkSpec</span><span class="p">(</span>
                 <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
-                <span class="n">names</span><span class="o">=</span><span class="n">target_names</span><span class="p">,</span>
+                <span class="n">names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">target_names</span><span class="p">,</span>
+                <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">E</span><span class="p">),</span>
                 <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
-            <span class="p">),</span>
-            <span class="n">EncodingChunkSpec</span><span class="p">(</span>
-                <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;covariates&#39;</span><span class="p">,</span>
-                <span class="n">names</span><span class="o">=</span><span class="n">covariate_names</span><span class="p">,</span>
-                <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="p">),</span>
-            <span class="n">DecodingChunkSpec</span><span class="p">(</span>
-                <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
-                <span class="n">names</span><span class="o">=</span><span class="n">target_names</span><span class="p">,</span>
-                <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
-            <span class="p">),</span>
-            <span class="n">DecodingChunkSpec</span><span class="p">(</span>
-                <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;covariates&#39;</span><span class="p">,</span>
-                <span class="n">names</span><span class="o">=</span><span class="n">covariate_names</span><span class="p">,</span>
-                <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
-                <span class="n">shift</span><span class="o">=</span><span class="mi">1</span>
             <span class="p">),</span>
             <span class="n">LabelChunkSpec</span><span class="p">(</span>
                 <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
-                <span class="n">names</span><span class="o">=</span><span class="n">target_names</span><span class="p">,</span>
-                <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+                <span class="n">names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">target_names</span><span class="p">,</span>
+                <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">E</span><span class="o">+</span><span class="n">D</span><span class="p">),</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
             <span class="p">),</span>
         <span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">chunk_specs</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_nontargets</span><span class="p">:</span>
+            <span class="n">chunk_specs</span> <span class="o">+=</span> <span class="p">[</span>
+                <span class="n">EncodingChunkSpec</span><span class="p">(</span>
+                    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;nontargets&#39;</span><span class="p">,</span>
+                    <span class="n">names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">nontarget_names</span><span class="p">,</span>
+                    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">E</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
+                    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">DecodingChunkSpec</span><span class="p">(</span>
+                    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;nontargets&#39;</span><span class="p">,</span>
+                    <span class="n">names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">nontarget_names</span><span class="p">,</span>
+                    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="n">E</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">E</span><span class="o">+</span><span class="n">D</span><span class="p">),</span>
+                    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">chunk_specs</span>
+
+    <span class="k">def</span> <span class="nf">configure_optimizers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">optimizer</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span>
+            <span class="n">lr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">lr</span><span class="p">,</span>
+            <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">optimizer_options</span><span class="p">,</span>
+        <span class="p">)</span></div>
 </pre></div>
 
               </article>

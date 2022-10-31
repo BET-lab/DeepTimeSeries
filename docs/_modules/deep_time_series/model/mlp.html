@@ -163,7 +163,6 @@
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
-<span class="kn">from</span> <span class="nn">torchmetrics</span> <span class="kn">import</span> <span class="n">MeanSquaredError</span>
 
 <span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ForecastingModule</span><span class="p">,</span>
@@ -188,18 +187,22 @@
         <span class="n">encoding_length</span><span class="p">,</span>
         <span class="n">decoding_length</span><span class="p">,</span>
         <span class="n">target_names</span><span class="p">,</span>
-        <span class="n">non_target_names</span><span class="p">,</span>
+        <span class="n">nontarget_names</span><span class="p">,</span>
         <span class="n">n_hidden_layers</span><span class="p">,</span>
-        <span class="n">activation</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">,</span>
+        <span class="n">activation</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">ELU</span><span class="p">,</span>
         <span class="n">dropout_rate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
         <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
         <span class="n">optimizer</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">,</span>
         <span class="n">optimizer_options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">loss_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">metrics</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">head</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_hyperparameters</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoding_length</span> <span class="o">=</span> <span class="n">encoding_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoding_length</span> <span class="o">=</span> <span class="n">decoding_length</span>
 
         <span class="k">if</span> <span class="n">optimizer_options</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">optimizer_options</span> <span class="o">=</span> <span class="p">{}</span>
@@ -208,12 +211,9 @@
             <span class="n">loss_fn</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
 
         <span class="n">n_outputs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_names</span><span class="p">)</span>
-        <span class="n">n_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">non_target_names</span><span class="p">)</span> <span class="o">+</span> <span class="n">n_outputs</span>
+        <span class="n">n_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nontarget_names</span><span class="p">)</span> <span class="o">+</span> <span class="n">n_outputs</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">use_non_targets</span> <span class="o">=</span> <span class="n">n_outputs</span> <span class="o">!=</span> <span class="n">n_features</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">encoding_length</span> <span class="o">=</span> <span class="n">encoding_length</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">decoding_length</span> <span class="o">=</span> <span class="n">decoding_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_nontargets</span> <span class="o">=</span> <span class="n">n_outputs</span> <span class="o">!=</span> <span class="n">n_features</span>
 
         <span class="n">layers</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">(),</span>
@@ -231,21 +231,24 @@
 
         <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Unsqueesze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">head</span> <span class="o">=</span> <span class="n">Head</span><span class="p">(</span>
-            <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
-            <span class="n">output_module</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">n_outputs</span><span class="p">),</span>
-            <span class="n">loss_fn</span><span class="o">=</span><span class="n">loss_fn</span><span class="p">,</span>
-            <span class="n">metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">,</span>
-        <span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">head</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">head</span> <span class="o">=</span> <span class="n">head</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">head</span> <span class="o">=</span> <span class="n">Head</span><span class="p">(</span>
+                <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
+                <span class="n">output_module</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">n_outputs</span><span class="p">),</span>
+                <span class="n">loss_fn</span><span class="o">=</span><span class="n">loss_fn</span><span class="p">,</span>
+                <span class="n">metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">,</span>
+            <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
         <span class="c1"># (B, L, F).</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_non_targets</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_nontargets</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span>
                 <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;encoding.targets&#39;</span><span class="p">],</span>
-                <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;encoding.non_targets&#39;</span><span class="p">]</span>
+                <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;encoding.nontargets&#39;</span><span class="p">]</span>
             <span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;encoding.targets&#39;</span><span class="p">]</span>
@@ -258,14 +261,13 @@
         <span class="n">x</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
 
         <span class="c1"># (B, L, C).</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_non_targets</span><span class="p">:</span>
-            <span class="n">c</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;decoding.non_targets&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_nontargets</span><span class="p">:</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;decoding.nontargets&#39;</span><span class="p">]</span>
 
         <span class="n">B</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">L</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
         <span class="n">EL</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding_length</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decoding_length</span><span class="p">):</span>
             <span class="c1"># (B, L*F)</span>
             <span class="c1"># x = x.view(B, -1)</span>
@@ -277,7 +279,7 @@
             <span class="k">if</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoding_length</span><span class="p">:</span>
                 <span class="k">break</span>
             <span class="c1"># (B, 1, F).</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_non_targets</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_nontargets</span><span class="p">:</span>
                 <span class="n">z</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="p">[:,</span> <span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">z</span> <span class="o">=</span> <span class="n">y</span>
@@ -290,7 +292,6 @@
             <span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">get_outputs</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">outputs</span>
 
@@ -313,17 +314,17 @@
             <span class="p">),</span>
         <span class="p">]</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_non_targets</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_nontargets</span><span class="p">:</span>
             <span class="n">chunk_specs</span> <span class="o">+=</span> <span class="p">[</span>
                 <span class="n">EncodingChunkSpec</span><span class="p">(</span>
-                    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;non_targets&#39;</span><span class="p">,</span>
-                    <span class="n">names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">non_target_names</span><span class="p">,</span>
+                    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;nontargets&#39;</span><span class="p">,</span>
+                    <span class="n">names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">nontarget_names</span><span class="p">,</span>
                     <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">E</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
                     <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
                 <span class="p">),</span>
                 <span class="n">DecodingChunkSpec</span><span class="p">(</span>
-                    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;non_targets&#39;</span><span class="p">,</span>
-                    <span class="n">names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">non_target_names</span><span class="p">,</span>
+                    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;nontargets&#39;</span><span class="p">,</span>
+                    <span class="n">names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">nontarget_names</span><span class="p">,</span>
                     <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="n">E</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">E</span><span class="o">+</span><span class="n">D</span><span class="p">),</span>
                     <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
                 <span class="p">),</span>
