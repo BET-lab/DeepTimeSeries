@@ -35,6 +35,7 @@ class MLP(ForecastingModule):
         optimizer_options=None,
         loss_fn=None,
         metrics=None,
+        head=None,
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -69,12 +70,15 @@ class MLP(ForecastingModule):
 
         layers.append(Unsqueesze(1))
 
-        self.head = Head(
-            tag='targets',
-            output_module=nn.Linear(hidden_size, n_outputs),
-            loss_fn=loss_fn,
-            metrics=metrics,
-        )
+        if head is not None:
+            self.head = head
+        else:
+            self.head = Head(
+                tag='targets',
+                output_module=nn.Linear(hidden_size, n_outputs),
+                loss_fn=loss_fn,
+                metrics=metrics,
+            )
 
         self.body = nn.Sequential(*layers)
 
