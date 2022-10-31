@@ -1,16 +1,14 @@
-"""
-.. warning::
-    This module has to be updated. Don't use yet.
-"""
-
 import math
 
 import numpy as np
 import torch
 import torch.nn as nn
-from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 
-from ..core import ForecastingModule
+from ..core import (
+    ForecastingModule,
+    Head,
+)
+
 from ..chunk import (
     EncodingChunkSpec,
     DecodingChunkSpec,
@@ -21,33 +19,56 @@ from ..chunk import (
 class SingleShotTransformer(ForecastingModule):
     def __init__(
         self,
-        n_encoder_features,
-        n_decoder_features,
+        encoding_length,
+        decoding_length,
+        target_names,
+        nontarget_names,
         d_model,
         n_heads,
         n_layers,
-        dim_feedforward,
-        n_outputs,
-        dropout_rate,
-        lr,
-        loss_fn,
+        dim_feedforward=None,
+        dropout_rate=0.0,
+        lr=1e-3,
+        optimizer: torch.optim.Optimizer = torch.optim.Adam,
+        optimizer_options=None,
+        loss_fn=None,
+        metrics=None,
         head=None,
     ):
         super().__init__()
         self.save_hyperparameters()
 
+        self.encoding_length = encoding_length
+        self.decoding_length = decoding_length
+
+        if optimizer_options is None:
+            self.hparams.optimizer_options = {}
+
+        if loss_fn is None:
+            loss_fn = nn.MSELoss()
+
+        if dim_feedforward is None:
+            dim_feedforward = 4 * d_model
+
+        n_targets = len(target_names)
+        n_nontargets = len(nontarget_names)
+        n_features = n_nontargets + n_targets
+
+        self.use_nontargets = n_nontargets > 0
+
         self.encoder_d_matching_layer = nn.Linear(
-            in_features=n_encoder_features,
+            in_features=n_features,
             out_features=d_model,
         )
 
-        self.decoder_d_matching_layer = nn.Linear(
-            in_features=n_decoder_features,
-            out_features=d_model,
-        )
+        if self.use_nontargets:
+            self.decoder_d_matching_layer = nn.Linear(
+                in_features=n_nontargets,
+                out_features=d_model,
+            )
 
         self.positional_encoding = PositionalEncoding(
-            d_model=d_model, max_len=5000,
+            d_model=d_model, max_len=max(encoding_length, decoding_length),
         )
 
         encoder_layer = nn.TransformerEncoderLayer(
@@ -68,21 +89,29 @@ class SingleShotTransformer(ForecastingModule):
 
         self.decoder = nn.TransformerDecoder(decoder_layer, n_layers)
 
-        if head is None:
-            self.head = nn.Linear(d_model, n_outputs)
-        else:
+        if head is not None:
             self.head = head
+        else:
+            self.head = Head(
+                tag='targets',
+                output_module=nn.Linear(d_model, n_targets),
+                loss_fn=loss_fn,
+                metrics=metrics,
+            )
 
     def encode(self, inputs):
         # L: encoding length.
         # all_input: (B, L, F).
-        all_input = torch.cat([
-            inputs['encoding.targets'],
-            inputs['encoding.covariates']
-        ], dim=2)
+        if self.use_nontargets:
+            x = torch.cat([
+                inputs['encoding.targets'],
+                inputs['encoding.nontargets']
+            ], dim=2)
+        else:
+            x = inputs['encoding.targets']
 
-        x = self.encoder_d_matching_layer(all_input)
 
+        x = self.encoder_d_matching_layer(x)
         x = self.positional_encoding(x)
 
         # (B, L, d_model).
@@ -92,12 +121,16 @@ class SingleShotTransformer(ForecastingModule):
             'memory': memory
         }
 
-    def decode_eval(self, inputs):
+    def decode(self, inputs):
         # L: decoding_length
         memory = inputs['memory']
 
-        all_input = inputs['decoding.covariates']
-        x = self.decoder_d_matching_layer(all_input)
+        if self.use_nontargets:
+            x = inputs['decoding.nontargets']
+            x = self.decoder_d_matching_layer(x)
+        else:
+            # Same device will be used automatically.
+            x = torch.zeros_like(memory)
 
         x = self.positional_encoding(x)
 
@@ -106,11 +139,11 @@ class SingleShotTransformer(ForecastingModule):
         x = self.decoder(tgt=x, memory=memory, tgt_mask=tgt_mask)
 
         # (B, L, n_outputs).
-        y = self.head(x)
+        self.head.reset()
+        self.head(x)
+        outputs = self.head.get_outputs()
 
-        return {
-            'label.targets': y
-        }
+        return outputs
 
     def generate_square_subsequent_mask(self, sz):
         r"""Generate a square mask for the sequence.
@@ -121,36 +154,49 @@ class SingleShotTransformer(ForecastingModule):
             torch.full((sz, sz), float('-inf')), diagonal=1
         ).to(self.device)
 
-    def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=self.hparams.lr)
+    def make_chunk_specs(self):
+        E = self.encoding_length
+        D = self.decoding_length
 
-    def make_chunk_specs(self, target_names, covariate_names):
         chunk_specs = [
             EncodingChunkSpec(
                 tag='targets',
-                names=target_names,
+                names=self.hparams.target_names,
+                range_=(0, E),
                 dtype=np.float32
             ),
-            EncodingChunkSpec(
-                tag='covariates',
-                names=covariate_names,
-                dtype=np.float32,
-            ),
-
-            DecodingChunkSpec(
-                tag='covariates',
-                names=covariate_names,
-                dtype=np.float32
-            ),
-
             LabelChunkSpec(
                 tag='targets',
-                names=target_names,
-                dtype=np.float32
+                names=self.hparams.target_names,
+                range_=(E, E+D),
+                dtype=np.float32,
             ),
         ]
 
+        if self.use_nontargets:
+            chunk_specs += [
+                EncodingChunkSpec(
+                    tag='nontargets',
+                    names=self.hparams.nontarget_names,
+                    range_=(0, E),
+                    dtype=np.float32,
+                ),
+                DecodingChunkSpec(
+                    tag='nontargets',
+                    names=self.hparams.nontarget_names,
+                    range_=(E, E+D),
+                    dtype=np.float32,
+                ),
+            ]
+
         return chunk_specs
+
+    def configure_optimizers(self):
+        return self.hparams.optimizer(
+            self.parameters(),
+            lr=self.hparams.lr,
+            **self.hparams.optimizer_options,
+        )
 
 # Modified from:
 # https://pytorch.org/tutorials/beginner/transformer_tutorial.html.
