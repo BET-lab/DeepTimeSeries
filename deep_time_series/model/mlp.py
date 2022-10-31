@@ -103,10 +103,10 @@ class MLP(ForecastingModule):
             c = inputs['decoding.nontargets']
 
         B = x.size(0)
-        L = x.size(1)
 
         EL = self.encoding_length
 
+        self.head.reset()
         for i in range(self.decoding_length):
             # (B, L*F)
             # x = x.view(B, -1)
@@ -131,7 +131,6 @@ class MLP(ForecastingModule):
             ], dim=1)
 
         outputs = self.head.get_outputs()
-        self.head.reset()
 
         return outputs
 
