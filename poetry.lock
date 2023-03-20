@@ -212,6 +212,18 @@ test = ["contextlib2", "coverage[toml] (>=4.5)", "hypothesis (>=4.0)", "mock (>=
 trio = ["trio (>=0.16,<0.22)"]
 
 [[package]]
+name = "appdirs"
+version = "1.4.4"
+description = "A small Python module for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
+category = "dev"
+optional = false
+python-versions = "*"
+files = [
+    {file = "appdirs-1.4.4-py2.py3-none-any.whl", hash = "sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128"},
+    {file = "appdirs-1.4.4.tar.gz", hash = "sha256:7d5d0167b2b1ba821647616af46a749d1c653740dd0d2415100fe26e27afdf41"},
+]
+
+[[package]]
 name = "appnope"
 version = "0.1.3"
 description = "Disable App Nap on macOS >= 10.9"
@@ -346,6 +358,22 @@ files = [
 jinxed = {version = ">=1.1.0", markers = "platform_system == \"Windows\""}
 six = ">=1.9.0"
 wcwidth = ">=0.1.4"
+
+[[package]]
+name = "cattrs"
+version = "22.2.0"
+description = "Composable complex class support for attrs and dataclasses."
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "cattrs-22.2.0-py3-none-any.whl", hash = "sha256:bc12b1f0d000b9f9bee83335887d532a1d3e99a833d1bf0882151c97d3e68c21"},
+    {file = "cattrs-22.2.0.tar.gz", hash = "sha256:f0eed5642399423cf656e7b66ce92cdc5b963ecafd041d1b24d136fdde7acf6d"},
+]
+
+[package.dependencies]
+attrs = ">=20"
+exceptiongroup = {version = "*", markers = "python_version < \"3.11\""}
 
 [[package]]
 name = "certifi"
@@ -821,6 +849,29 @@ files = [
 [package.dependencies]
 dnspython = ">=1.15.0"
 idna = ">=2.0.0"
+
+[[package]]
+name = "esbonio"
+version = "0.16.1"
+description = "A Language Server for Sphinx projects."
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "esbonio-0.16.1-py3-none-any.whl", hash = "sha256:cd5ed65666d7566a38b04cac01dd55b7d74147a016d1b2ac0a0f971a8cd510cc"},
+    {file = "esbonio-0.16.1.tar.gz", hash = "sha256:d5d57c29a793de9b9b1894f9bffdd3bd25a79d430459e3e597424f52e8d02320"},
+]
+
+[package.dependencies]
+appdirs = "*"
+pygls = ">=1.0.0"
+pyspellchecker = "*"
+sphinx = "*"
+
+[package.extras]
+dev = ["black", "flake8", "pre-commit", "tox"]
+test = ["mock", "pytest", "pytest-cov", "pytest-lsp", "pytest-timeout"]
+typecheck = ["mypy", "pytest-lsp", "types-appdirs", "types-docutils", "types-pygments"]
 
 [[package]]
 name = "exceptiongroup"
@@ -1557,6 +1608,22 @@ python-versions = "*"
 files = [
     {file = "lit-15.0.7.tar.gz", hash = "sha256:ed08ac55afe714a193653df293ae8a6ee6c45d6fb11eeca72ce347d99b88ecc8"},
 ]
+
+[[package]]
+name = "lsprotocol"
+version = "2023.0.0a1"
+description = "Python implementation of the Language Server Protocol."
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "lsprotocol-2023.0.0a1-py3-none-any.whl", hash = "sha256:133c339a7cccb299a5b357f9b8ef6aebe27616e0daf4ba54e63476afe0e12e47"},
+    {file = "lsprotocol-2023.0.0a1.tar.gz", hash = "sha256:32edfd4856abba1349bf5a070567445b3d7286951afba3644b472629796f82d0"},
+]
+
+[package.dependencies]
+attrs = "*"
+cattrs = "*"
 
 [[package]]
 name = "markdown-it-py"
@@ -2305,6 +2372,28 @@ doc = ["ablog (>=0.11.0rc2)", "colorama", "ipyleaflet", "jupyter_sphinx", "linki
 test = ["codecov", "pytest", "pytest-cov", "pytest-regressions"]
 
 [[package]]
+name = "pygls"
+version = "1.0.1"
+description = "a pythonic generic language server (pronounced like \"pie glass\")."
+category = "dev"
+optional = false
+python-versions = "<4,>=3.7"
+files = [
+    {file = "pygls-1.0.1-py3-none-any.whl", hash = "sha256:adacc96da77598c70f46acfdfd1481d3da90cd54f639f7eee52eb6e4dbd57b55"},
+    {file = "pygls-1.0.1.tar.gz", hash = "sha256:f3ee98ddbb4690eb5c755bc32ba7e129607f14cbd313575f33d0cea443b78cb2"},
+]
+
+[package.dependencies]
+lsprotocol = "*"
+typeguard = ">=2.10.0,<3"
+
+[package.extras]
+dev = ["bandit (==1.7.4)", "flake8 (==4.0.1)", "mypy (==0.961)"]
+docs = ["sphinx (==5.0.1)", "sphinx-rtd-theme (==1.0.0)"]
+test = ["mock (==4.0.3)", "pytest (==7.1.2)", "pytest-asyncio (==0.18.3)"]
+ws = ["websockets (>=10.0.0,<11.0.0)"]
+
+[[package]]
 name = "pygments"
 version = "2.14.0"
 description = "Pygments is a syntax highlighting package written in Python."
@@ -2351,6 +2440,18 @@ files = [
 
 [package.extras]
 diagrams = ["jinja2", "railroad-diagrams"]
+
+[[package]]
+name = "pyspellchecker"
+version = "0.7.1"
+description = "Pure python spell checker based on work by Peter Norvig"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "pyspellchecker-0.7.1-py3-none-any.whl", hash = "sha256:9fac7e3abf2a11eb1660906dc513bc9f92bd49795f136bb1a56ac1f59f5498b0"},
+    {file = "pyspellchecker-0.7.1.tar.gz", hash = "sha256:ed46a7218a363ef1a348fac14c9fef95b0aca5daa7744389d70843fcc0961b31"},
+]
 
 [[package]]
 name = "pytest"
@@ -3282,6 +3383,22 @@ tests = ["autopep8", "flake8", "isort", "numpy", "pytest", "scipy (>=1.7.1)"]
 tutorials = ["matplotlib", "pandas", "tabulate"]
 
 [[package]]
+name = "typeguard"
+version = "2.13.3"
+description = "Run-time type checker for Python"
+category = "dev"
+optional = false
+python-versions = ">=3.5.3"
+files = [
+    {file = "typeguard-2.13.3-py3-none-any.whl", hash = "sha256:5e3e3be01e887e7eafae5af63d1f36c849aaa94e3a0112097312aabfa16284f1"},
+    {file = "typeguard-2.13.3.tar.gz", hash = "sha256:00edaa8da3a133674796cf5ea87d9f4b4c367d77476e185e80251cc13dfbb8c4"},
+]
+
+[package.extras]
+doc = ["sphinx-autodoc-typehints (>=1.2.0)", "sphinx-rtd-theme"]
+test = ["mypy", "pytest", "typing-extensions"]
+
+[[package]]
 name = "typing-extensions"
 version = "4.5.0"
 description = "Backported and Experimental Type Hints for Python 3.7+"
@@ -3628,4 +3745,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "5ecbe04fee6570a83ab6ee01e48ee4f086fcb7a058e7ad4bf79eebd42007ffa2"
+content-hash = "8a5cdc46bd3f33c9cda6a0fbec8c491faefaec4da48a5656453e272e65f8f80a"

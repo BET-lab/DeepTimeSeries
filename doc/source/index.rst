@@ -20,8 +20,8 @@ The design philosophy of DeepTimeSeries is as follows:
 time series forecasting**
 
 Our main target users are intermediate-level users who need to develop
-deep learning models for time series forecasting. 
-We provide solutions to many problems that deep learning modelers face 
+deep learning models for time series forecasting.
+We provide solutions to many problems that deep learning modelers face
 because of the uniqueness of time series data.
 
 We additionally implement a high-level API, which allows comparatively beginners
