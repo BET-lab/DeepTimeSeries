@@ -9,3 +9,4 @@ pl_runs
 test/test.log
 .pytest_cache
 .venv
+_autosummary
