@@ -1,13 +1,12 @@
-from collections import defaultdict
-from typing import Any, Callable
-
 import torch
 import torch.nn as nn
 import torch.distributions
 
 import pytorch_lightning as pl
-from torchmetrics import Metric, MetricCollection
 
+from collections import defaultdict
+from typing import Any, Callable
+from torchmetrics import Metric, MetricCollection
 from .util import merge_dicts
 
 
