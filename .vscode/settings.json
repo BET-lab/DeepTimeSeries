@@ -1,0 +1,15 @@
+{
+    "esbonio.sphinx.buildDir" : "${workspaceFolder}/doc/build",
+    "esbonio.sphinx.confDir"  : "${workspaceFolder}/doc/source",
+    "esbonio.sphinx.srcDir"   : "${workspaceFolder}/doc/source",
+    "esbonio.server.enabled": true,
+    "esbonio.server.pythonPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+    "esbonio.server.logLevel": "debug",
+    "python.testing.pytestArgs": [
+        "-c",
+        "${workspaceFolder}/test/pytest.ini",
+        "test",
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+}
