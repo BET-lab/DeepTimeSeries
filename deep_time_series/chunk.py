@@ -1,5 +1,3 @@
-from typing import Type
-
 import numpy as np
 import xarray as xr
 
