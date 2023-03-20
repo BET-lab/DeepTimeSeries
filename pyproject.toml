@@ -1,7 +1,8 @@
 [tool.poetry]
 name = "deep-time-series"
 version = "0.1.0"
-description = ""
+description = """Deep learning library for time series \
+forecasting based on PyTorch."""
 authors = ["Sangwon <lsw91.main@gmail.com>"]
 license = "MIT"
 readme = "README.md"
