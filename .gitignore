@@ -1,10 +1,8 @@
 test*.ipynb
-__pycache__*
+__pycache__
 *.egg-info
 dist
 build
-doc/build
-doc/source/_autosummary
 pl_runs
 test/test.log
 .pytest_cache
