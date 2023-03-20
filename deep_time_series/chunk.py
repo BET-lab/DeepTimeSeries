@@ -9,20 +9,20 @@ import torch
 class BaseChunkSpec:
     PREFIX = ''
 
-    def __init__(self):
-        self.__tag = None
-        self.__names = None
-        self.__range = None
-        self.__dtype = None
+    def __init__(self, tag, names, range_, dtype):
+        self.tag = tag
+        self.names = names
+        self.range = range_
+        self.dtype = dtype
 
     @property
     def tag(self) -> str:
-        if self.__tag is None:
+        if self._tag is None:
             raise NotImplementedError(
-                f'Define {self.__class__.__name__}.tag'
+                f'Define {self.__class__._name__}.tag'
             )
 
-        return self.__tag
+        return self._tag
 
     @tag.setter
     def tag(self, value: str):
@@ -34,16 +34,16 @@ class BaseChunkSpec:
         if not value.startswith(self.PREFIX):
             value = f'{self.PREFIX}.{value}'
 
-        self.__tag = value
+        self._tag = value
 
     @property
     def names(self) -> list[str]:
-        if self.__names is None:
+        if self._names is None:
             raise NotImplementedError(
-                f'Define {self.__class__.__name__}.names'
+                f'Define {self.__class__._name__}.names'
             )
 
-        return self.__names
+        return self._names
 
     @names.setter
     def names(self, value):
@@ -56,16 +56,16 @@ class BaseChunkSpec:
                 f'Invalid type for "names"'
             )
 
-        self.__names = list(value)
+        self._names = list(value)
 
     @property
     def range(self) -> tuple[int, int]:
-        if self.__range is None:
+        if self._range is None:
             raise NotImplementedError(
-                f'Define {self.__class__.__name__}.range'
+                f'Define {self.__class__._name__}.range'
             )
 
-        return self.__range
+        return self._range
 
     @range.setter
     def range(self, value: tuple[int, int]):
@@ -87,16 +87,16 @@ class BaseChunkSpec:
         if value[0] >= value[1]:
             raise ValueError('range[0] >= range[1]')
 
-        self.__range = tuple(value)
+        self._range = tuple(value)
 
     @property
     def dtype(self) -> np.dtype:
-        if self.__dtype is None:
+        if self._dtype is None:
             raise NotImplementedError(
-                f'Define {self.__class__.__name__}.dtype'
+                f'Define {self.__class__._name__}.dtype'
             )
 
-        return self.__dtype
+        return self._dtype
 
     @dtype.setter
     def dtype(self, value: np.dtype):
@@ -105,37 +105,19 @@ class BaseChunkSpec:
                 f'Invalid type for "dtype": {type(value)}'
             )
 
-        self.__dtype = np.dtype(value)
+        self._dtype = np.dtype(value)
 
 
 class EncodingChunkSpec(BaseChunkSpec):
     PREFIX = 'encoding'
 
-    def __init__(self, tag, names, range_, dtype):
-        self.tag = tag
-        self.names = names
-        self.range = range_
-        self.dtype = dtype
-
 
 class DecodingChunkSpec(BaseChunkSpec):
     PREFIX = 'decoding'
 
-    def __init__(self, tag, names, range_, dtype):
-        self.tag = tag
-        self.names = names
-        self.range = range_
-        self.dtype = dtype
-
 
 class LabelChunkSpec(BaseChunkSpec):
     PREFIX = 'label'
-
-    def __init__(self, tag, names, range_, dtype):
-        self.tag = tag
-        self.names = names
-        self.range = range_
-        self.dtype = dtype
 
 
 class ChunkExtractor:

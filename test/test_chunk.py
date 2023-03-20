@@ -24,7 +24,13 @@ from deep_time_series import BaseChunkSpec
 
 
 def test_chunk_spec():
-    chunk_spec = BaseChunkSpec()
+    chunk_spec = BaseChunkSpec(
+        tag='my_tag',
+        names=['a', 'b'],
+        range_=(0, 3),
+        dtype=np.float32,
+    )
+
     chunk_spec.tag = 'my_tag'
 
     assert chunk_spec.tag == 'my_tag'
