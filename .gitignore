@@ -8,3 +8,4 @@ doc/build
 doc/source/_autosummary
 pl_runs
 test/test.log
+.pytest_cache
