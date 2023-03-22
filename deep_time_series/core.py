@@ -492,7 +492,7 @@ class ForecastingModule(pl.LightningModule):
 
         return loss
 
-    def training_epoch_end(self, epoch_outputs) -> None:
+    def on_train_epoch_end(self) -> None:
         # Don't log epoch averaged metrics. Just reset the states.
         self.reset_metrics(stage='train')
 
@@ -513,7 +513,7 @@ class ForecastingModule(pl.LightningModule):
         # loss will be epoch averaged.
         self.log('val/loss', loss)
 
-    def validation_epoch_end(self, epoch_outputs) -> None:
+    def on_validation_epoch_end(self) -> None:
         metrics = self.compute_metrics(stage='val')
         self.log_dict(metrics)
         self.reset_metrics(stage='val')
@@ -535,7 +535,7 @@ class ForecastingModule(pl.LightningModule):
         # loss will be epoch averaged.
         self.log('test/loss', loss)
 
-    def test_epoch_end(self, epoch_outputs) -> None:
+    def on_test_epoch_end(self) -> None:
         metrics = self.compute_metrics(stage='test')
         self.log_dict(metrics)
         self.reset_metrics(stage='test')
