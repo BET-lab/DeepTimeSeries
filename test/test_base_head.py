@@ -1,4 +1,3 @@
-from re import L, S
 import sys
 
 from deep_time_series.core import MetricModule
