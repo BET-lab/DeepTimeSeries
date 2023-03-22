@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "deep-time-series"
-version = "0.1.0"
+version = "0.1.1"
 description = """Deep learning library for time series \
 forecasting based on PyTorch."""
 authors = ["Sangwon <lsw91.main@gmail.com>"]
