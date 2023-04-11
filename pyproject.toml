@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "deep-time-series"
-version = "0.1.1"
+version = "0.1.2"
 description = """Deep learning library for time series \
 forecasting based on PyTorch."""
 authors = ["Sangwon <lsw91.main@gmail.com>"]
@@ -16,7 +16,7 @@ torchaudio = {version = "^2.0.1", source = "torch"}
 lightning = "^2.0.0"
 numpy = "^1.24.2"
 pandas = "^1.5.3"
-matplotlib = "^3.7.1"
+matplotlib = "^3.5.1"
 xarray = "^2023.2.0"
 rich = "^13.3.2"
 scikit-learn = "^1.2.2"
