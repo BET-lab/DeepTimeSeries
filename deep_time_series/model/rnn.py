@@ -2,16 +2,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from ..core import (
-    ForecastingModule,
-    Head,
-)
-
-from ..chunk import (
-    EncodingChunkSpec,
-    DecodingChunkSpec,
-    LabelChunkSpec,
-)
+from ..chunk import DecodingChunkSpec, EncodingChunkSpec, LabelChunkSpec
+from ..core import ForecastingModule, Head
 
 
 class RNN(ForecastingModule):
@@ -73,10 +65,10 @@ class RNN(ForecastingModule):
     def encode(self, inputs):
         # (B, L, F).
         if self.use_nontargets:
-            x = torch.cat([
-                inputs['encoding.targets'],
-                inputs['encoding.nontargets']
-            ], dim=2)
+            x = torch.cat(
+                [inputs['encoding.targets'], inputs['encoding.nontargets']],
+                dim=2,
+            )
         else:
             x = inputs['encoding.targets']
 
@@ -105,11 +97,11 @@ class RNN(ForecastingModule):
             h, memory = self.decoder(x, memory)
             y = self.head(h)
 
-            if i+1 == self.decoding_length:
+            if i + 1 == self.decoding_length:
                 break
 
             if self.use_nontargets:
-                x = torch.cat([y, c[:, i:i+1, :]], dim=2)
+                x = torch.cat([y, c[:, i : i + 1, :]], dim=2)
             else:
                 x = y
 
@@ -126,12 +118,12 @@ class RNN(ForecastingModule):
                 tag='targets',
                 names=self.hparams.target_names,
                 range_=(0, E),
-                dtype=np.float32
+                dtype=np.float32,
             ),
             LabelChunkSpec(
                 tag='targets',
                 names=self.hparams.target_names,
-                range_=(E, E+D),
+                range_=(E, E + D),
                 dtype=np.float32,
             ),
         ]
@@ -141,13 +133,13 @@ class RNN(ForecastingModule):
                 EncodingChunkSpec(
                     tag='nontargets',
                     names=self.hparams.nontarget_names,
-                    range_=(1, E+1),
+                    range_=(1, E + 1),
                     dtype=np.float32,
                 ),
                 DecodingChunkSpec(
                     tag='nontargets',
                     names=self.hparams.nontarget_names,
-                    range_=(E+1, E+D),
+                    range_=(E + 1, E + D),
                     dtype=np.float32,
                 ),
             ]

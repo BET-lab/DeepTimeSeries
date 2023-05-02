@@ -1,20 +1,18 @@
-import torch
-import torch.nn as nn
-import torch.distributions
-
-import pytorch_lightning as pl
-
 from collections import defaultdict
 from typing import Any, Callable
+
+import pytorch_lightning as pl
+import torch
+import torch.distributions
+import torch.nn as nn
 from torchmetrics import Metric, MetricCollection
+
 from .util import merge_dicts
 
 
 class MetricModule(nn.Module):
     def __init__(
-        self,
-        tag: str,
-        metrics: Metric | list[Metric] | dict[str, Metric]
+        self, tag: str, metrics: Metric | list[Metric] | dict[str, Metric]
     ):
         super().__init__()
 
@@ -29,11 +27,13 @@ class MetricModule(nn.Module):
 
         metrics = MetricCollection(metrics)
 
-        self._metric_dict = nn.ModuleDict({
-            '_train': metrics.clone(prefix=f'train/{tag}.'),
-            '_val': metrics.clone(prefix=f'val/{tag}.'),
-            '_test': metrics.clone(prefix=f'test/{tag}.')
-        })
+        self._metric_dict = nn.ModuleDict(
+            {
+                '_train': metrics.clone(prefix=f'train/{tag}.'),
+                '_val': metrics.clone(prefix=f'val/{tag}.'),
+                '_test': metrics.clone(prefix=f'test/{tag}.'),
+            }
+        )
 
     def forward(self, outputs, batch, stage):
         return self._metric_dict[f'_{stage}'](
@@ -53,11 +53,7 @@ class MetricModule(nn.Module):
 
 
 class BaseHead(nn.Module):
-    _SPECIAL_ATTRIBUTES = (
-        'tag',
-        'loss_weight',
-        'metrics'
-    )
+    _SPECIAL_ATTRIBUTES = ('tag', 'loss_weight', 'metrics')
 
     def __init__(self):
         """Base class of all Head classes."""
@@ -76,18 +72,14 @@ class BaseHead(nn.Module):
     def tag(self) -> str:
         """Tag for a head. Prefix 'head.' is added automatically."""
         if self._tag is None:
-            raise NotImplementedError(
-                f'Define {self.__class__.__name__}.tag'
-            )
+            raise NotImplementedError(f'Define {self.__class__.__name__}.tag')
         else:
             return self._tag
 
     @tag.setter
     def tag(self, value: str):
         if not isinstance(value, str):
-            raise TypeError(
-                f'Invalid type for "tag": {type(value)}'
-            )
+            raise TypeError(f'Invalid type for "tag": {type(value)}')
 
         if not value.startswith('head.'):
             value = f'head.{value}'
@@ -122,9 +114,7 @@ class BaseHead(nn.Module):
     @loss_weight.setter
     def loss_weight(self, value: float):
         if not isinstance(value, (float, int)):
-            raise TypeError(
-                f'Invalid type for "loss_weight": {type(value)}'
-            )
+            raise TypeError(f'Invalid type for "loss_weight": {type(value)}')
         elif value < 0:
             raise ValueError('loss_weight < 0')
 
@@ -138,9 +128,7 @@ class BaseHead(nn.Module):
         return f'label.{self.tag[5:]}'
 
     def forward(self, inputs: Any) -> torch.Tensor:
-        raise NotImplementedError(
-            f'Define {self.__class__.__name__}.forward()'
-        )
+        raise NotImplementedError(f'Define {self.__class__.__name__}.forward()')
 
     def get_outputs(self) -> dict[str, Any]:
         raise NotImplementedError(
@@ -148,14 +136,10 @@ class BaseHead(nn.Module):
         )
 
     def reset(self):
-        raise NotImplementedError(
-            f'Define {self.__class__.__name__}.reset()'
-        )
+        raise NotImplementedError(f'Define {self.__class__.__name__}.reset()')
 
     def calculate_loss(
-        self,
-        outputs: dict[str, Any],
-        batch: dict[str, Any]
+        self, outputs: dict[str, Any], batch: dict[str, Any]
     ) -> torch.Tensor:
         raise NotImplementedError(
             f'Define {self.__class__.__name__}.calculate_loss()'
@@ -189,23 +173,20 @@ class Head(BaseHead):
         return y
 
     def get_outputs(self):
-        return {
-            self.tag: torch.cat(self._ys, dim=1)
-        }
+        return {self.tag: torch.cat(self._ys, dim=1)}
 
     def reset(self):
         self._ys = []
 
     def calculate_loss(
-        self,
-        outputs: dict[str, Any],
-        batch: dict[str, Any]
+        self, outputs: dict[str, Any], batch: dict[str, Any]
     ) -> torch.Tensor:
         return self.loss_fn(outputs[self.tag], batch[self.label_tag])
 
 
 class DistributionHead(BaseHead):
-    def __init__(self,
+    def __init__(
+        self,
         tag: str,
         distribution: torch.distributions.Distribution,
         in_features: int,
@@ -239,8 +220,7 @@ class DistributionHead(BaseHead):
 
     def forward(self, x):
         kwargs = {
-            k: self.transforms[k](layer(x))
-            for k, layer in self.linears.items()
+            k: self.transforms[k](layer(x)) for k, layer in self.linears.items()
         }
 
         m = self.distribution(**kwargs)
@@ -263,15 +243,8 @@ class DistributionHead(BaseHead):
     def reset(self):
         self._outputs = defaultdict(list)
 
-    def calculate_loss(
-        self,
-        outputs,
-        batch
-    ) -> torch.Tensor:
-        kwargs = {
-            k: outputs[f'{self.tag}.{k}']
-            for k in self.linears.keys()
-        }
+    def calculate_loss(self, outputs, batch) -> torch.Tensor:
+        kwargs = {k: outputs[f'{self.tag}.{k}'] for k in self.linears.keys()}
 
         m = self.distribution(**kwargs)
 
@@ -287,8 +260,7 @@ class ForecastingModule(pl.LightningModule):
     )
 
     def __init__(self):
-        """Base class of all forecasting modules.
-        """
+        """Base class of all forecasting modules."""
         super().__init__()
 
         self._encoding_length = None
@@ -319,9 +291,7 @@ class ForecastingModule(pl.LightningModule):
                 f'Invalid type for "encoding_length": {type(value)}'
             )
         elif value <= 0:
-            raise ValueError(
-                'Encoding length <= 0.'
-            )
+            raise ValueError('Encoding length <= 0.')
         self._encoding_length = value
 
     @property
@@ -340,26 +310,20 @@ class ForecastingModule(pl.LightningModule):
                 f'Invalid type for "decoding_length": {type(value)}'
             )
         elif value <= 0:
-            raise ValueError(
-                'Decoding length <= 0.'
-            )
+            raise ValueError('Decoding length <= 0.')
         self._decoding_length = value
 
     @property
     def heads(self) -> list[BaseHead]:
         if self._heads is None:
-            raise NotImplementedError(
-                f'Define {self.__class__.__name__}.heads'
-            )
+            raise NotImplementedError(f'Define {self.__class__.__name__}.heads')
         else:
             return self._heads
 
     @heads.setter
     def heads(self, heads: list[BaseHead]):
         if not isinstance(heads, list):
-            raise TypeError(
-                f'Invalid type for "heads". {type(heads)}'
-            )
+            raise TypeError(f'Invalid type for "heads". {type(heads)}')
         elif not all(isinstance(head, BaseHead) for head in heads):
             raise TypeError(
                 f'Invalid type for "heads". {[type(v) for v in heads]}'
@@ -370,9 +334,7 @@ class ForecastingModule(pl.LightningModule):
     @property
     def head(self) -> BaseHead:
         if self._heads is None:
-            raise NotImplementedError(
-                f'Define {self.__class__.__name__}.heads'
-            )
+            raise NotImplementedError(f'Define {self.__class__.__name__}.heads')
         elif len(self._heads) != 1:
             raise Exception('Multi-head model cannot use head.')
         else:
@@ -381,24 +343,18 @@ class ForecastingModule(pl.LightningModule):
     @head.setter
     def head(self, head: BaseHead):
         if not isinstance(head, BaseHead):
-            raise TypeError(
-                f'Invalid type for "heads". {type(head)}'
-            )
+            raise TypeError(f'Invalid type for "heads". {type(head)}')
 
         self.heads = [head]
 
     def encode(self, inputs: dict[str, Any]) -> dict[str, Any]:
-        raise NotImplementedError(
-            f'Define {self.__class__.__name__}.encode()'
-        )
+        raise NotImplementedError(f'Define {self.__class__.__name__}.encode()')
 
     def decode_train(self, inputs: dict[str, Any]) -> dict[str, Any]:
         return self.decode_eval(inputs)
 
     def decode_eval(self, inputs: dict[str, Any]) -> dict[str, Any]:
-        NotImplementedError(
-            f'Define {self.__class__.__name__}.decode()'
-        )
+        NotImplementedError(f'Define {self.__class__.__name__}.decode()')
 
     def decode(self, inputs):
         if self.training:
@@ -408,9 +364,7 @@ class ForecastingModule(pl.LightningModule):
 
     def forward(self, inputs: dict[str, Any]) -> dict[str, Any]:
         encoder_outputs = self.encode(inputs)
-        decoder_inputs = merge_dicts(
-            [inputs, encoder_outputs]
-        )
+        decoder_inputs = merge_dicts([inputs, encoder_outputs])
         outputs = self.decode(decoder_inputs)
 
         return outputs
@@ -419,9 +373,7 @@ class ForecastingModule(pl.LightningModule):
         pass
 
     def calculate_loss(
-        self,
-        outputs: dict[str, Any],
-        batch: dict[str, Any]
+        self, outputs: dict[str, Any], batch: dict[str, Any]
     ) -> dict[str, Any]:
         loss = 0
         for head in self.heads:
@@ -475,16 +427,13 @@ class ForecastingModule(pl.LightningModule):
             head.metrics.reset(stage=stage)
 
     def training_step(
-        self,
-        batch: dict[str, Any], batch_idx: int
+        self, batch: dict[str, Any], batch_idx: int
     ) -> dict[str, Any]:
         outputs = self(batch)
         loss = self.calculate_loss(outputs, batch)
 
         # Update and evaluate metric.
-        metrics = self.forward_metrics(
-            outputs, batch, stage='train'
-        )
+        metrics = self.forward_metrics(outputs, batch, stage='train')
 
         self.log('train/loss', loss)
         # Log instant metrics.
@@ -506,9 +455,7 @@ class ForecastingModule(pl.LightningModule):
         loss = self.calculate_loss(outputs, batch)
 
         # Don't log metrics yet.
-        self.update_metrics(
-            outputs, batch, stage='val'
-        )
+        self.update_metrics(outputs, batch, stage='val')
 
         # loss will be epoch averaged.
         self.log('val/loss', loss)
@@ -528,9 +475,7 @@ class ForecastingModule(pl.LightningModule):
         loss = self.calculate_loss(outputs, batch)
 
         # Don't log metrics yet.
-        self.update_metrics(
-            outputs, batch, stage='test'
-        )
+        self.update_metrics(outputs, batch, stage='test')
 
         # loss will be epoch averaged.
         self.log('test/loss', loss)

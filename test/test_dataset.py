@@ -1,33 +1,29 @@
 import sys
-from typing import Type
-
-from deep_time_series.dataset import (
-    TimeSeriesDataset,
-)
 
 from deep_time_series import (
+    ColumnTransformer,
     EncodingChunkSpec,
     LabelChunkSpec,
-    ColumnTransformer,
 )
+from deep_time_series.dataset import TimeSeriesDataset
 
 sys.path.append('..')
 
+import logging
+
 import pytest
 
-import logging
 logger = logging.getLogger('test')
 
 import numpy as np
 import pandas as pd
-
-from sklearn.preprocessing import MinMaxScaler, FunctionTransformer
+from sklearn.preprocessing import FunctionTransformer
 
 
 def test_dataset():
     df = pd.DataFrame(
         data={
-            'a': np.arange(20)**2,
+            'a': np.arange(20) ** 2,
             'b': -np.arange(20),
         }
     )
@@ -35,20 +31,14 @@ def test_dataset():
     logger.debug(df)
 
     spec = EncodingChunkSpec(
-        tag='my_tag',
-        names=['a', 'b'],
-        range_=(-1, 3),
-        dtype=np.float32
+        tag='my_tag', names=['a', 'b'], range_=(-1, 3), dtype=np.float32
     )
 
     column_transformer = ColumnTransformer(
         transformer_tuples=[
             (
-                FunctionTransformer(
-                    func=lambda x: x,
-                    inverse_func=lambda x: x
-                ),
-                ['a', 'b']
+                FunctionTransformer(func=lambda x: x, inverse_func=lambda x: x),
+                ['a', 'b'],
             ),
         ]
     )
@@ -71,27 +61,18 @@ def test_dataset():
 
     specs = [
         EncodingChunkSpec(
-            tag='my_tag',
-            names=['a', 'b'],
-            range_=(-1, 3),
-            dtype=np.float32
+            tag='my_tag', names=['a', 'b'], range_=(-1, 3), dtype=np.float32
         ),
         LabelChunkSpec(
-            tag='my_tag',
-            names=['a', 'b'],
-            range_=(2, 4),
-            dtype=np.float32
+            tag='my_tag', names=['a', 'b'], range_=(2, 4), dtype=np.float32
         ),
     ]
 
     column_transformer = ColumnTransformer(
         transformer_tuples=[
             (
-                FunctionTransformer(
-                    func=lambda x: x,
-                    inverse_func=lambda x: x
-                ),
-                ['a', 'b']
+                FunctionTransformer(func=lambda x: x, inverse_func=lambda x: x),
+                ['a', 'b'],
             ),
         ]
     )
@@ -119,21 +100,14 @@ def test_dataset():
     )
 
     assert np.allclose(
-        dataset[0]['encoding.my_tag.time_index'],
-        np.arange(0, 4)
+        dataset[0]['encoding.my_tag.time_index'], np.arange(0, 4)
     )
 
-    assert np.allclose(
-        dataset[0]['label.my_tag.time_index'],
-        np.arange(3, 5)
-    )
+    assert np.allclose(dataset[0]['label.my_tag.time_index'], np.arange(3, 5))
 
     specs = [
         EncodingChunkSpec(
-            tag='my_tag',
-            names=['a', 'b'],
-            range_=(-1, 3),
-            dtype=np.float32
+            tag='my_tag', names=['a', 'b'], range_=(-1, 3), dtype=np.float32
         ),
     ] * 2
 

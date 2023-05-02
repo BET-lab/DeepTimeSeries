@@ -1,4 +1,5 @@
 import math
+
 import torch
 import torch.nn as nn
 
@@ -32,8 +33,7 @@ class LeftPadding1D(nn.Module):
         C = x.size(2)
 
         padding = torch.zeros(
-            B, self.padding_size, C,
-            dtype=x.dtype, device=x.device
+            B, self.padding_size, C, dtype=x.dtype, device=x.device
         )
 
         y = torch.cat([padding, x], axis=1)
@@ -51,8 +51,9 @@ class PositionalEncoding(nn.Module):
         super().__init__()
 
         position = torch.arange(max_len).unsqueeze(1)
-        div_term = torch.exp(torch.arange(0, d_model, 2) \
-            * (-math.log(10000.0) / d_model))
+        div_term = torch.exp(
+            torch.arange(0, d_model, 2) * (-math.log(10000.0) / d_model)
+        )
 
         pe = torch.zeros(max_len, 1, d_model)
         pe[:, 0, 0::2] = torch.sin(position * div_term)
@@ -65,5 +66,5 @@ class PositionalEncoding(nn.Module):
 
     def forward(self, x):
         # x: (B, L, F).
-        x = x + self.pe[:, :x.size(1), :]
+        x = x + self.pe[:, : x.size(1), :]
         return x

@@ -1,4 +1,3 @@
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 
@@ -14,7 +13,7 @@ def plot_chunks(chunk_specs):
 
     for y, spec in enumerate(chunk_specs, start=1):
         ys.append(y)
-        widths.append(spec.range[1]-spec.range[0])
+        widths.append(spec.range[1] - spec.range[0])
         lefts.append(spec.range[0])
         tags.append(spec.tag)
 

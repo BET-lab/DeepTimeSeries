@@ -1,22 +1,18 @@
 import sys
 
-from deep_time_series.core import MetricModule
 sys.path.append('..')
+
+import logging
 
 import pytest
 
-import logging
 logger = logging.getLogger('test')
 
-import numpy as np
 import torch
 import torch.nn as nn
+from torchmetrics import MeanAbsoluteError, MeanSquaredError
 
-from torchmetrics import MeanAbsoluteError,  MeanSquaredError
-
-from deep_time_series import (
-    BaseHead, Head, DistributionHead, MetricModule
-)
+from deep_time_series import BaseHead, DistributionHead, Head, MetricModule
 
 
 def test_base_head_tag_assignment():
@@ -62,28 +58,26 @@ def test_metric_module():
         metrics=[
             MeanAbsoluteError(),
             MeanSquaredError(),
-        ]
+        ],
     )
 
     assert metric_module.head_tag == 'head.my_tag'
     assert metric_module.label_tag == 'label.my_tag'
 
-    outputs = {
-        'head.my_tag': torch.zeros(size=(10, 5))
-    }
+    outputs = {'head.my_tag': torch.zeros(size=(10, 5))}
 
-    batch = {
-        'label.my_tag': 2*torch.ones(size=(10, 5))
-    }
+    batch = {'label.my_tag': 2 * torch.ones(size=(10, 5))}
 
     metric_module.update(outputs=outputs, batch=batch, stage='train')
     metrics = metric_module.compute(stage='train')
 
     assert torch.allclose(
-        metrics['train/my_tag.MeanAbsoluteError'], torch.FloatTensor([2.0]))
+        metrics['train/my_tag.MeanAbsoluteError'], torch.FloatTensor([2.0])
+    )
 
     assert torch.allclose(
-        metrics['train/my_tag.MeanSquaredError'], torch.FloatTensor([4.0]))
+        metrics['train/my_tag.MeanSquaredError'], torch.FloatTensor([4.0])
+    )
 
     metric_module.reset(stage='val')
     metrics = metric_module.compute(stage='val')
@@ -124,7 +118,7 @@ def test_head():
         output_module=nn.Linear(5, 3),
         loss_fn=nn.MSELoss(),
         loss_weight=0.3,
-        metrics=[MeanAbsoluteError(), MeanSquaredError()]
+        metrics=[MeanAbsoluteError(), MeanSquaredError()],
     )
 
     assert head.tag == 'head.my_tag'
@@ -155,9 +149,7 @@ def test_head():
     with pytest.raises(RuntimeError):
         outputs = head.get_outputs()
 
-    batch = {
-        'label.my_tag': torch.zeros(size=(2, 10, 3))
-    }
+    batch = {'label.my_tag': torch.zeros(size=(2, 10, 3))}
 
     head.reset()
     for i in range(10):
@@ -167,7 +159,7 @@ def test_head():
 
     loss = head.calculate_loss(outputs, batch)
 
-    assert torch.allclose(loss, (outputs['head.my_tag']**2).mean())
+    assert torch.allclose(loss, (outputs['head.my_tag'] ** 2).mean())
 
     head.metrics.update(outputs, batch, stage='train')
     metrics = head.metrics.compute(stage='train')
@@ -240,9 +232,9 @@ def test_distribution_head():
         y = head(x)
 
         if distribution is torch.distributions.Categorical:
-            assert y.shape ==  torch.Size([3, 1])
+            assert y.shape == torch.Size([3, 1])
         else:
-            assert y.shape ==  torch.Size([3, 1, 3])
+            assert y.shape == torch.Size([3, 1, 3])
 
     head = DistributionHead(
         tag='my_tag',
@@ -272,17 +264,15 @@ def test_distribution_head():
         outputs = head.get_outputs()
 
         if distribution is torch.distributions.Categorical:
-            assert outputs['head.my_tag'].shape ==  torch.Size([3, 10])
+            assert outputs['head.my_tag'].shape == torch.Size([3, 10])
 
-            batch = {
-                'label.my_tag': torch.randint(0, 2, size=(3, 10))
-            }
+            batch = {'label.my_tag': torch.randint(0, 2, size=(3, 10))}
 
             loss = head.calculate_loss(outputs, batch)
 
             logger.info(f'{loss = }')
         else:
-            assert outputs['head.my_tag'].shape ==  torch.Size([3, 10, 3])
+            assert outputs['head.my_tag'].shape == torch.Size([3, 10, 3])
 
             batch = {'label.my_tag': torch.rand(size=(3, 10, 3))}
 
@@ -305,8 +295,7 @@ def test_distribution_head():
 
             if distribution is torch.distributions.OneHotCategorical:
                 label = nn.functional.one_hot(
-                    torch.randint(1, 3, size=(3, 10)),
-                    num_classes=3
+                    torch.randint(1, 3, size=(3, 10)), num_classes=3
                 )
 
                 batch = {'label.my_tag': label}

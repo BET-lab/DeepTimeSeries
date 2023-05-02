@@ -1,10 +1,11 @@
 import copy
+
 import numpy as np
 import pandas as pd
 
 
 def _merge_data_frames(
-    data_frames: pd.DataFrame | list[pd.DataFrame]
+    data_frames: pd.DataFrame | list[pd.DataFrame],
 ) -> pd.DataFrame:
     if isinstance(data_frames, pd.DataFrame):
         data_frames = [data_frames]
@@ -50,22 +51,16 @@ class ColumnTransformer:
         # Do not use list(valid_name_set) to preserve order of elements.
         return [name for name in names if name in valid_name_set]
 
-    def fit(
-        self,
-        data_frames: pd.DataFrame | list[pd.DataFrame]
-    ) -> None:
+    def fit(self, data_frames: pd.DataFrame | list[pd.DataFrame]) -> None:
         df = _merge_data_frames(data_frames)
 
         for name in self._get_valid_names(df.columns):
             transformer = self.transformer_dict[name]
 
-            self._apply_to_single_feature(
-                df[name], transformer.fit
-            )
+            self._apply_to_single_feature(df[name], transformer.fit)
 
     def transform(
-        self,
-        data_frames: pd.DataFrame | list[pd.DataFrame]
+        self, data_frames: pd.DataFrame | list[pd.DataFrame]
     ) -> pd.DataFrame | list[pd.DataFrame]:
         single_df = isinstance(data_frames, pd.DataFrame)
 

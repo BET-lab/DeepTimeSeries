@@ -2,17 +2,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from ..core import (
-    ForecastingModule,
-    Head,
-)
-
-from ..chunk import (
-    EncodingChunkSpec,
-    DecodingChunkSpec,
-    LabelChunkSpec,
-)
-
+from ..chunk import DecodingChunkSpec, EncodingChunkSpec, LabelChunkSpec
+from ..core import ForecastingModule, Head
 from ..layer import PositionalEncoding
 
 
@@ -68,11 +59,13 @@ class SingleShotTransformer(ForecastingModule):
             )
 
         self.positional_encoding = PositionalEncoding(
-            d_model=d_model, max_len=max(encoding_length, decoding_length),
+            d_model=d_model,
+            max_len=max(encoding_length, decoding_length),
         )
 
         encoder_layer = nn.TransformerEncoderLayer(
-            d_model, n_heads,
+            d_model,
+            n_heads,
             dim_feedforward=dim_feedforward,
             dropout=dropout_rate,
             batch_first=True,
@@ -81,7 +74,8 @@ class SingleShotTransformer(ForecastingModule):
         self.encoder = nn.TransformerEncoder(encoder_layer, n_layers)
 
         decoder_layer = nn.TransformerDecoderLayer(
-            d_model, n_heads,
+            d_model,
+            n_heads,
             dim_feedforward=dim_feedforward,
             dropout=dropout_rate,
             batch_first=True,
@@ -103,13 +97,12 @@ class SingleShotTransformer(ForecastingModule):
         # L: encoding length.
         # all_input: (B, L, F).
         if self.use_nontargets:
-            x = torch.cat([
-                inputs['encoding.targets'],
-                inputs['encoding.nontargets']
-            ], dim=2)
+            x = torch.cat(
+                [inputs['encoding.targets'], inputs['encoding.nontargets']],
+                dim=2,
+            )
         else:
             x = inputs['encoding.targets']
-
 
         x = self.encoder_d_matching_layer(x)
         x = self.positional_encoding(x)
@@ -117,9 +110,7 @@ class SingleShotTransformer(ForecastingModule):
         # (B, L, d_model).
         memory = self.encoder(x)
 
-        return {
-            'memory': memory
-        }
+        return {'memory': memory}
 
     def decode(self, inputs):
         # L: decoding_length
@@ -147,12 +138,12 @@ class SingleShotTransformer(ForecastingModule):
 
     def generate_square_subsequent_mask(self, sz):
         r"""Generate a square mask for the sequence.
-            The masked positions are filled with float('-inf').
-            Unmasked positions are filled with float(0.0).
+        The masked positions are filled with float('-inf').
+        Unmasked positions are filled with float(0.0).
         """
-        return torch.triu(
-            torch.full((sz, sz), float('-inf')), diagonal=1
-        ).to(self.device)
+        return torch.triu(torch.full((sz, sz), float('-inf')), diagonal=1).to(
+            self.device
+        )
 
     def make_chunk_specs(self):
         E = self.encoding_length
@@ -163,12 +154,12 @@ class SingleShotTransformer(ForecastingModule):
                 tag='targets',
                 names=self.hparams.target_names,
                 range_=(0, E),
-                dtype=np.float32
+                dtype=np.float32,
             ),
             LabelChunkSpec(
                 tag='targets',
                 names=self.hparams.target_names,
-                range_=(E, E+D),
+                range_=(E, E + D),
                 dtype=np.float32,
             ),
         ]
@@ -184,7 +175,7 @@ class SingleShotTransformer(ForecastingModule):
                 DecodingChunkSpec(
                     tag='nontargets',
                     names=self.hparams.nontarget_names,
-                    range_=(E, E+D),
+                    range_=(E, E + D),
                     dtype=np.float32,
                 ),
             ]

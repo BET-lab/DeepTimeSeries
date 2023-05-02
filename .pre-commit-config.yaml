@@ -34,6 +34,8 @@ repos:
         #       occurs before a binary operator (such as + or -)
         # E501: Try to respect --line-length,
         #       but don’t become crazy if you can’t.
-        args: ['--max-line-length=80', '--ignore=W503,E501']
+        # E203: whitespace before ':'.
+        # E402: module level import not at top of file.
+        args: ['--max-line-length=80', '--ignore=W503,E501,E203,E402']
         # __init__ frequently violate F401, F403.
         exclude: '__init__'

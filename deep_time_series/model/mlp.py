@@ -2,20 +2,9 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from ..core import (
-    ForecastingModule,
-    Head,
-)
-
-from ..chunk import (
-    EncodingChunkSpec,
-    DecodingChunkSpec,
-    LabelChunkSpec,
-)
-
-from ..layer import (
-    Unsqueesze,
-)
+from ..chunk import DecodingChunkSpec, EncodingChunkSpec, LabelChunkSpec
+from ..core import ForecastingModule, Head
+from ..layer import Unsqueesze
 
 
 class MLP(ForecastingModule):
@@ -55,8 +44,8 @@ class MLP(ForecastingModule):
 
         layers = [
             nn.Flatten(),
-            nn.Linear(n_features*encoding_length, hidden_size),
-            activation()
+            nn.Linear(n_features * encoding_length, hidden_size),
+            activation(),
         ]
         for i in range(n_hidden_layers):
             if dropout_rate > 1e-6:
@@ -84,10 +73,10 @@ class MLP(ForecastingModule):
     def encode(self, inputs):
         # (B, L, F).
         if self.use_nontargets:
-            x = torch.cat([
-                inputs['encoding.targets'],
-                inputs['encoding.nontargets']
-            ], dim=2)
+            x = torch.cat(
+                [inputs['encoding.targets'], inputs['encoding.nontargets']],
+                dim=2,
+            )
         else:
             x = inputs['encoding.targets']
 
@@ -114,20 +103,18 @@ class MLP(ForecastingModule):
             # y = y.unsqueeze(1)
             y = self.head(y)
 
-            if i+1 == self.decoding_length:
+            if i + 1 == self.decoding_length:
                 break
             # (B, 1, F).
             if self.use_nontargets:
-                z = torch.cat([y, c[:, i:i+1, :]], dim=2)
+                z = torch.cat([y, c[:, i : i + 1, :]], dim=2)
             else:
                 z = y
             # z = y
             # (B, EL, F).
             x = x.view(B, EL, -1)
             # (B, L, F).
-            x = torch.cat([
-                x[:, 1:, :], z
-            ], dim=1)
+            x = torch.cat([x[:, 1:, :], z], dim=1)
 
         outputs = self.head.get_outputs()
 
@@ -142,12 +129,12 @@ class MLP(ForecastingModule):
                 tag='targets',
                 names=self.hparams.target_names,
                 range_=(0, E),
-                dtype=np.float32
+                dtype=np.float32,
             ),
             LabelChunkSpec(
                 tag='targets',
                 names=self.hparams.target_names,
-                range_=(E, E+D),
+                range_=(E, E + D),
                 dtype=np.float32,
             ),
         ]
@@ -157,13 +144,13 @@ class MLP(ForecastingModule):
                 EncodingChunkSpec(
                     tag='nontargets',
                     names=self.hparams.nontarget_names,
-                    range_=(1, E+1),
+                    range_=(1, E + 1),
                     dtype=np.float32,
                 ),
                 DecodingChunkSpec(
                     tag='nontargets',
                     names=self.hparams.nontarget_names,
-                    range_=(E+1, E+D),
+                    range_=(E + 1, E + D),
                     dtype=np.float32,
                 ),
             ]

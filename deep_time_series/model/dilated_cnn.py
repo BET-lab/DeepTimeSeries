@@ -1,19 +1,11 @@
 import math
+
 import numpy as np
 import torch
 import torch.nn as nn
 
-from ..core import (
-    ForecastingModule,
-    Head,
-)
-
-from ..chunk import (
-    EncodingChunkSpec,
-    DecodingChunkSpec,
-    LabelChunkSpec,
-)
-
+from ..chunk import DecodingChunkSpec, EncodingChunkSpec, LabelChunkSpec
+from ..core import ForecastingModule, Head
 from ..layer import LeftPadding1D, Permute
 
 
@@ -57,7 +49,7 @@ class DilatedCNN(ForecastingModule):
 
         # Calculate the number of layers.
         # Formula is obtained from Darts.
-        v = (encoding_length-1) * (dilation_base-1) / (kernel_size-1) + 1
+        v = (encoding_length - 1) * (dilation_base - 1) / (kernel_size - 1) + 1
         n_layers = math.ceil(math.log(v) / math.log(dilation_base))
 
         layers = []
@@ -71,15 +63,23 @@ class DilatedCNN(ForecastingModule):
             layers.append(Permute(0, 2, 1))
 
             if i == 0:
-                layers.append(nn.Conv1d(
-                    n_features, hidden_size,
-                    kernel_size=kernel_size, dilation=dilation,
-                ))
+                layers.append(
+                    nn.Conv1d(
+                        n_features,
+                        hidden_size,
+                        kernel_size=kernel_size,
+                        dilation=dilation,
+                    )
+                )
             else:
-                layers.append(nn.Conv1d(
-                    hidden_size, hidden_size,
-                    kernel_size=kernel_size, dilation=dilation,
-                ))
+                layers.append(
+                    nn.Conv1d(
+                        hidden_size,
+                        hidden_size,
+                        kernel_size=kernel_size,
+                        dilation=dilation,
+                    )
+                )
 
             layers.append(activation())
 
@@ -104,10 +104,10 @@ class DilatedCNN(ForecastingModule):
     def encode(self, inputs):
         # (B, L, F).
         if self.use_nontargets:
-            x = torch.cat([
-                inputs['encoding.targets'],
-                inputs['encoding.nontargets']
-            ], dim=2)
+            x = torch.cat(
+                [inputs['encoding.targets'], inputs['encoding.nontargets']],
+                dim=2,
+            )
         else:
             x = inputs['encoding.targets']
 
@@ -129,20 +129,18 @@ class DilatedCNN(ForecastingModule):
             # (B, 1, n_outputs).
             y = self.head(h)
 
-            if i+1 == self.decoding_length:
+            if i + 1 == self.decoding_length:
                 break
             # (B, 1, F).
             if self.use_nontargets:
-                z = torch.cat([y, c[:, i:i+1, :]], dim=2)
+                z = torch.cat([y, c[:, i : i + 1, :]], dim=2)
             else:
                 z = y
 
             # Concat on time dimension.
             # Remove first time step of previous input x
             # and append predicted value.
-            x = torch.cat([
-                x[:, 1:, :], z
-            ], dim=1)
+            x = torch.cat([x[:, 1:, :], z], dim=1)
 
         outputs = self.head.get_outputs()
 
@@ -157,12 +155,12 @@ class DilatedCNN(ForecastingModule):
                 tag='targets',
                 names=self.hparams.target_names,
                 range_=(0, E),
-                dtype=np.float32
+                dtype=np.float32,
             ),
             LabelChunkSpec(
                 tag='targets',
                 names=self.hparams.target_names,
-                range_=(E, E+D),
+                range_=(E, E + D),
                 dtype=np.float32,
             ),
         ]
@@ -172,13 +170,13 @@ class DilatedCNN(ForecastingModule):
                 EncodingChunkSpec(
                     tag='nontargets',
                     names=self.hparams.nontarget_names,
-                    range_=(1, E+1),
+                    range_=(1, E + 1),
                     dtype=np.float32,
                 ),
                 DecodingChunkSpec(
                     tag='nontargets',
                     names=self.hparams.nontarget_names,
-                    range_=(E+1, E+D),
+                    range_=(E + 1, E + D),
                     dtype=np.float32,
                 ),
             ]

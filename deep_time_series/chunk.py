@@ -1,7 +1,6 @@
 import numpy as np
-import xarray as xr
-
 import torch
+import xarray as xr
 
 
 class BaseChunkSpec:
@@ -16,18 +15,14 @@ class BaseChunkSpec:
     @property
     def tag(self) -> str:
         if self._tag is None:
-            raise NotImplementedError(
-                f'Define {self.__class__._name__}.tag'
-            )
+            raise NotImplementedError(f'Define {self.__class__._name__}.tag')
 
         return self._tag
 
     @tag.setter
     def tag(self, value: str):
         if not isinstance(value, str):
-            raise TypeError(
-                f'Invalid type for "tag": {type(value)}'
-            )
+            raise TypeError(f'Invalid type for "tag": {type(value)}')
 
         if not value.startswith(self.PREFIX):
             value = f'{self.PREFIX}.{value}'
@@ -37,50 +32,36 @@ class BaseChunkSpec:
     @property
     def names(self) -> list[str]:
         if self._names is None:
-            raise NotImplementedError(
-                f'Define {self.__class__._name__}.names'
-            )
+            raise NotImplementedError(f'Define {self.__class__._name__}.names')
 
         return self._names
 
     @names.setter
     def names(self, value):
         if not isinstance(value, (list, tuple)):
-            raise TypeError(
-                f'Invalid type for "names"'
-            )
+            raise TypeError('Invalid type for "names"')
         if not all((isinstance(name, str) for name in value)):
-            raise TypeError(
-                f'Invalid type for "names"'
-            )
+            raise TypeError('Invalid type for "names"')
 
         self._names = list(value)
 
     @property
     def range(self) -> tuple[int, int]:
         if self._range is None:
-            raise NotImplementedError(
-                f'Define {self.__class__._name__}.range'
-            )
+            raise NotImplementedError(f'Define {self.__class__._name__}.range')
 
         return self._range
 
     @range.setter
     def range(self, value: tuple[int, int]):
         if not isinstance(value, (tuple, list)):
-            raise TypeError(
-                f'Invalid type for "range": {type(value)}'
-            )
+            raise TypeError(f'Invalid type for "range": {type(value)}')
 
         if not isinstance(value[0], int):
-            raise TypeError(
-                f'Invalid type for "range[0]": {type(value)}'
-            )
+            raise TypeError(f'Invalid type for "range[0]": {type(value)}')
 
         if not isinstance(value[1], int):
-            raise TypeError(
-                f'Invalid type for "range[1]": {type(value)}'
-            )
+            raise TypeError(f'Invalid type for "range[1]": {type(value)}')
 
         if value[0] >= value[1]:
             raise ValueError('range[0] >= range[1]')
@@ -90,18 +71,14 @@ class BaseChunkSpec:
     @property
     def dtype(self) -> np.dtype:
         if self._dtype is None:
-            raise NotImplementedError(
-                f'Define {self.__class__._name__}.dtype'
-            )
+            raise NotImplementedError(f'Define {self.__class__._name__}.dtype')
 
         return self._dtype
 
     @dtype.setter
     def dtype(self, value: np.dtype):
         if not isinstance(np.dtype(value), np.dtype):
-            raise TypeError(
-                f'Invalid type for "dtype": {type(value)}'
-            )
+            raise TypeError(f'Invalid type for "dtype": {type(value)}')
 
         self._dtype = np.dtype(value)
 
@@ -148,15 +125,17 @@ class ChunkExtractor:
         assert start_time_index + self.chunk_min_t >= 0
 
         times = self.time_index_values[
-            start_time_index + self.chunk_min_t :
-            start_time_index + self.chunk_max_t
+            start_time_index
+            + self.chunk_min_t : start_time_index
+            + self.chunk_max_t
         ]
 
         chunk_dict = {}
         for spec in self.chunk_specs:
             array = self.data[spec.tag][
-                start_time_index + self.chunk_min_t :
-                start_time_index + self.chunk_max_t
+                start_time_index
+                + self.chunk_min_t : start_time_index
+                + self.chunk_max_t
             ]
 
             range_ = (
@@ -187,7 +166,7 @@ class ChunkInverter:
             else:
                 a = np.array(self.core_tag_dict[core_tag])
                 b = np.array(spec.names)
-                assert np.all(a ==  b)
+                assert np.all(a == b)
 
         self.tag_dict = {spec.tag: spec.names for spec in chunk_specs}
 

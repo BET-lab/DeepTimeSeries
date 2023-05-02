@@ -1,23 +1,16 @@
-from .core import (
-    ForecastingModule,
-    MetricModule,
-    BaseHead,
-    Head,
-    DistributionHead,
-)
-
 from .chunk import (
     BaseChunkSpec,
-    EncodingChunkSpec,
-    DecodingChunkSpec,
-    LabelChunkSpec,
     ChunkExtractor,
+    DecodingChunkSpec,
+    EncodingChunkSpec,
+    LabelChunkSpec,
 )
-
-from .dataset import (
-    TimeSeriesDataset,
+from .core import (
+    BaseHead,
+    DistributionHead,
+    ForecastingModule,
+    Head,
+    MetricModule,
 )
-
-from .transform import (
-    ColumnTransformer,
-)
+from .dataset import TimeSeriesDataset
+from .transform import ColumnTransformer

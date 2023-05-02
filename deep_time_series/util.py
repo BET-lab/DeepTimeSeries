@@ -20,9 +20,9 @@ def logical_or_for_set_list(set_list):
 
 def merge_dicts(dicts, ignore_keys=None):
     # Check key duplication.
-    assert len(
-        logical_and_for_set_list([set(d.keys()) for d in dicts])
-    ) == 0, 'Keys of dictionaries are duplicated.'
+    assert (
+        len(logical_and_for_set_list([set(d.keys()) for d in dicts])) == 0
+    ), 'Keys of dictionaries are duplicated.'
 
     if ignore_keys is None:
         ignore_keys = set()

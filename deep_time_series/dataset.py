@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-
 from torch.utils.data import Dataset
 
 from .chunk import BaseChunkSpec, ChunkExtractor
@@ -8,7 +7,8 @@ from .plotting import plot_chunks
 
 
 class TimeSeriesDataset(Dataset):
-    def __init__(self,
+    def __init__(
+        self,
         data_frames: pd.DataFrame | list[pd.DataFrame],
         chunk_specs: list[BaseChunkSpec],
         return_time_index: bool = True,
@@ -32,8 +32,9 @@ class TimeSeriesDataset(Dataset):
             for df in self.data_frames
         ]
 
-        self.min_start_time_index = \
-            max(0, -self.chunk_extractors[0].chunk_min_t)
+        self.min_start_time_index = max(
+            0, -self.chunk_extractors[0].chunk_min_t
+        )
 
     def __len__(self):
         return sum(self.lengths)

@@ -1,23 +1,23 @@
 import sys
-from typing import Type
 
 from deep_time_series.chunk import (
-    ChunkInverter,
-    EncodingChunkSpec,
-    DecodingChunkSpec,
-    LabelChunkSpec,
     ChunkExtractor,
+    ChunkInverter,
+    DecodingChunkSpec,
+    EncodingChunkSpec,
+    LabelChunkSpec,
 )
+
 sys.path.append('..')
+
+import logging
 
 import pytest
 
-import logging
 logger = logging.getLogger('test')
 
 import numpy as np
 import pandas as pd
-
 import torch
 
 from deep_time_series import BaseChunkSpec
@@ -78,28 +78,19 @@ def test_chunk_spec():
         chunk_spec.dtype = 3
 
     chunk_spec = EncodingChunkSpec(
-        tag='my_tag',
-        names=['a', 'b', 'c'],
-        range_=(0, 24),
-        dtype=np.float32
+        tag='my_tag', names=['a', 'b', 'c'], range_=(0, 24), dtype=np.float32
     )
 
     assert chunk_spec.tag == 'encoding.my_tag'
 
     chunk_spec = DecodingChunkSpec(
-        tag='my_tag',
-        names=['a', 'b', 'c'],
-        range_=(0, 24),
-        dtype=np.float32
+        tag='my_tag', names=['a', 'b', 'c'], range_=(0, 24), dtype=np.float32
     )
 
     assert chunk_spec.tag == 'decoding.my_tag'
 
     chunk_spec = LabelChunkSpec(
-        tag='my_tag',
-        names=['a', 'b', 'c'],
-        range_=(0, 24),
-        dtype=np.float32
+        tag='my_tag', names=['a', 'b', 'c'], range_=(0, 24), dtype=np.float32
     )
 
     assert chunk_spec.tag == 'label.my_tag'
@@ -108,7 +99,7 @@ def test_chunk_spec():
 def test_chunk_extractor():
     df = pd.DataFrame(
         data={
-            'a': np.arange(20)**2,
+            'a': np.arange(20) ** 2,
             'b': -np.arange(20),
         }
     )
@@ -116,17 +107,11 @@ def test_chunk_extractor():
     logger.info(df)
 
     chunk_spec = EncodingChunkSpec(
-        tag='my_tag',
-        names=['a', 'b'],
-        range_=(2, 10),
-        dtype=np.float32
+        tag='my_tag', names=['a', 'b'], range_=(2, 10), dtype=np.float32
     )
 
     chunk_spec2 = EncodingChunkSpec(
-        tag='my_tag2',
-        names=['a', 'b'],
-        range_=(-2, 10),
-        dtype=np.float32
+        tag='my_tag2', names=['a', 'b'], range_=(-2, 10), dtype=np.float32
     )
 
     chunk_extractor = ChunkExtractor(df, [chunk_spec, chunk_spec2])
@@ -143,27 +128,19 @@ def test_chunk_extractor():
 
 def test_chunk_inverter():
     chunk_spec = EncodingChunkSpec(
-        tag='my_tag',
-        names=['a', 'b'],
-        range_=(2, 10),
-        dtype=np.float32
+        tag='my_tag', names=['a', 'b'], range_=(2, 10), dtype=np.float32
     )
 
     chunk_specs = [chunk_spec]
 
     ci = ChunkInverter(chunk_specs=chunk_specs)
 
-
-    assert isinstance(
-        ci._convert_to_numpy(np.array([1, 2])), np.ndarray
-    )
+    assert isinstance(ci._convert_to_numpy(np.array([1, 2])), np.ndarray)
 
     value = torch.FloatTensor([1.0, 2.0])
     logger.debug(type(value))
 
-    assert isinstance(
-        ci._convert_to_numpy(value), np.ndarray
-    )
+    assert isinstance(ci._convert_to_numpy(value), np.ndarray)
 
     # Only 2 features.
     data = {
@@ -187,3 +164,6 @@ def test_chunk_inverter():
     df = ci.invert('label.my_tag.loc', data['my_tag'])
 
     dfs = ci.invert_dict(data)
+
+    # To prevent never used error (F841).
+    (df, dfs)

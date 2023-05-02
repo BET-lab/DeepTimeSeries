@@ -9,7 +9,6 @@
 import os
 import sys
 
-
 # To recognize the path of the python library.
 sys.path.insert(0, os.path.abspath('../..'))
 
@@ -27,12 +26,11 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.viewcode',
-    'sphinx.ext.githubpages'
+    'sphinx.ext.githubpages',
 ]
 
 templates_path = ['_templates']
 exclude_patterns = []
-
 
 
 # -- Options for HTML output -------------------------------------------------

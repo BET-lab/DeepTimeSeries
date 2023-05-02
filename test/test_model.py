@@ -1,14 +1,17 @@
 import sys
+
 sys.path.append('..')
 
-import pytest
+import logging
+
 import numpy as np
 import pandas as pd
+import pytest
 import pytorch_lightning as pl
 
 import deep_time_series as dts
 import deep_time_series.model
-import logging
+
 logger = logging.getLogger('test')
 
 from torch.utils.data import DataLoader
@@ -19,7 +22,7 @@ def data():
     return pd.DataFrame(
         data={
             'a': np.arange(100),
-            'b': np.arange(100)*2,
+            'b': np.arange(100) * 2,
         }
     )
 
@@ -32,9 +35,7 @@ def trainer():
 
 
 def make_loader(model, data):
-    dataset = dts.TimeSeriesDataset(
-        data, model.make_chunk_specs()
-    )
+    dataset = dts.TimeSeriesDataset(data, model.make_chunk_specs())
 
     return DataLoader(dataset, batch_size=8)
 
