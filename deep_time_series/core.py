@@ -14,6 +14,10 @@ class MetricModule(nn.Module):
     def __init__(
         self, tag: str, metrics: Metric | list[Metric] | dict[str, Metric]
     ):
+        """Module for metrics. It's a wrapper of MetricCollections for training,
+        validation and test stage. It's used in BaseHead class. In general,
+        it's not used directly by users. """
+
         super().__init__()
 
         self.tag = tag
@@ -56,7 +60,30 @@ class BaseHead(nn.Module):
     _SPECIAL_ATTRIBUTES = ('tag', 'loss_weight', 'metrics')
 
     def __init__(self):
-        """Base class of all Head classes."""
+        """Base class of all Head classes. Head is a module that takes the
+        output of the last layer of body and produces the output of the model.
+        It also calculates the loss and metrics. User have to define following
+        attributes:
+
+        * tag: str
+            Tag for a head. Prefix 'head.' is added automatically.
+        * loss_weight: float
+            Loss weight for loss calculations.
+        * metrics: Metric | list[Metric] | dict[str, Metric]
+            Metrics for training, validation and test stage.
+
+        User have to define following methods:
+
+        * forward(self, inputs: Any) -> torch.Tensor
+            Forward method of the head.
+        * get_outputs(self) -> dict[str, Any]
+            Get outputs of the head. It produces a dictionary of outputs from
+            internal state of the head.
+        * reset(self)
+            Reset the internal states of the head.
+        * calculate_loss(self, outputs: dict[str, Any], batch: dict[str, Any]) -> torch.Tensor
+            Calculate loss of the head.
+        """
         super().__init__()
         self._tag = None
         self._loss_weight = None
