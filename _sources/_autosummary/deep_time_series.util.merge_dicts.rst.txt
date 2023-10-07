@@ -1,0 +1,6 @@
+merge\_dicts
+============
+
+.. currentmodule:: deep_time_series.util
+
+.. autofunction:: merge_dicts

@@ -1,0 +1,38 @@
+BaseHead
+========
+
+.. currentmodule:: deep_time_series.core
+
+.. autoclass:: BaseHead
+   :members:
+   :show-inheritance:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~BaseHead.calculate_loss
+      ~BaseHead.forward
+      ~BaseHead.get_outputs
+      ~BaseHead.reset
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~BaseHead.has_metrics
+      ~BaseHead.label_tag
+      ~BaseHead.loss_weight
+      ~BaseHead.metrics
+      ~BaseHead.tag
+      ~BaseHead.training
+   
+   

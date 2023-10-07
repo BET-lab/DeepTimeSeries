@@ -1,0 +1,6 @@
+merge\_data\_frames
+===================
+
+.. currentmodule:: deep_time_series.util
+
+.. autofunction:: merge_data_frames

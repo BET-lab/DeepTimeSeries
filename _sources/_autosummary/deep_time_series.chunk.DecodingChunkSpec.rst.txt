@@ -1,0 +1,29 @@
+DecodingChunkSpec
+=================
+
+.. currentmodule:: deep_time_series.chunk
+
+.. autoclass:: DecodingChunkSpec
+   :members:
+   :show-inheritance:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DecodingChunkSpec.PREFIX
+   
+   
