@@ -7,3 +7,4 @@ This page provides information that users of DeepTimeSeries need to know.
     :maxdepth: 1
 
     design.rst
+    io.rst
