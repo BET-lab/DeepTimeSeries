@@ -179,4 +179,5 @@ MIT License
 
 ## Authors
 
-- Sangwon (lsw91.main@gmail.com)
+- Sangwon Lee 
+- Wonjun Choi
