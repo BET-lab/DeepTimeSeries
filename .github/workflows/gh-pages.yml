@@ -31,7 +31,7 @@ jobs:
           version: "latest"
       - name: Install dependencies
         run: |
-          uv sync --extra-index-url https://download.pytorch.org/whl/cu117
+          uv sync --extra-index-url https://download.pytorch.org/whl/cu117 --index-strategy unsafe-best-match
       - name: Build documentation
         run: |
           uv run sphinx-build -M html doc/source doc/build
