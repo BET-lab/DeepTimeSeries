@@ -55,4 +55,4 @@ All models support both deterministic and probabilistic forecasting, and can han
 
    User Guide <user_guide/index>
    Tutorial <tutorials/index>
-   API Reference <_autosummary/deep_time_series>
+   API Reference <api/index>
