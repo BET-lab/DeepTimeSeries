@@ -8,12 +8,48 @@ TimeSeriesDataset
 
 A PyTorch Dataset class that handles time series data extraction using chunk specifications. It supports single or multiple DataFrames and automatically extracts chunks based on the provided specifications.
 
+**Purpose:**
+
+``TimeSeriesDataset`` provides a PyTorch-compatible interface for loading time series data with chunk-based extraction. It automatically handles the extraction of encoding, decoding, and label chunks from your DataFrames based on chunk specifications.
+
 **Key Features:**
 
 - **PyTorch Compatible**: Inherits from ``torch.utils.data.Dataset``, works seamlessly with ``DataLoader``
 - **Multiple DataFrames**: Supports both single DataFrame and list of DataFrames (useful for multiple time series)
 - **Automatic Chunk Extraction**: Uses ``ChunkExtractor`` internally to extract chunks based on specifications
 - **Time Index Tracking**: Optionally returns time indices for each chunk
+
+**Initialization Parameters:**
+
+- ``data_frames`` (pd.DataFrame | list[pd.DataFrame]): Input data. Can be a single DataFrame or a list of DataFrames. If multiple DataFrames are provided, they are treated as separate time series.
+
+- ``chunk_specs`` (list[BaseChunkSpec]): List of chunk specifications defining what data to extract. Typically obtained from ``model.make_chunk_specs()``.
+
+- ``return_time_index`` (bool): If ``True``, includes time index arrays in the output dictionary. Default is ``True``. Time indices are useful for tracking which time steps correspond to predictions.
+
+**Properties:**
+
+- **``data_frames``** (list[pd.DataFrame]): List of input DataFrames (always a list, even if single DataFrame was provided).
+
+- **``chunk_specs``** (list[BaseChunkSpec]): Chunk specifications used for extraction.
+
+- **``return_time_index``** (bool): Whether to include time indices in outputs.
+
+- **``chunk_extractors``** (list[ChunkExtractor]): Internal list of chunk extractors, one per DataFrame.
+
+- **``lengths``** (list[int]): List of dataset lengths for each DataFrame.
+
+- **``min_start_time_index``** (int): Minimum valid start time index for extraction.
+
+**Methods:**
+
+- **``__len__()``**: Returns the total number of samples in the dataset. Calculated as the sum of lengths for all DataFrames.
+
+- **``__getitem__(i)``**: Returns a sample at index ``i``. The index is mapped to the appropriate DataFrame and time position. Returns a dictionary with chunk tags as keys and tensors as values. If ``return_time_index=True``, also includes time index arrays.
+
+- **``_preprocess()``**: Internal method called during initialization. Creates ``ChunkExtractor`` instances for each DataFrame and calculates dataset lengths. Automatically called by ``__init__()``.
+
+- **``plot_chunks()``**: Visualizes the chunk specifications as a horizontal bar chart. Useful for understanding the temporal structure of your model's input/output windows. Requires matplotlib.
 
 **Typical Usage:**
 

@@ -22,9 +22,17 @@ Compute the intersection of a list of sets.
 
 Finds elements that are common to all sets in a list. Used internally for validation (e.g., checking for duplicate keys in dictionaries).
 
+**Parameters:**
+
+- ``set_list`` (list[set]): List of sets to compute the intersection of. Must contain at least one set.
+
+**Returns:**
+
+- ``set``: A set containing elements that appear in all input sets. If any set is empty or there are no common elements, returns an empty set.
+
 **When to Use:**
 
-- Validating that multiple sets have no common elements
+- Validating that multiple sets have no common elements (check if result is empty)
 - Finding common elements across multiple sets
 - Internal validation in framework code
 
@@ -40,10 +48,14 @@ Finds elements that are common to all sets in a list. Used internally for valida
        {'c', 'd', 'e'},
    ]
    common = logical_and_for_set_list(sets)  # {'c'}
+   
+   # Check for duplicates (common use case)
+   if logical_and_for_set_list([set(d1.keys()), set(d2.keys())]):
+       raise ValueError("Duplicate keys found!")
 
 **Note:**
 
-Typically used internally by the framework for validation purposes.
+Typically used internally by the framework for validation purposes. The function computes the intersection sequentially: ``set1 & set2 & set3 & ...``.
 
 .. autofunction:: deep_time_series.util.logical_and_for_set_list
 
@@ -55,6 +67,14 @@ Compute the union of a list of sets.
 **Purpose:**
 
 Finds all unique elements across all sets in a list. Used internally for combining sets.
+
+**Parameters:**
+
+- ``set_list`` (list[set]): List of sets to compute the union of. Must contain at least one set.
+
+**Returns:**
+
+- ``set``: A set containing all unique elements from all input sets.
 
 **When to Use:**
 
@@ -74,10 +94,13 @@ Finds all unique elements across all sets in a list. Used internally for combini
        {'c', 'd'},
    ]
    union = logical_or_for_set_list(sets)  # {'a', 'b', 'c', 'd'}
+   
+   # Get all unique keys from multiple dictionaries
+   all_keys = logical_or_for_set_list([set(d.keys()) for d in dict_list])
 
 **Note:**
 
-Typically used internally by the framework.
+Typically used internally by the framework. The function computes the union sequentially: ``set1 | set2 | set3 | ...``.
 
 .. autofunction:: deep_time_series.util.logical_or_for_set_list
 
@@ -89,6 +112,20 @@ Merge multiple dictionaries into a single dictionary. Raises an error if keys ar
 **Purpose:**
 
 Combines multiple dictionaries into one, ensuring no key conflicts. Used extensively in the framework to merge encoder outputs with decoder inputs.
+
+**Parameters:**
+
+- ``dicts`` (list[dict]): List of dictionaries to merge. All dictionaries will be combined into one.
+
+- ``ignore_keys`` (set | list[str] | None): Optional set or list of keys to ignore during merging. These keys will be excluded from the result even if they appear in multiple dictionaries. Default is ``None``.
+
+**Returns:**
+
+- ``dict``: A new dictionary containing all key-value pairs from all input dictionaries (except ignored keys). Maintains insertion order (Python 3.7+).
+
+**Raises:**
+
+- ``AssertionError``: If any keys overlap between dictionaries (unless they are in ``ignore_keys``).
 
 **When to Use:**
 
@@ -132,6 +169,7 @@ The ``ForecastingModule.forward()`` method uses this to merge encoder outputs wi
 
 - Keys must be unique across all dictionaries (unless in ignore_keys)
 - Raises AssertionError if duplicates are found
+- The function creates a new dictionary; original dictionaries are not modified
 
 .. autofunction:: deep_time_series.util.merge_dicts
 
@@ -142,19 +180,31 @@ Merge multiple pandas DataFrames by concatenating them and adding time_index and
 
 **Purpose:**
 
-Combines multiple time series DataFrames into a single DataFrame while preserving information about which series each row belongs to.
+Combines multiple time series DataFrames into a single DataFrame while preserving information about which series each row belongs to. This is useful when working with multiple related time series that need to be analyzed together.
 
-**When to Use:**
+**Parameters:**
 
-- Combining multiple time series for analysis
-- Preparing data from multiple sources
-- Creating a unified dataset from separate series
+- ``dfs`` (list[pd.DataFrame]): List of DataFrames to merge. Each DataFrame represents a separate time series. DataFrames should have compatible column structures (same column names and types).
+
+**Returns:**
+
+- ``pd.DataFrame``: A single DataFrame containing all rows from all input DataFrames, with two additional columns:
+  - ``time_index``: The original index values from each DataFrame
+  - ``time_series_id``: Integer identifier (0, 1, 2, ...) indicating which DataFrame each row came from
 
 **Key Features:**
 
 - **Time Index Preservation**: Adds original index as 'time_index' column
 - **Series Identification**: Adds 'time_series_id' to track source DataFrame
 - **Deep Copy**: Creates copies to avoid modifying original DataFrames
+- **Index Reset**: Resets the index of the merged DataFrame (uses default integer index)
+
+**When to Use:**
+
+- Combining multiple time series for analysis
+- Preparing data from multiple sources
+- Creating a unified dataset from separate series
+- Preprocessing multiple series together with ``ColumnTransformer``
 
 **Example:**
 
@@ -164,21 +214,31 @@ Combines multiple time series DataFrames into a single DataFrame while preservin
    import numpy as np
    from deep_time_series.util import merge_data_frames
 
-   # Multiple time series
-   df1 = pd.DataFrame({'temperature': np.sin(np.arange(100))})
-   df2 = pd.DataFrame({'temperature': np.cos(np.arange(100))})
-   df3 = pd.DataFrame({'temperature': np.random.randn(100)})
+   # Multiple time series from different sensors
+   df1 = pd.DataFrame({
+       'temperature': np.sin(np.arange(100)),
+       'humidity': np.random.rand(100)
+   })
+   df2 = pd.DataFrame({
+       'temperature': np.cos(np.arange(100)),
+       'humidity': np.random.rand(100)
+   })
+   df3 = pd.DataFrame({
+       'temperature': np.random.randn(100),
+       'humidity': np.random.rand(100)
+   })
 
    # Merge with tracking
    merged = merge_data_frames([df1, df2, df3])
-   # Result has columns: ['temperature', 'time_index', 'time_series_id']
+   # Result has columns: ['temperature', 'humidity', 'time_index', 'time_series_id']
    # time_series_id: 0 for df1, 1 for df2, 2 for df3
+   # time_index: original index values from each DataFrame
 
 **Output Format:**
 
 The merged DataFrame includes:
 - All original columns from input DataFrames
-- ``time_index``: Original index values
+- ``time_index``: Original index values (preserved from each source DataFrame)
 - ``time_series_id``: Integer ID (0, 1, 2, ...) indicating source DataFrame
 
 **Use Cases:**
@@ -186,6 +246,7 @@ The merged DataFrame includes:
 - Combining data from multiple sensors/locations
 - Merging training and validation sets for preprocessing
 - Creating unified datasets for analysis
+- Preparing data for models that can handle multiple time series
 
 .. autofunction:: deep_time_series.util.merge_data_frames
 
@@ -201,7 +262,15 @@ Visualize chunk specifications as horizontal bars showing the time windows for e
 
 **Purpose:**
 
-Creates a visual representation of chunk specifications, making it easy to understand the temporal structure of your model's input/output windows.
+Creates a visual representation of chunk specifications, making it easy to understand the temporal structure of your model's input/output windows. This visualization helps debug chunk configurations and understand how data flows through the model.
+
+**Parameters:**
+
+- ``chunk_specs`` (list[BaseChunkSpec]): List of chunk specifications to visualize. Each chunk will be displayed as a horizontal bar.
+
+**Returns:**
+
+- ``None``: The function modifies the current matplotlib figure/axes in place. Use ``plt.show()`` or ``plt.savefig()`` to display or save the plot.
 
 **When to Use:**
 
@@ -209,14 +278,16 @@ Creates a visual representation of chunk specifications, making it easy to under
 - Debugging chunk specifications
 - Visualizing data windows
 - Documentation and presentations
+- Verifying that chunk ranges are correct
 
 **Output:**
 
 Creates a horizontal bar chart where:
 - Each bar represents a chunk specification
-- Bar position shows the time range
-- Bar width shows the window length
+- Bar position (left edge) shows the start of the time range
+- Bar width shows the window length (end - start)
 - Labels show the chunk tag
+- Y-axis position indicates different chunks
 
 **Example:**
 
@@ -224,17 +295,20 @@ Creates a horizontal bar chart where:
 
    import matplotlib.pyplot as plt
    from deep_time_series.plotting import plot_chunks
-   from deep_time_series.chunk import EncodingChunkSpec, LabelChunkSpec
+   from deep_time_series.chunk import EncodingChunkSpec, LabelChunkSpec, DecodingChunkSpec
    import numpy as np
 
    # Create chunk specifications
    chunk_specs = [
        EncodingChunkSpec('targets', ['temp'], (0, 10), np.float32),
+       DecodingChunkSpec('nontargets', ['humidity'], (10, 15), np.float32),
        LabelChunkSpec('targets', ['temp'], (10, 15), np.float32),
    ]
 
    # Visualize
    plot_chunks(chunk_specs)
+   plt.xlabel('Time Index')
+   plt.title('Chunk Specifications')
    plt.show()
 
 **Integration with TimeSeriesDataset:**
@@ -247,17 +321,22 @@ The ``TimeSeriesDataset`` class provides a convenience method:
 
    dataset = TimeSeriesDataset(data_frames=data, chunk_specs=chunk_specs)
    dataset.plot_chunks()  # Visualize the chunks used by this dataset
+   plt.show()
 
 **Visualization Details:**
 
 - Uses matplotlib's ``barh()`` for horizontal bars
-- Alpha transparency for overlapping bars
-- Annotations show chunk tags
-- Y-axis shows different chunks
+- Alpha transparency (0.8) for overlapping bars
+- Annotations show chunk tags at the left edge of each bar
+- Y-axis shows different chunks (numbered from 1)
+- X-axis shows time indices
 
 **Note:**
 
-Requires matplotlib to be installed. The function modifies the current matplotlib figure/axes.
+- Requires matplotlib to be installed
+- The function modifies the current matplotlib figure/axes
+- You may want to add labels and title using ``plt.xlabel()``, ``plt.ylabel()``, ``plt.title()``
+- Call ``plt.show()`` or ``plt.savefig()`` after calling this function to display or save the plot
 
 .. automodule:: deep_time_series.plotting
    :members:

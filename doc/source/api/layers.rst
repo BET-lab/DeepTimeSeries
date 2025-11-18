@@ -27,6 +27,15 @@ A layer that adds a dimension to the input tensor at the specified position.
 
 Wraps PyTorch's ``unsqueeze()`` operation as a layer, useful for adding dimensions in sequential models.
 
+**Initialization Parameters:**
+
+- ``dim`` (int): The position at which to insert the new dimension. Must be between ``-input.ndim-1`` and ``input.ndim`` (inclusive).
+
+**Input/Output:**
+
+- **Input**: Any tensor with shape ``(...,)``
+- **Output**: Tensor with an additional dimension at position ``dim``, shape ``(..., 1, ...)``
+
 **When to Use:**
 
 - Need to add a time dimension for sequential processing
@@ -61,6 +70,15 @@ A layer that permutes the dimensions of the input tensor according to the specif
 **Purpose:**
 
 Wraps PyTorch's ``permute()`` operation as a layer, useful for reordering dimensions.
+
+**Initialization Parameters:**
+
+- ``*dims`` (int): Variable number of integers specifying the desired dimension order. The number of arguments must match the input tensor's number of dimensions. Each integer represents the dimension index in the original tensor.
+
+**Input/Output:**
+
+- **Input**: Tensor with shape ``(d0, d1, ..., dn)``
+- **Output**: Tensor with permuted dimensions according to ``dims``. If ``dims = (i0, i1, ..., in)``, output shape is ``(d[i0], d[i1], ..., d[in])``
 
 **When to Use:**
 
@@ -98,6 +116,15 @@ A layer that adds left padding to 1D sequences. Useful for causal convolutions i
 
 Ensures causal (non-leaking) convolutions by padding on the left side. This prevents the convolution from using future information when processing time series data.
 
+**Initialization Parameters:**
+
+- ``padding_size`` (int): Number of zero-padding elements to add at the beginning of the sequence. Must be non-negative.
+
+**Input/Output:**
+
+- **Input**: Tensor with shape ``(batch_size, sequence_length, n_features)``
+- **Output**: Tensor with shape ``(batch_size, sequence_length + padding_size, n_features)``. The first ``padding_size`` time steps are zeros, followed by the original sequence.
+
 **When to Use:**
 
 - Implementing causal convolutions (e.g., in DilatedCNN)
@@ -106,7 +133,7 @@ Ensures causal (non-leaking) convolutions by padding on the left side. This prev
 
 **How It Works:**
 
-Adds zeros to the left (beginning) of the sequence, shifting the original data to the right. This allows convolutions to process the sequence while maintaining causality.
+Adds zeros to the left (beginning) of the sequence, shifting the original data to the right. This allows convolutions to process the sequence while maintaining causality. The padding is created on the same device and with the same dtype as the input tensor.
 
 **Example:**
 
@@ -143,6 +170,18 @@ Positional encoding layer for transformer models. Adds positional information to
 
 Since transformers don't have inherent notion of sequence order, positional encoding adds temporal information to help the model understand the position of each time step.
 
+**Initialization Parameters:**
+
+- ``d_model`` (int): Embedding dimension. Must match the input tensor's feature dimension. This determines the size of the positional encoding vectors.
+
+- ``max_len`` (int): Maximum sequence length to pre-compute encodings for. The positional encodings are pre-computed up to this length for efficiency. If your sequence is longer, the encoding will be truncated.
+
+**Input/Output:**
+
+- **Input**: Tensor with shape ``(batch_size, sequence_length, d_model)``. The feature dimension must match ``d_model``.
+
+- **Output**: Tensor with the same shape ``(batch_size, sequence_length, d_model)``. The positional encoding is added (element-wise) to the input embeddings.
+
 **When to Use:**
 
 - Building transformer-based models (e.g., SingleShotTransformer)
@@ -151,11 +190,16 @@ Since transformers don't have inherent notion of sequence order, positional enco
 
 **How It Works:**
 
-Uses sinusoidal functions (sine and cosine) with different frequencies to encode position. Each dimension of the encoding corresponds to a different frequency, allowing the model to learn relative positions.
+Uses sinusoidal functions (sine and cosine) with different frequencies to encode position. Each dimension of the encoding corresponds to a different frequency, allowing the model to learn relative positions. The encoding is pre-computed during initialization and stored as a buffer.
 
 **Architecture:**
 
-Based on the original Transformer paper, modified for batch-first format and without dropout.
+Based on the original Transformer paper (Vaswani et al., 2017), modified for batch-first format and without dropout. The encoding uses:
+
+- Sine functions for even dimensions: ``sin(pos / 10000^(2i/d_model))``
+- Cosine functions for odd dimensions: ``cos(pos / 10000^(2i/d_model))``
+
+where ``pos`` is the position and ``i`` is the dimension index.
 
 **Example:**
 
@@ -171,17 +215,13 @@ Based on the original Transformer paper, modified for batch-first format and wit
 **Key Properties:**
 
 - **Sinusoidal**: Uses sin/cos functions for smooth position encoding
-- **Learnable**: While the encoding is fixed, the model can learn to use it
-- **Relative Positions**: The encoding allows the model to understand relative distances
-
-**Parameters:**
-
-- ``d_model``: Embedding dimension (must match input dimension)
-- ``max_len``: Maximum sequence length to pre-compute encodings for
+- **Fixed**: The encoding is deterministic and not learnable (stored as buffer)
+- **Relative Positions**: The encoding allows the model to understand relative distances between time steps
+- **Additive**: The encoding is added (not concatenated) to the input embeddings
 
 **Note:**
 
-The encoding is added (not concatenated) to the input embeddings. This allows the model to learn how to combine positional and feature information.
+The encoding is added (not concatenated) to the input embeddings. This allows the model to learn how to combine positional and feature information. The positional encodings are registered as buffers, so they are automatically moved to the correct device when the model is moved.
 
 .. autoclass:: deep_time_series.layer.PositionalEncoding
    :members:

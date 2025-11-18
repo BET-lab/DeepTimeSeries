@@ -8,12 +8,70 @@ ColumnTransformer
 
 A transformer that applies sklearn-style transformers to specific columns of a pandas DataFrame. It supports both dictionary and tuple-based transformer specifications.
 
+**Purpose:**
+
+``ColumnTransformer`` provides a convenient way to apply different preprocessing transformers to different columns of a DataFrame. It follows the sklearn API pattern, making it easy to integrate with existing sklearn workflows.
+
 **Key Features:**
 
 - **sklearn-Compatible Interface**: Follows the ``fit()``, ``transform()``, ``fit_transform()``, and ``inverse_transform()`` pattern
 - **Column-Specific Transformers**: Apply different transformers to different columns
 - **Multiple DataFrame Support**: Can fit and transform single or multiple DataFrames
 - **Deep Copy Safety**: Each column gets its own transformer instance (no shared state)
+
+**Initialization Parameters:**
+
+- ``transformer_dict`` (dict[str, Transformer] | None): Dictionary mapping column names to transformer instances. Each column name maps to a transformer that will be applied to that column. Either ``transformer_dict`` or ``transformer_tuples`` must be provided, but not both.
+
+- ``transformer_tuples`` (list[tuple[Transformer, list[str]]] | None): List of tuples, each containing a transformer instance and a list of column names. The transformer will be deep-copied for each column. This is more convenient when applying the same transformer to multiple columns.
+
+**Methods:**
+
+- **``fit(data_frames)``**: Fits all transformers on the provided data. Computes statistics (e.g., mean, std for StandardScaler) from the data.
+
+  **Parameters:**
+  
+  - ``data_frames`` (pd.DataFrame | list[pd.DataFrame]): Training data. Can be a single DataFrame or a list of DataFrames. If multiple DataFrames are provided, they are concatenated before fitting.
+  
+  **Returns:**
+  
+  - ``self``: Returns self for method chaining.
+
+- **``transform(data_frames)``**: Applies the fitted transformers to the data. Only transforms columns that were specified during initialization.
+
+  **Parameters:**
+  
+  - ``data_frames`` (pd.DataFrame | list[pd.DataFrame]): Data to transform. Can be a single DataFrame or a list of DataFrames.
+  
+  **Returns:**
+  
+  - ``pd.DataFrame | list[pd.DataFrame]``: Transformed data with the same structure as input. Columns not specified in transformers remain unchanged.
+
+- **``fit_transform(data_frames)``**: Convenience method that fits and transforms in one step. Equivalent to calling ``fit()`` followed by ``transform()``.
+
+  **Parameters:**
+  
+  - ``data_frames`` (pd.DataFrame | list[pd.DataFrame]): Data to fit and transform.
+  
+  **Returns:**
+  
+  - ``pd.DataFrame | list[pd.DataFrame]``: Transformed data.
+
+- **``inverse_transform(data_frames)``**: Applies the inverse transformation to convert data back to the original scale. Useful for converting model predictions back to the original data scale.
+
+  **Parameters:**
+  
+  - ``data_frames`` (pd.DataFrame | list[pd.DataFrame]): Transformed data to invert.
+  
+  **Returns:**
+  
+  - ``pd.DataFrame | list[pd.DataFrame]``: Data in original scale.
+
+**Internal Methods:**
+
+- **``_apply_to_single_feature(series, func)``**: Internal helper method that applies a transformer function to a single pandas Series. Handles reshaping and type conversion.
+
+- **``_get_valid_names(names)``**: Internal helper method that returns the intersection of column names in the transformer dictionary and the provided names. Ensures only valid columns are transformed.
 
 **Typical Use Cases:**
 

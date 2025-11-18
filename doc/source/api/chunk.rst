@@ -37,19 +37,33 @@ BaseChunkSpec
 
 Base class for all chunk specifications. Defines the structure for specifying time windows and feature names.
 
-**Properties:**
+**Purpose:**
 
-- ``tag``: Unique identifier for the chunk (e.g., ``'encoding.targets'``, ``'decoding.nontargets'``)
-- ``names``: List of column names from the DataFrame to include in this chunk
-- ``range_``: Tuple ``(start, end)`` defining the time window (relative indices)
-- ``dtype``: NumPy dtype for the data (typically ``np.float32``)
+``BaseChunkSpec`` provides the foundation for all chunk types. It defines the common interface for specifying which features to extract and over what time range.
+
+**Key Properties:**
+
+- **``tag``** (str): Unique identifier for the chunk. Automatically prefixed based on the chunk type (e.g., ``'encoding.targets'``, ``'decoding.nontargets'``, ``'label.targets'``). The tag is used as a key in dictionaries when extracting chunks.
+
+- **``names``** (list[str]): List of column names from the DataFrame to include in this chunk. These must match column names in your input DataFrame. For example, ``['temperature', 'humidity']`` will extract these two columns.
+
+- **``range_``** (tuple[int, int]): Tuple ``(start, end)`` defining the time window using relative indices. The range is half-open: ``[start, end)``, meaning it includes ``start`` but excludes ``end``. For example, ``(0, 10)`` includes time steps 0 through 9.
+
+- **``dtype``** (np.dtype): NumPy dtype for the data. Typically ``np.float32`` for numerical data. The data will be cast to this dtype during extraction.
 
 **Tag Prefixes:**
 
-Each chunk type has an automatic prefix:
-- ``EncodingChunkSpec``: ``'encoding'``
-- ``DecodingChunkSpec``: ``'decoding'``
-- ``LabelChunkSpec``: ``'label'``
+Each chunk type automatically adds a prefix to the tag:
+- ``EncodingChunkSpec``: Adds ``'encoding'`` prefix
+- ``DecodingChunkSpec``: Adds ``'decoding'`` prefix
+- ``LabelChunkSpec``: Adds ``'label'`` prefix
+
+**Initialization Parameters:**
+
+- ``tag`` (str): The tag identifier (prefix will be added automatically)
+- ``names`` (list[str]): Column names to extract
+- ``range_`` (tuple[int, int]): Time window ``(start, end)``, must satisfy ``start < end``
+- ``dtype`` (np.dtype): Data type for the extracted arrays
 
 **Example:**
 
@@ -203,9 +217,27 @@ Utility class for extracting chunks from pandas DataFrames based on chunk specif
 
 **Key Properties:**
 
-- ``chunk_min_t``: Minimum time index across all chunks
-- ``chunk_max_t``: Maximum time index across all chunks
-- ``chunk_length``: Total length of the chunk window
+- ``chunk_min_t`` (int): Minimum time index across all chunks. This is the earliest time step needed to extract all chunks.
+
+- ``chunk_max_t`` (int): Maximum time index across all chunks. This is the latest time step needed to extract all chunks.
+
+- ``chunk_length`` (int): Total length of the chunk window, calculated as ``chunk_max_t - chunk_min_t``. This determines how much data needs to be available.
+
+**Methods:**
+
+- **``extract(start_time_index, return_time_index=False)``**: Extracts all chunks starting from the given time index. Returns a dictionary with chunk tags as keys and numpy arrays as values. If ``return_time_index=True``, also includes time index arrays for each chunk.
+
+  **Parameters:**
+  
+  - ``start_time_index`` (int): The starting time index in the DataFrame. Must satisfy ``start_time_index + chunk_min_t >= 0``.
+  
+  - ``return_time_index`` (bool): If ``True``, includes time index arrays in the output dictionary with keys like ``'{tag}.time_index'``.
+  
+  **Returns:**
+  
+  - ``dict[str, np.ndarray]``: Dictionary mapping chunk tags to extracted arrays. Arrays have shape ``(time_steps, n_features)``.
+
+- **``_preprocess(df)``**: Internal method that preprocesses the DataFrame and prepares data for extraction. Called automatically during initialization. Converts DataFrame columns to numpy arrays with the specified dtype.
 
 **Example:**
 
@@ -291,12 +323,39 @@ Tensors should have shape ``(batch_size, time_steps, n_features)`` or ``(time_st
    # Returns DataFrame with columns ['temperature', 'humidity']
    # and MultiIndex with 'batch_index' and 'time_index'
 
+**Methods:**
+
+- **``invert(tag, tensor)``**: Converts a tensor or numpy array to a pandas DataFrame.
+
+  **Parameters:**
+  
+  - ``tag`` (str): The chunk tag to match. Can be:
+    - Full tag: ``'label.targets'`` (exact match)
+    - Core tag: ``'targets'`` (extracts from ``'label.targets'`` or ``'head.targets'``)
+    - Partial tag: ``'head.targets'`` (extracts core tag ``'targets'``)
+  
+  - ``tensor`` (torch.Tensor | np.ndarray): Input tensor with shape ``(batch_size, time_steps, n_features)`` or ``(time_steps, n_features)``.
+  
+  **Returns:**
+  
+  - ``pd.DataFrame``: DataFrame with columns matching the feature names from the chunk specification. Has a MultiIndex with ``'batch_index'`` and ``'time_index'`` levels.
+
+- **``invert_dict(data)``**: Converts a dictionary of tensors to a dictionary of DataFrames.
+
+  **Parameters:**
+  
+  - ``data`` (dict[str, torch.Tensor | np.ndarray]): Dictionary mapping tags to tensors.
+  
+  **Returns:**
+  
+  - ``dict[str, pd.DataFrame]``: Dictionary mapping tags to DataFrames.
+
 **Tag Matching:**
 
 The inverter can match tags in several ways:
-- Full tag: ``'label.targets'``
-- Core tag: ``'targets'`` (without prefix)
-- Partial tag: ``'head.targets'`` (extracts core tag)
+- Full tag: ``'label.targets'`` (exact match)
+- Core tag: ``'targets'`` (without prefix, extracts from any matching chunk spec)
+- Partial tag: ``'head.targets'`` (extracts core tag ``'targets'`` from the tag)
 
 **Use Cases:**
 
