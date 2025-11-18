@@ -26,15 +26,15 @@ The project uses `pyproject.toml` for dependency management. You can install it 
 pip install .
 
 # Using uv (recommended)
-uv pip install .
+uv sync
 
 # For development with dev dependencies
-uv pip install -e ".[dev]"
+uv sync --all-groups
 ```
 
 ### Requirements
 
-- Python >= 3.10, < 4.0
+- Python >= 3.10, < 3.12
 - PyTorch >= 2.0.0
 - PyTorch Lightning >= 2.0.0
 - NumPy >= 1.24.2
