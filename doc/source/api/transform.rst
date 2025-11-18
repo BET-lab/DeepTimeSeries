@@ -134,13 +134,6 @@ The transformer can handle lists of DataFrames, which is useful when you have mu
    :undoc-members:
    :show-inheritance:
 
-.. autosummary::
-   :toctree: _autosummary
-   :template: class.rst
-   :recursive:
-
-   deep_time_series.transform.ColumnTransformer
-
 .. autoclass:: deep_time_series.transform.ColumnTransformer
    :members:
    :undoc-members:

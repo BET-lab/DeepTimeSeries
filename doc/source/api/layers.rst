@@ -18,16 +18,6 @@ These layers are building blocks used internally by the forecasting models. Whil
    :undoc-members:
    :show-inheritance:
 
-.. autosummary::
-   :toctree: _autosummary
-   :template: class.rst
-   :recursive:
-
-   deep_time_series.layer.Unsqueesze
-   deep_time_series.layer.Permute
-   deep_time_series.layer.LeftPadding1D
-   deep_time_series.layer.PositionalEncoding
-
 Unsqueesze
 ~~~~~~~~~~
 

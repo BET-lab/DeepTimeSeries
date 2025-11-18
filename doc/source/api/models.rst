@@ -24,16 +24,6 @@ All models share these capabilities:
    :undoc-members:
    :show-inheritance:
 
-.. autosummary::
-   :toctree: _autosummary
-   :template: class.rst
-   :recursive:
-
-   deep_time_series.model.MLP
-   deep_time_series.model.DilatedCNN
-   deep_time_series.model.RNN
-   deep_time_series.model.SingleShotTransformer
-
 MLP
 ---
 

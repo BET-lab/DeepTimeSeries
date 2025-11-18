@@ -107,13 +107,6 @@ You can visualize the chunk specifications using the ``plot_chunks()`` method:
    :undoc-members:
    :show-inheritance:
 
-.. autosummary::
-   :toctree: _autosummary
-   :template: class.rst
-   :recursive:
-
-   deep_time_series.dataset.TimeSeriesDataset
-
 .. autoclass:: deep_time_series.dataset.TimeSeriesDataset
    :members:
    :undoc-members:

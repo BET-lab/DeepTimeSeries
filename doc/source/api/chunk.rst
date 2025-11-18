@@ -32,18 +32,6 @@ For a model with encoding_length=10 and decoding_length=5:
    :undoc-members:
    :show-inheritance:
 
-.. autosummary::
-   :toctree: _autosummary
-   :template: class.rst
-   :recursive:
-
-   deep_time_series.chunk.BaseChunkSpec
-   deep_time_series.chunk.EncodingChunkSpec
-   deep_time_series.chunk.DecodingChunkSpec
-   deep_time_series.chunk.LabelChunkSpec
-   deep_time_series.chunk.ChunkExtractor
-   deep_time_series.chunk.ChunkInverter
-
 BaseChunkSpec
 ~~~~~~~~~~~~~
 

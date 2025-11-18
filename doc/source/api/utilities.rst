@@ -263,11 +263,4 @@ Requires matplotlib to be installed. The function modifies the current matplotli
    :members:
    :undoc-members:
 
-.. autosummary::
-   :toctree: _autosummary
-   :template: function.rst
-   :recursive:
-
-   deep_time_series.plotting.plot_chunks
-
 .. autofunction:: deep_time_series.plotting.plot_chunks

@@ -44,17 +44,6 @@ The module follows an encoder-decoder pattern:
    :undoc-members:
    :show-inheritance:
 
-.. autosummary::
-   :toctree: _autosummary
-   :template: class.rst
-   :recursive:
-
-   deep_time_series.core.ForecastingModule
-   deep_time_series.core.BaseHead
-   deep_time_series.core.Head
-   deep_time_series.core.DistributionHead
-   deep_time_series.core.MetricModule
-
 ForecastingModule
 ~~~~~~~~~~~~~~~~~
 
