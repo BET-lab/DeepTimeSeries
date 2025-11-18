@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 project = 'DeepTimeSeries'
 copyright = '2025, betlab and dartwork'
-author = 'Sangwon Lee', 'Wonjun Choi'
+author = 'Sangwon Lee, Wonjun Choi'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
