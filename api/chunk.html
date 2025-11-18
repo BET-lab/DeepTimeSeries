@@ -1,0 +1,1036 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Chunk Specification &#8212; DeepTimeSeries  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/chunk';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Dataset" href="dataset.html" />
+    <link rel="prev" title="Core Modules" href="core.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DeepTimeSeries  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core Modules</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Chunk Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataset.html">Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform.html">Data Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layers.html">Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">API Reference</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Chunk Specification</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="chunk-specification">
+<h1>Chunk Specification<a class="headerlink" href="#chunk-specification" title="Permalink to this heading">#</a></h1>
+<p>The chunk module provides classes for defining and extracting chunks from time series data. Chunks are used to specify the input windows for encoding, decoding, and the target windows for prediction.</p>
+<section id="understanding-chunks">
+<h2>Understanding Chunks<a class="headerlink" href="#understanding-chunks" title="Permalink to this heading">#</a></h2>
+<p>In DeepTimeSeries, a <strong>chunk</strong> represents a time window within a time series. The framework uses three types of chunks:</p>
+<ol class="arabic simple">
+<li><p><strong>Encoding Chunks</strong>: Input features used by the encoder (historical data)</p></li>
+<li><p><strong>Decoding Chunks</strong>: Input features used by the decoder during autoregressive prediction (future known features)</p></li>
+<li><p><strong>Label Chunks</strong>: Target values for prediction (what we want to predict)</p></li>
+</ol>
+<p><strong>Time Range Convention:</strong></p>
+<p>Chunks use relative time indices where:
+- Time <code class="docutils literal notranslate"><span class="pre">0</span></code> represents the current time step
+- Negative indices represent past time steps (e.g., <code class="docutils literal notranslate"><span class="pre">-10</span></code> is 10 steps ago)
+- Positive indices represent future time steps (e.g., <code class="docutils literal notranslate"><span class="pre">5</span></code> is 5 steps ahead)</p>
+<p><strong>Example:</strong></p>
+<p>For a model with encoding_length=10 and decoding_length=5:</p>
+<ul class="simple">
+<li><p>Encoding window: <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">10)</span></code> - uses time steps 0 to 9 (current and past)</p></li>
+<li><p>Decoding window: <code class="docutils literal notranslate"><span class="pre">(10,</span> <span class="pre">15)</span></code> - uses time steps 10 to 14 (future known features)</p></li>
+<li><p>Label window: <code class="docutils literal notranslate"><span class="pre">(10,</span> <span class="pre">15)</span></code> - predicts time steps 10 to 14</p></li>
+</ul>
+<span class="target" id="module-deep_time_series.chunk"></span><dl class="py class">
+<dt class="sig sig-object py" id="deep_time_series.chunk.BaseChunkSpec">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseChunkSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/chunk.html#BaseChunkSpec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.chunk.BaseChunkSpec" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="deep_time_series.chunk.BaseChunkSpec.PREFIX">
+<span class="sig-name descname"><span class="pre">PREFIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#deep_time_series.chunk.BaseChunkSpec.PREFIX" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="deep_time_series.chunk.BaseChunkSpec.dtype">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dtype</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dtype</span></em><a class="headerlink" href="#deep_time_series.chunk.BaseChunkSpec.dtype" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="deep_time_series.chunk.BaseChunkSpec.names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#deep_time_series.chunk.BaseChunkSpec.names" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="deep_time_series.chunk.BaseChunkSpec.range">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">range</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#deep_time_series.chunk.BaseChunkSpec.range" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="deep_time_series.chunk.BaseChunkSpec.tag">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tag</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#deep_time_series.chunk.BaseChunkSpec.tag" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="deep_time_series.chunk.ChunkExtractor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ChunkExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_specs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/chunk.html#ChunkExtractor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.chunk.ChunkExtractor" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.chunk.ChunkExtractor.extract">
+<span class="sig-name descname"><span class="pre">extract</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_time_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/chunk.html#ChunkExtractor.extract"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.chunk.ChunkExtractor.extract" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="deep_time_series.chunk.ChunkInverter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ChunkInverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunk_specs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/chunk.html#ChunkInverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.chunk.ChunkInverter" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to convert tensor to DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>chunk_specs</strong> (<em>list</em><em>[</em><a class="reference internal" href="#id0" title="deep_time_series.chunk.BaseChunkSpec"><em>deep_time_series.chunk.BaseChunkSpec</em></a><em>]</em>) – </p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.chunk.ChunkInverter.invert">
+<span class="sig-name descname"><span class="pre">invert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/chunk.html#ChunkInverter.invert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.chunk.ChunkInverter.invert" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>str</em>) – </p></li>
+<li><p><strong>tensor</strong> (<em>Tensor</em><em> | </em><em>ndarray</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.chunk.ChunkInverter.invert_dict">
+<span class="sig-name descname"><span class="pre">invert_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/chunk.html#ChunkInverter.invert_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.chunk.ChunkInverter.invert_dict" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>torch.Tensor</em><em> | </em><em>numpy.ndarray</em><em>]</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="deep_time_series.chunk.DecodingChunkSpec">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DecodingChunkSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/chunk.html#DecodingChunkSpec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.chunk.DecodingChunkSpec" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#id0" title="deep_time_series.chunk.BaseChunkSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseChunkSpec</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="deep_time_series.chunk.DecodingChunkSpec.PREFIX">
+<span class="sig-name descname"><span class="pre">PREFIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'decoding'</span></em><a class="headerlink" href="#deep_time_series.chunk.DecodingChunkSpec.PREFIX" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="deep_time_series.chunk.EncodingChunkSpec">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EncodingChunkSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/chunk.html#EncodingChunkSpec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.chunk.EncodingChunkSpec" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#id0" title="deep_time_series.chunk.BaseChunkSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseChunkSpec</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="deep_time_series.chunk.EncodingChunkSpec.PREFIX">
+<span class="sig-name descname"><span class="pre">PREFIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'encoding'</span></em><a class="headerlink" href="#deep_time_series.chunk.EncodingChunkSpec.PREFIX" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="deep_time_series.chunk.LabelChunkSpec">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LabelChunkSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/chunk.html#LabelChunkSpec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.chunk.LabelChunkSpec" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#id0" title="deep_time_series.chunk.BaseChunkSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseChunkSpec</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="deep_time_series.chunk.LabelChunkSpec.PREFIX">
+<span class="sig-name descname"><span class="pre">PREFIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'label'</span></em><a class="headerlink" href="#deep_time_series.chunk.LabelChunkSpec.PREFIX" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<section id="basechunkspec">
+<h3>BaseChunkSpec<a class="headerlink" href="#basechunkspec" title="Permalink to this heading">#</a></h3>
+<p>Base class for all chunk specifications. Defines the structure for specifying time windows and feature names.</p>
+<p><strong>Purpose:</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">BaseChunkSpec</span></code> provides the foundation for all chunk types. It defines the common interface for specifying which features to extract and over what time range.</p>
+<p><strong>Key Properties:</strong></p>
+<ul class="simple">
+<li><p><strong>``tag``</strong> (str): Unique identifier for the chunk. Automatically prefixed based on the chunk type (e.g., <code class="docutils literal notranslate"><span class="pre">'encoding.targets'</span></code>, <code class="docutils literal notranslate"><span class="pre">'decoding.nontargets'</span></code>, <code class="docutils literal notranslate"><span class="pre">'label.targets'</span></code>). The tag is used as a key in dictionaries when extracting chunks.</p></li>
+<li><p><strong>``names``</strong> (list[str]): List of column names from the DataFrame to include in this chunk. These must match column names in your input DataFrame. For example, <code class="docutils literal notranslate"><span class="pre">['temperature',</span> <span class="pre">'humidity']</span></code> will extract these two columns.</p></li>
+<li><p><strong>``range_``</strong> (tuple[int, int]): Tuple <code class="docutils literal notranslate"><span class="pre">(start,</span> <span class="pre">end)</span></code> defining the time window using relative indices. The range is half-open: <code class="docutils literal notranslate"><span class="pre">[start,</span> <span class="pre">end)</span></code>, meaning it includes <code class="docutils literal notranslate"><span class="pre">start</span></code> but excludes <code class="docutils literal notranslate"><span class="pre">end</span></code>. For example, <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">10)</span></code> includes time steps 0 through 9.</p></li>
+<li><p><strong>``dtype``</strong> (np.dtype): NumPy dtype for the data. Typically <code class="docutils literal notranslate"><span class="pre">np.float32</span></code> for numerical data. The data will be cast to this dtype during extraction.</p></li>
+</ul>
+<p><strong>Tag Prefixes:</strong></p>
+<p>Each chunk type automatically adds a prefix to the tag:
+- <code class="docutils literal notranslate"><span class="pre">EncodingChunkSpec</span></code>: Adds <code class="docutils literal notranslate"><span class="pre">'encoding'</span></code> prefix
+- <code class="docutils literal notranslate"><span class="pre">DecodingChunkSpec</span></code>: Adds <code class="docutils literal notranslate"><span class="pre">'decoding'</span></code> prefix
+- <code class="docutils literal notranslate"><span class="pre">LabelChunkSpec</span></code>: Adds <code class="docutils literal notranslate"><span class="pre">'label'</span></code> prefix</p>
+<p><strong>Initialization Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tag</span></code> (str): The tag identifier (prefix will be added automatically)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">names</span></code> (list[str]): Column names to extract</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">range_</span></code> (tuple[int, int]): Time window <code class="docutils literal notranslate"><span class="pre">(start,</span> <span class="pre">end)</span></code>, must satisfy <code class="docutils literal notranslate"><span class="pre">start</span> <span class="pre">&lt;</span> <span class="pre">end</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dtype</span></code> (np.dtype): Data type for the extracted arrays</p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.chunk</span><span class="w"> </span><span class="kn">import</span> <span class="n">EncodingChunkSpec</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">spec</span> <span class="o">=</span> <span class="n">EncodingChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;humidity&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>  <span class="c1"># Use time steps 0-9</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="c1"># spec.tag will be &#39;encoding.targets&#39;</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="id0">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseChunkSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/chunk.html#BaseChunkSpec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">PREFIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#id1" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id2">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dtype</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dtype</span></em><a class="headerlink" href="#id2" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id3">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id3" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id4">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">range</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id4" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id5">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tag</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id5" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="encodingchunkspec">
+<h3>EncodingChunkSpec<a class="headerlink" href="#encodingchunkspec" title="Permalink to this heading">#</a></h3>
+<p>Specification for the encoding window, which defines the input features for the encoder.</p>
+<p><strong>Use Case:</strong></p>
+<p>Define what historical data the model should use to make predictions. This typically includes:
+- Target features (what you’re predicting)
+- Non-target features (exogenous variables)</p>
+<p><strong>Time Range:</strong></p>
+<p>Usually starts at time <code class="docutils literal notranslate"><span class="pre">0</span></code> and extends backward or forward. For example:
+- <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">10)</span></code>: Uses current time step and 9 past steps
+- <code class="docutils literal notranslate"><span class="pre">(-10,</span> <span class="pre">0)</span></code>: Uses 10 past steps (excluding current)</p>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.chunk</span><span class="w"> </span><span class="kn">import</span> <span class="n">EncodingChunkSpec</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Encode using last 20 time steps of temperature and pressure</span>
+<span class="n">encoding_spec</span> <span class="o">=</span> <span class="n">EncodingChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;pressure&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="id6">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EncodingChunkSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/chunk.html#EncodingChunkSpec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id6" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#id0" title="deep_time_series.chunk.BaseChunkSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseChunkSpec</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">PREFIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'encoding'</span></em><a class="headerlink" href="#id7" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="decodingchunkspec">
+<h3>DecodingChunkSpec<a class="headerlink" href="#decodingchunkspec" title="Permalink to this heading">#</a></h3>
+<p>Specification for the decoding window, which defines the input features for the decoder during autoregressive prediction.</p>
+<p><strong>Use Case:</strong></p>
+<p>Define future known features that the decoder can use during autoregressive prediction. This is useful when you have exogenous variables (non-target features) that are known in advance.</p>
+<p><strong>Time Range:</strong></p>
+<p>Typically starts after the encoding window and extends into the future. For example:
+- <code class="docutils literal notranslate"><span class="pre">(10,</span> <span class="pre">15)</span></code>: Uses time steps 10-14 (5 future steps)</p>
+<p><strong>Important:</strong></p>
+<ul class="simple">
+<li><p>Only non-target features should be specified here (targets are predicted, not provided)</p></li>
+<li><p>If you don’t have future known features, you don’t need a <code class="docutils literal notranslate"><span class="pre">DecodingChunkSpec</span></code></p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.chunk</span><span class="w"> </span><span class="kn">import</span> <span class="n">DecodingChunkSpec</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Use future known features (e.g., scheduled events, weather forecasts)</span>
+<span class="n">decoding_spec</span> <span class="o">=</span> <span class="n">DecodingChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;nontargets&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;scheduled_events&#39;</span><span class="p">,</span> <span class="s1">&#39;weather_forecast&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>  <span class="c1"># Future time steps 10-14</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="id8">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DecodingChunkSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/chunk.html#DecodingChunkSpec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id8" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#id0" title="deep_time_series.chunk.BaseChunkSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseChunkSpec</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">PREFIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'decoding'</span></em><a class="headerlink" href="#id9" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="labelchunkspec">
+<h3>LabelChunkSpec<a class="headerlink" href="#labelchunkspec" title="Permalink to this heading">#</a></h3>
+<p>Specification for the label window, which defines the target values for prediction.</p>
+<p><strong>Use Case:</strong></p>
+<p>Define what the model should predict. This is used during training to compute loss and during evaluation to compare predictions with ground truth.</p>
+<p><strong>Time Range:</strong></p>
+<p>Typically matches the prediction horizon. For example:
+- <code class="docutils literal notranslate"><span class="pre">(10,</span> <span class="pre">15)</span></code>: Predict time steps 10-14 (5 steps ahead)</p>
+<p><strong>Important:</strong></p>
+<ul class="simple">
+<li><p>The label window should align with your prediction horizon</p></li>
+<li><p>The names should match the target features you want to predict</p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.chunk</span><span class="w"> </span><span class="kn">import</span> <span class="n">LabelChunkSpec</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Predict next 5 time steps of temperature</span>
+<span class="n">label_spec</span> <span class="o">=</span> <span class="n">LabelChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>  <span class="c1"># Predict time steps 10-14</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="id10">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LabelChunkSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/chunk.html#LabelChunkSpec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id10" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#id0" title="deep_time_series.chunk.BaseChunkSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseChunkSpec</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">PREFIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'label'</span></em><a class="headerlink" href="#id11" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="chunkextractor">
+<h3>ChunkExtractor<a class="headerlink" href="#chunkextractor" title="Permalink to this heading">#</a></h3>
+<p>Utility class for extracting chunks from pandas DataFrames based on chunk specifications.</p>
+<p><strong>Purpose:</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">ChunkExtractor</span></code> takes a DataFrame and a list of chunk specifications, then extracts the appropriate time windows when given a starting time index.</p>
+<p><strong>How It Works:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Initialization</strong>: Preprocesses the DataFrame and validates chunk specifications</p></li>
+<li><p><strong>Extraction</strong>: Given a start time index, extracts all specified chunks</p></li>
+<li><p><strong>Output</strong>: Returns a dictionary with chunk tags as keys and numpy arrays as values</p></li>
+</ol>
+<p><strong>Key Properties:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">chunk_min_t</span></code> (int): Minimum time index across all chunks. This is the earliest time step needed to extract all chunks.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">chunk_max_t</span></code> (int): Maximum time index across all chunks. This is the latest time step needed to extract all chunks.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">chunk_length</span></code> (int): Total length of the chunk window, calculated as <code class="docutils literal notranslate"><span class="pre">chunk_max_t</span> <span class="pre">-</span> <span class="pre">chunk_min_t</span></code>. This determines how much data needs to be available.</p></li>
+</ul>
+<p><strong>Methods:</strong></p>
+<ul>
+<li><p><strong>``extract(start_time_index, return_time_index=False)``</strong>: Extracts all chunks starting from the given time index. Returns a dictionary with chunk tags as keys and numpy arrays as values. If <code class="docutils literal notranslate"><span class="pre">return_time_index=True</span></code>, also includes time index arrays for each chunk.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">start_time_index</span></code> (int): The starting time index in the DataFrame. Must satisfy <code class="docutils literal notranslate"><span class="pre">start_time_index</span> <span class="pre">+</span> <span class="pre">chunk_min_t</span> <span class="pre">&gt;=</span> <span class="pre">0</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">return_time_index</span></code> (bool): If <code class="docutils literal notranslate"><span class="pre">True</span></code>, includes time index arrays in the output dictionary with keys like <code class="docutils literal notranslate"><span class="pre">'{tag}.time_index'</span></code>.</p></li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dict[str,</span> <span class="pre">np.ndarray]</span></code>: Dictionary mapping chunk tags to extracted arrays. Arrays have shape <code class="docutils literal notranslate"><span class="pre">(time_steps,</span> <span class="pre">n_features)</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>``_preprocess(df)``</strong>: Internal method that preprocesses the DataFrame and prepares data for extraction. Called automatically during initialization. Converts DataFrame columns to numpy arrays with the specified dtype.</p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.chunk</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChunkExtractor</span><span class="p">,</span> <span class="n">EncodingChunkSpec</span><span class="p">,</span> <span class="n">LabelChunkSpec</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Create sample data</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+    <span class="s1">&#39;humidity&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+<span class="p">})</span>
+
+<span class="c1"># Define chunk specifications</span>
+<span class="n">chunk_specs</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">EncodingChunkSpec</span><span class="p">(</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">],</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+    <span class="n">LabelChunkSpec</span><span class="p">(</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">],</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="c1"># Create extractor</span>
+<span class="n">extractor</span> <span class="o">=</span> <span class="n">ChunkExtractor</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">chunk_specs</span><span class="p">)</span>
+
+<span class="c1"># Extract chunks starting at time index 20</span>
+<span class="n">chunks</span> <span class="o">=</span> <span class="n">extractor</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">start_time_index</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">return_time_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># Returns: {</span>
+<span class="c1">#   &#39;encoding.targets&#39;: array of shape (10, 1),</span>
+<span class="c1">#   &#39;label.targets&#39;: array of shape (5, 1),</span>
+<span class="c1">#   &#39;encoding.targets.time_index&#39;: array([20, 21, ..., 29]),</span>
+<span class="c1">#   &#39;label.targets.time_index&#39;: array([30, 31, ..., 34]),</span>
+<span class="c1"># }</span>
+</pre></div>
+</div>
+<p><strong>Note:</strong></p>
+<p>The extractor ensures that all chunks are extracted from the same time window, maintaining temporal alignment.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="id12">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ChunkExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_specs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/chunk.html#ChunkExtractor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id12" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">extract</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_time_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/chunk.html#ChunkExtractor.extract"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id13" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="chunkinverter">
+<h3>ChunkInverter<a class="headerlink" href="#chunkinverter" title="Permalink to this heading">#</a></h3>
+<p>Utility class for converting model outputs (tensors) back to pandas DataFrames.</p>
+<p><strong>Purpose:</strong></p>
+<p>After model inference, outputs are PyTorch tensors. <code class="docutils literal notranslate"><span class="pre">ChunkInverter</span></code> converts these tensors back to pandas DataFrames with proper column names and structure.</p>
+<p><strong>How It Works:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Initialization</strong>: Takes chunk specifications to understand the output structure</p></li>
+<li><p><strong>Inversion</strong>: Converts tensors (or numpy arrays) to DataFrames using the chunk tag and feature names</p></li>
+<li><p><strong>Output</strong>: Returns DataFrames with proper column names matching the original data</p></li>
+</ol>
+<p><strong>Input Format:</strong></p>
+<p>Tensors should have shape <code class="docutils literal notranslate"><span class="pre">(batch_size,</span> <span class="pre">time_steps,</span> <span class="pre">n_features)</span></code> or <code class="docutils literal notranslate"><span class="pre">(time_steps,</span> <span class="pre">n_features)</span></code> for single samples.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.chunk</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChunkInverter</span><span class="p">,</span> <span class="n">LabelChunkSpec</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Define chunk specification</span>
+<span class="n">chunk_specs</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">LabelChunkSpec</span><span class="p">(</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;humidity&#39;</span><span class="p">],</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="c1"># Create inverter</span>
+<span class="n">inverter</span> <span class="o">=</span> <span class="n">ChunkInverter</span><span class="p">(</span><span class="n">chunk_specs</span><span class="p">)</span>
+
+<span class="c1"># Model output (batch_size=32, time_steps=5, n_features=2)</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Convert to DataFrame</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">inverter</span><span class="o">.</span><span class="n">invert</span><span class="p">(</span><span class="s1">&#39;label.targets&#39;</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+<span class="c1"># Returns DataFrame with columns [&#39;temperature&#39;, &#39;humidity&#39;]</span>
+<span class="c1"># and MultiIndex with &#39;batch_index&#39; and &#39;time_index&#39;</span>
+</pre></div>
+</div>
+<p><strong>Methods:</strong></p>
+<ul>
+<li><p><strong>``invert(tag, tensor)``</strong>: Converts a tensor or numpy array to a pandas DataFrame.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tag</span></code> (str): The chunk tag to match. Can be:
+- Full tag: <code class="docutils literal notranslate"><span class="pre">'label.targets'</span></code> (exact match)
+- Core tag: <code class="docutils literal notranslate"><span class="pre">'targets'</span></code> (extracts from <code class="docutils literal notranslate"><span class="pre">'label.targets'</span></code> or <code class="docutils literal notranslate"><span class="pre">'head.targets'</span></code>)
+- Partial tag: <code class="docutils literal notranslate"><span class="pre">'head.targets'</span></code> (extracts core tag <code class="docutils literal notranslate"><span class="pre">'targets'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tensor</span></code> (torch.Tensor | np.ndarray): Input tensor with shape <code class="docutils literal notranslate"><span class="pre">(batch_size,</span> <span class="pre">time_steps,</span> <span class="pre">n_features)</span></code> or <code class="docutils literal notranslate"><span class="pre">(time_steps,</span> <span class="pre">n_features)</span></code>.</p></li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pd.DataFrame</span></code>: DataFrame with columns matching the feature names from the chunk specification. Has a MultiIndex with <code class="docutils literal notranslate"><span class="pre">'batch_index'</span></code> and <code class="docutils literal notranslate"><span class="pre">'time_index'</span></code> levels.</p></li>
+</ul>
+</li>
+<li><p><strong>``invert_dict(data)``</strong>: Converts a dictionary of tensors to a dictionary of DataFrames.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> (dict[str, torch.Tensor | np.ndarray]): Dictionary mapping tags to tensors.</p></li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dict[str,</span> <span class="pre">pd.DataFrame]</span></code>: Dictionary mapping tags to DataFrames.</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Tag Matching:</strong></p>
+<p>The inverter can match tags in several ways:
+- Full tag: <code class="docutils literal notranslate"><span class="pre">'label.targets'</span></code> (exact match)
+- Core tag: <code class="docutils literal notranslate"><span class="pre">'targets'</span></code> (without prefix, extracts from any matching chunk spec)
+- Partial tag: <code class="docutils literal notranslate"><span class="pre">'head.targets'</span></code> (extracts core tag <code class="docutils literal notranslate"><span class="pre">'targets'</span></code> from the tag)</p>
+<p><strong>Use Cases:</strong></p>
+<ul class="simple">
+<li><p>Converting model predictions to DataFrames for analysis</p></li>
+<li><p>Saving predictions in a readable format</p></li>
+<li><p>Comparing predictions with ground truth DataFrames</p></li>
+</ul>
+<dl class="py class">
+<dt class="sig sig-object py" id="id14">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ChunkInverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunk_specs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/chunk.html#ChunkInverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id14" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to convert tensor to DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>chunk_specs</strong> (<em>list</em><em>[</em><a class="reference internal" href="#id0" title="deep_time_series.chunk.BaseChunkSpec"><em>deep_time_series.chunk.BaseChunkSpec</em></a><em>]</em>) – </p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="id15">
+<span class="sig-name descname"><span class="pre">invert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/chunk.html#ChunkInverter.invert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id15" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>str</em>) – </p></li>
+<li><p><strong>tensor</strong> (<em>Tensor</em><em> | </em><em>ndarray</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id16">
+<span class="sig-name descname"><span class="pre">invert_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/chunk.html#ChunkInverter.invert_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id16" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>torch.Tensor</em><em> | </em><em>numpy.ndarray</em><em>]</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="core.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Core Modules</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="dataset.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Dataset</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-chunks">Understanding Chunks</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.chunk.BaseChunkSpec"><code class="docutils literal notranslate"><span class="pre">BaseChunkSpec</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.chunk.BaseChunkSpec.PREFIX"><code class="docutils literal notranslate"><span class="pre">BaseChunkSpec.PREFIX</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.chunk.BaseChunkSpec.dtype"><code class="docutils literal notranslate"><span class="pre">BaseChunkSpec.dtype</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.chunk.BaseChunkSpec.names"><code class="docutils literal notranslate"><span class="pre">BaseChunkSpec.names</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.chunk.BaseChunkSpec.range"><code class="docutils literal notranslate"><span class="pre">BaseChunkSpec.range</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.chunk.BaseChunkSpec.tag"><code class="docutils literal notranslate"><span class="pre">BaseChunkSpec.tag</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.chunk.ChunkExtractor"><code class="docutils literal notranslate"><span class="pre">ChunkExtractor</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.chunk.ChunkExtractor.extract"><code class="docutils literal notranslate"><span class="pre">ChunkExtractor.extract()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.chunk.ChunkInverter"><code class="docutils literal notranslate"><span class="pre">ChunkInverter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.chunk.ChunkInverter.invert"><code class="docutils literal notranslate"><span class="pre">ChunkInverter.invert()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.chunk.ChunkInverter.invert_dict"><code class="docutils literal notranslate"><span class="pre">ChunkInverter.invert_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.chunk.DecodingChunkSpec"><code class="docutils literal notranslate"><span class="pre">DecodingChunkSpec</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.chunk.DecodingChunkSpec.PREFIX"><code class="docutils literal notranslate"><span class="pre">DecodingChunkSpec.PREFIX</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.chunk.EncodingChunkSpec"><code class="docutils literal notranslate"><span class="pre">EncodingChunkSpec</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.chunk.EncodingChunkSpec.PREFIX"><code class="docutils literal notranslate"><span class="pre">EncodingChunkSpec.PREFIX</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.chunk.LabelChunkSpec"><code class="docutils literal notranslate"><span class="pre">LabelChunkSpec</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.chunk.LabelChunkSpec.PREFIX"><code class="docutils literal notranslate"><span class="pre">LabelChunkSpec.PREFIX</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basechunkspec">BaseChunkSpec</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id0"><code class="docutils literal notranslate"><span class="pre">BaseChunkSpec</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"><code class="docutils literal notranslate"><span class="pre">BaseChunkSpec.PREFIX</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id2"><code class="docutils literal notranslate"><span class="pre">BaseChunkSpec.dtype</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id3"><code class="docutils literal notranslate"><span class="pre">BaseChunkSpec.names</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id4"><code class="docutils literal notranslate"><span class="pre">BaseChunkSpec.range</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id5"><code class="docutils literal notranslate"><span class="pre">BaseChunkSpec.tag</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#encodingchunkspec">EncodingChunkSpec</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6"><code class="docutils literal notranslate"><span class="pre">EncodingChunkSpec</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id7"><code class="docutils literal notranslate"><span class="pre">EncodingChunkSpec.PREFIX</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#decodingchunkspec">DecodingChunkSpec</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8"><code class="docutils literal notranslate"><span class="pre">DecodingChunkSpec</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id9"><code class="docutils literal notranslate"><span class="pre">DecodingChunkSpec.PREFIX</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#labelchunkspec">LabelChunkSpec</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10"><code class="docutils literal notranslate"><span class="pre">LabelChunkSpec</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id11"><code class="docutils literal notranslate"><span class="pre">LabelChunkSpec.PREFIX</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chunkextractor">ChunkExtractor</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12"><code class="docutils literal notranslate"><span class="pre">ChunkExtractor</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id13"><code class="docutils literal notranslate"><span class="pre">ChunkExtractor.extract()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chunkinverter">ChunkInverter</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id14"><code class="docutils literal notranslate"><span class="pre">ChunkInverter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id15"><code class="docutils literal notranslate"><span class="pre">ChunkInverter.invert()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id16"><code class="docutils literal notranslate"><span class="pre">ChunkInverter.invert_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/chunk.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, betlab and dartwork.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

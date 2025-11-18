@@ -1,0 +1,797 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Design of DeepTimeSeries &#8212; DeepTimeSeries  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/design';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Data Input/Output" href="io.html" />
+    <link rel="prev" title="DeepTimeSeries User Guide" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DeepTimeSeries  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Design of DeepTimeSeries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">Data Input/Output</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">DeepTimeSeries User Guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Design of DeepTimeSeries</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="design-of-deeptimeseries">
+<h1>Design of DeepTimeSeries<a class="headerlink" href="#design-of-deeptimeseries" title="Permalink to this heading">#</a></h1>
+<p>This page describes the design of DeepTimeSeries and the concepts for understanding the design.</p>
+<section id="encoding-and-decoding">
+<h2>1. Encoding and Decoding<a class="headerlink" href="#encoding-and-decoding" title="Permalink to this heading">#</a></h2>
+<p>DeepTimeSeries uses an encoder-decoder architecture for time series forecasting.
+This design separates the input processing (encoding) from the output generation (decoding),
+providing flexibility and clarity in model design.</p>
+<section id="encoding-phase">
+<h3>Encoding Phase<a class="headerlink" href="#encoding-phase" title="Permalink to this heading">#</a></h3>
+<p>The encoding phase processes historical time series data to extract meaningful representations.
+The encoder receives input data from the <strong>encoding window</strong> (defined by <code class="docutils literal notranslate"><span class="pre">encoding_length</span></code>)
+and produces a context representation that captures the patterns and dependencies in the historical data.</p>
+<p>The encoding process:</p>
+<ul class="simple">
+<li><p>Takes input from <code class="docutils literal notranslate"><span class="pre">encoding.targets</span></code> and optionally <code class="docutils literal notranslate"><span class="pre">encoding.nontargets</span></code></p></li>
+<li><p>Processes the data through the encoder network (e.g., RNN, CNN, Transformer encoder)</p></li>
+<li><p>Produces a context representation (e.g., hidden states, memory, encoded features)</p></li>
+</ul>
+</section>
+<section id="decoding-phase">
+<h3>Decoding Phase<a class="headerlink" href="#decoding-phase" title="Permalink to this heading">#</a></h3>
+<p>The decoding phase generates future predictions based on the encoded context.
+The decoder uses the context from the encoder and optionally future non-target features
+to generate predictions for the <strong>decoding window</strong> (defined by <code class="docutils literal notranslate"><span class="pre">decoding_length</span></code>).</p>
+<p>The decoding process:</p>
+<ul class="simple">
+<li><p>Receives the encoded context and optionally <code class="docutils literal notranslate"><span class="pre">decoding.nontargets</span></code></p></li>
+<li><p>Generates predictions step-by-step for each time step in the decoding window</p></li>
+<li><p>Can use teacher forcing during training (using ground truth) or autoregressive generation during inference</p></li>
+</ul>
+</section>
+<section id="key-design-principles">
+<h3>Key Design Principles<a class="headerlink" href="#key-design-principles" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Separation of Concerns</strong>: Encoding and decoding are clearly separated, making it easy to understand and modify each component</p></li>
+<li><p><strong>Flexible Input Handling</strong>: Models can handle both target variables and non-target features</p></li>
+<li><p><strong>Autoregressive Generation</strong>: Decoders generate predictions step-by-step, allowing for conditional generation</p></li>
+</ul>
+</section>
+</section>
+<section id="chunk-specification-system">
+<h2>2. Chunk Specification System<a class="headerlink" href="#chunk-specification-system" title="Permalink to this heading">#</a></h2>
+<p>The chunk specification system is a core concept in DeepTimeSeries that defines
+how time series data is extracted and organized for model training and inference.</p>
+<section id="chunk-types">
+<h3>Chunk Types<a class="headerlink" href="#chunk-types" title="Permalink to this heading">#</a></h3>
+<p>There are three types of chunk specifications:</p>
+<dl class="simple">
+<dt><strong>EncodingChunkSpec</strong></dt><dd><p>Defines the input window for the encoder. This specifies which time steps
+and features are used as input to the encoder.</p>
+</dd>
+<dt><strong>DecodingChunkSpec</strong></dt><dd><p>Defines the input window for the decoder. This typically includes future
+non-target features that are known at prediction time.</p>
+</dd>
+<dt><strong>LabelChunkSpec</strong></dt><dd><p>Defines the target window for prediction. This specifies which time steps
+and features should be predicted.</p>
+</dd>
+</dl>
+</section>
+<section id="chunk-specification-properties">
+<h3>Chunk Specification Properties<a class="headerlink" href="#chunk-specification-properties" title="Permalink to this heading">#</a></h3>
+<p>Each chunk specification has the following properties:</p>
+<ul class="simple">
+<li><p><strong>tag</strong>: A unique identifier for the chunk (e.g., <code class="docutils literal notranslate"><span class="pre">'targets'</span></code>, <code class="docutils literal notranslate"><span class="pre">'nontargets'</span></code>)</p></li>
+<li><p><strong>names</strong>: List of feature names (columns) to extract</p></li>
+<li><p><strong>range_</strong>: Tuple <code class="docutils literal notranslate"><span class="pre">(start,</span> <span class="pre">end)</span></code> defining the time window relative to a reference point</p></li>
+<li><p><strong>dtype</strong>: Data type for the extracted data (typically <code class="docutils literal notranslate"><span class="pre">np.float32</span></code>)</p></li>
+</ul>
+</section>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this heading">#</a></h3>
+<p>For a model with <code class="docutils literal notranslate"><span class="pre">encoding_length=10</span></code> and <code class="docutils literal notranslate"><span class="pre">decoding_length=5</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">EncodingChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>  <span class="c1"># Time steps 0-9</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+<span class="p">)</span>
+
+<span class="n">LabelChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>  <span class="c1"># Time steps 10-14</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="chunkextractor-and-chunkinverter">
+<h3>ChunkExtractor and ChunkInverter<a class="headerlink" href="#chunkextractor-and-chunkinverter" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>ChunkExtractor</strong>: Extracts chunks from DataFrames based on chunk specifications</p></li>
+<li><p><strong>ChunkInverter</strong>: Converts model outputs (tensors) back to DataFrame format</p></li>
+</ul>
+</section>
+</section>
+<section id="forecastingmodule-architecture">
+<h2>3. ForecastingModule Architecture<a class="headerlink" href="#forecastingmodule-architecture" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ForecastingModule</span></code> is the base class for all forecasting models in DeepTimeSeries.
+It extends PyTorch Lightning’s <code class="docutils literal notranslate"><span class="pre">LightningModule</span></code>, providing automatic training,
+validation, and testing loops.</p>
+<section id="core-components">
+<h3>Core Components<a class="headerlink" href="#core-components" title="Permalink to this heading">#</a></h3>
+<dl class="simple">
+<dt><strong>Encoding and Decoding Methods</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">encode()</span></code>: Must be implemented by subclasses to process input data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">decode_train()</span></code>: Decoding logic for training (defaults to <code class="docutils literal notranslate"><span class="pre">decode_eval()</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">decode_eval()</span></code>: Decoding logic for evaluation/inference</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">decode()</span></code>: Automatically selects training or evaluation decoding based on mode</p></li>
+</ul>
+</dd>
+<dt><strong>Head Management</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">heads</span></code>: List of <code class="docutils literal notranslate"><span class="pre">BaseHead</span></code> instances for multi-head models</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">head</span></code>: Convenience property for single-head models</p></li>
+</ul>
+</dd>
+<dt><strong>Chunk Specification</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">make_chunk_specs()</span></code>: Generates chunk specifications based on model parameters</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">encoding_length</span></code>: Length of the encoding window</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">decoding_length</span></code>: Length of the decoding window</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="automatic-training-loop">
+<h3>Automatic Training Loop<a class="headerlink" href="#automatic-training-loop" title="Permalink to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">ForecastingModule</span></code> automatically handles:</p>
+<ul class="simple">
+<li><p><strong>Loss Calculation</strong>: Aggregates losses from all heads with their respective weights</p></li>
+<li><p><strong>Metric Tracking</strong>: Updates and computes metrics for each head</p></li>
+<li><p><strong>Logging</strong>: Logs losses and metrics to PyTorch Lightning’s logger</p></li>
+</ul>
+</section>
+<section id="training-flow">
+<h3>Training Flow<a class="headerlink" href="#training-flow" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Input batch is passed to <code class="docutils literal notranslate"><span class="pre">forward()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">encode()</span></code> processes the encoding window</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">decode()</span></code> generates predictions using the encoded context</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">calculate_loss()</span></code> computes the total loss from all heads</p></li>
+<li><p>Metrics are updated and logged automatically</p></li>
+</ol>
+</section>
+</section>
+<section id="head-system">
+<h2>4. Head System<a class="headerlink" href="#head-system" title="Permalink to this heading">#</a></h2>
+<p>The head system provides a flexible way to define output layers and loss functions
+for forecasting models. It supports both deterministic and probabilistic forecasting.</p>
+<section id="basehead">
+<h3>BaseHead<a class="headerlink" href="#basehead" title="Permalink to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">BaseHead</span></code> is the abstract base class for all heads. It defines the interface
+that all heads must implement:</p>
+<ul class="simple">
+<li><p><strong>tag</strong>: Unique identifier for the head (automatically prefixed with <code class="docutils literal notranslate"><span class="pre">'head.'</span></code>)</p></li>
+<li><p><strong>loss_weight</strong>: Weight for the head’s loss in the total loss calculation</p></li>
+<li><p><strong>metrics</strong>: Optional metrics to track (e.g., MAE, MSE, RMSE)</p></li>
+</ul>
+</section>
+<section id="key-methods">
+<h3>Key Methods<a class="headerlink" href="#key-methods" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">forward()</span></code>: Processes input and generates output</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_outputs()</span></code>: Returns accumulated outputs as a dictionary</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reset()</span></code>: Resets internal state (e.g., accumulated outputs)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">calculate_loss()</span></code>: Computes loss given outputs and batch</p></li>
+</ul>
+</section>
+<section id="head-types">
+<h3>Head Types<a class="headerlink" href="#head-types" title="Permalink to this heading">#</a></h3>
+<dl class="simple">
+<dt><strong>Head (Deterministic)</strong></dt><dd><p>Standard head for deterministic forecasting:</p>
+<ul class="simple">
+<li><p>Takes an <code class="docutils literal notranslate"><span class="pre">output_module</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">nn.Linear</span></code>) and a <code class="docutils literal notranslate"><span class="pre">loss_fn</span></code></p></li>
+<li><p>Generates point predictions</p></li>
+<li><p>Supports custom loss functions and metrics</p></li>
+</ul>
+</dd>
+<dt><strong>DistributionHead (Probabilistic)</strong></dt><dd><p>Head for probabilistic forecasting:</p>
+<ul class="simple">
+<li><p>Takes a PyTorch distribution class (e.g., <code class="docutils literal notranslate"><span class="pre">torch.distributions.Normal</span></code>)</p></li>
+<li><p>Automatically creates linear layers for distribution parameters</p></li>
+<li><p>Uses negative log-likelihood as the loss function</p></li>
+<li><p>Supports sampling from the distribution</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="multi-head-models">
+<h3>Multi-Head Models<a class="headerlink" href="#multi-head-models" title="Permalink to this heading">#</a></h3>
+<p>Models can have multiple heads for different prediction tasks:</p>
+<ul class="simple">
+<li><p>Each head has its own tag, loss weight, and metrics</p></li>
+<li><p>Total loss is the weighted sum of all head losses</p></li>
+<li><p>Metrics are tracked separately for each head</p></li>
+</ul>
+</section>
+</section>
+<section id="data-flow">
+<h2>5. Data Flow<a class="headerlink" href="#data-flow" title="Permalink to this heading">#</a></h2>
+<p>Understanding the complete data flow helps in designing and debugging models.</p>
+<section id="data-preparation">
+<h3>Data Preparation<a class="headerlink" href="#data-preparation" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Load Data</strong>: Load time series data as pandas DataFrame(s)</p></li>
+<li><p><strong>Preprocess</strong>: Apply <code class="docutils literal notranslate"><span class="pre">ColumnTransformer</span></code> for scaling/transformation</p></li>
+<li><p><strong>Create Dataset</strong>: Use <code class="docutils literal notranslate"><span class="pre">TimeSeriesDataset</span></code> with chunk specifications</p></li>
+<li><p><strong>Create DataLoader</strong>: Wrap dataset in PyTorch DataLoader</p></li>
+</ol>
+</section>
+<section id="model-forward-pass">
+<h3>Model Forward Pass<a class="headerlink" href="#model-forward-pass" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Input</strong>: Batch dictionary with keys like <code class="docutils literal notranslate"><span class="pre">'encoding.targets'</span></code>, <code class="docutils literal notranslate"><span class="pre">'decoding.nontargets'</span></code>, <code class="docutils literal notranslate"><span class="pre">'label.targets'</span></code></p></li>
+<li><p><strong>Encoding</strong>: <code class="docutils literal notranslate"><span class="pre">encode()</span></code> processes encoding chunks → produces context</p></li>
+<li><p><strong>Decoding</strong>: <code class="docutils literal notranslate"><span class="pre">decode()</span></code> uses context to generate predictions → produces outputs dictionary</p></li>
+<li><p><strong>Output</strong>: Dictionary with keys like <code class="docutils literal notranslate"><span class="pre">'head.targets'</span></code> containing predictions</p></li>
+</ol>
+</section>
+<section id="post-processing">
+<h3>Post-Processing<a class="headerlink" href="#post-processing" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Convert to DataFrame</strong>: Use <code class="docutils literal notranslate"><span class="pre">ChunkInverter</span></code> to convert tensor outputs to DataFrames</p></li>
+<li><p><strong>Inverse Transform</strong>: Apply inverse transformation if needed (e.g., denormalize)</p></li>
+<li><p><strong>Visualize</strong>: Plot predictions and compare with ground truth</p></li>
+</ol>
+</section>
+</section>
+<section id="model-design-patterns">
+<h2>6. Model Design Patterns<a class="headerlink" href="#model-design-patterns" title="Permalink to this heading">#</a></h2>
+<section id="single-head-deterministic-model">
+<h3>Single-Head Deterministic Model<a class="headerlink" href="#single-head-deterministic-model" title="Permalink to this heading">#</a></h3>
+<p>The simplest pattern: one head producing point predictions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span>
+    <span class="n">hidden_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">encoding_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">decoding_length</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span>
+    <span class="n">nontarget_names</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">n_hidden_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="c1"># Uses default Head with MSE loss</span>
+</pre></div>
+</div>
+</section>
+<section id="single-head-probabilistic-model">
+<h3>Single-Head Probabilistic Model<a class="headerlink" href="#single-head-probabilistic-model" title="Permalink to this heading">#</a></h3>
+<p>For uncertainty quantification: one head producing distribution parameters.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">DistributionHead</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.distributions</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dist</span>
+
+<span class="n">head</span> <span class="o">=</span> <span class="n">DistributionHead</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
+    <span class="n">distribution</span><span class="o">=</span><span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">,</span>
+    <span class="n">in_features</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">out_features</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span>
+    <span class="n">hidden_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">encoding_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">decoding_length</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span>
+    <span class="n">nontarget_names</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">n_hidden_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">head</span><span class="o">=</span><span class="n">head</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="multi-head-model">
+<h3>Multi-Head Model<a class="headerlink" href="#multi-head-model" title="Permalink to this heading">#</a></h3>
+<p>For predicting multiple targets or using multiple loss functions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Head</span>
+
+<span class="n">heads</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Head</span><span class="p">(</span>
+        <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;target1&#39;</span><span class="p">,</span>
+        <span class="n">output_module</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">loss_fn</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">(),</span>
+        <span class="n">loss_weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">Head</span><span class="p">(</span>
+        <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;target2&#39;</span><span class="p">,</span>
+        <span class="n">output_module</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">loss_fn</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">L1Loss</span><span class="p">(),</span>
+        <span class="n">loss_weight</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">heads</span> <span class="o">=</span> <span class="n">heads</span>
+</pre></div>
+</div>
+</section>
+<section id="custom-model">
+<h3>Custom Model<a class="headerlink" href="#custom-model" title="Permalink to this heading">#</a></h3>
+<p>To create a custom model, inherit from <code class="docutils literal notranslate"><span class="pre">ForecastingModule</span></code> and implement:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">__init__()</span></code>: Set <code class="docutils literal notranslate"><span class="pre">encoding_length</span></code>, <code class="docutils literal notranslate"><span class="pre">decoding_length</span></code>, and <code class="docutils literal notranslate"><span class="pre">heads</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">encode()</span></code>: Process encoding chunks and return context</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">decode_eval()</span></code>: Generate predictions from context</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make_chunk_specs()</span></code>: Define chunk specifications</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">configure_optimizers()</span></code>: Set up optimizer (optional, can use default)</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">DeepTimeSeries User Guide</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="io.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Data Input/Output</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#encoding-and-decoding">1. Encoding and Decoding</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#encoding-phase">Encoding Phase</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#decoding-phase">Decoding Phase</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-design-principles">Key Design Principles</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chunk-specification-system">2. Chunk Specification System</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chunk-types">Chunk Types</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chunk-specification-properties">Chunk Specification Properties</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chunkextractor-and-chunkinverter">ChunkExtractor and ChunkInverter</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#forecastingmodule-architecture">3. ForecastingModule Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-components">Core Components</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automatic-training-loop">Automatic Training Loop</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-flow">Training Flow</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#head-system">4. Head System</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basehead">BaseHead</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-methods">Key Methods</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#head-types">Head Types</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-head-models">Multi-Head Models</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-flow">5. Data Flow</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preparation">Data Preparation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-forward-pass">Model Forward Pass</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-processing">Post-Processing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-design-patterns">6. Model Design Patterns</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#single-head-deterministic-model">Single-Head Deterministic Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#single-head-probabilistic-model">Single-Head Probabilistic Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-head-model">Multi-Head Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-model">Custom Model</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/user_guide/design.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, betlab and dartwork.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

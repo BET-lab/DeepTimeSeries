@@ -1,0 +1,1761 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Core Modules &#8212; DeepTimeSeries  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/core';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Chunk Specification" href="chunk.html" />
+    <link rel="prev" title="API Reference" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DeepTimeSeries  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chunk.html">Chunk Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataset.html">Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform.html">Data Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layers.html">Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">API Reference</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Core Modules</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="core-modules">
+<h1>Core Modules<a class="headerlink" href="#core-modules" title="Permalink to this heading">#</a></h1>
+<p>The core module provides the base classes for building forecasting models. These classes form the foundation of the DeepTimeSeries framework and define the interface for all forecasting modules.</p>
+<p>All forecasting models in DeepTimeSeries inherit from <code class="xref py py-class docutils literal notranslate"><span class="pre">ForecastingModule</span></code>, which extends PyTorch Lightning’s <code class="docutils literal notranslate"><span class="pre">LightningModule</span></code>. This provides automatic training, validation, and testing loops, metric tracking, and loss calculation.</p>
+<section id="forecastingmodule">
+<h2>ForecastingModule<a class="headerlink" href="#forecastingmodule" title="Permalink to this heading">#</a></h2>
+<p>The base class for all forecasting models. It provides automatic training/validation/test step implementations, metric tracking, and loss calculation.</p>
+<p><strong>Key Features:</strong></p>
+<ul class="simple">
+<li><p><strong>PyTorch Lightning Integration</strong>: Inherits from <code class="docutils literal notranslate"><span class="pre">pl.LightningModule</span></code>, providing automatic training loops</p></li>
+<li><p><strong>Automatic Loss Calculation</strong>: Aggregates losses from all heads with their respective weights</p></li>
+<li><p><strong>Metric Tracking</strong>: Automatically updates and computes metrics for each head during training, validation, and testing</p></li>
+<li><p><strong>Encoding-Decoding Architecture</strong>: Standardizes the encode-decode pattern for time series forecasting</p></li>
+<li><p><strong>Multi-head Support</strong>: Can handle multiple output heads with different loss weights</p></li>
+</ul>
+<p><strong>Architecture:</strong></p>
+<p>The module follows an encoder-decoder pattern:</p>
+<ol class="arabic simple">
+<li><p><strong>Encoding</strong>: The <code class="docutils literal notranslate"><span class="pre">encode()</span></code> method processes the input encoding window</p></li>
+<li><p><strong>Decoding</strong>: The <code class="docutils literal notranslate"><span class="pre">decode()</span></code> method generates predictions (can differ between training and evaluation)</p></li>
+<li><p><strong>Forward</strong>: Automatically combines encoding and decoding</p></li>
+</ol>
+<p><strong>Required Methods to Implement:</strong></p>
+<ul class="simple">
+<li><p><strong>``encode(inputs)``</strong>: Process the encoding window and return encoder outputs. This method receives a dictionary with keys like <code class="docutils literal notranslate"><span class="pre">'encoding.targets'</span></code> and <code class="docutils literal notranslate"><span class="pre">'encoding.nontargets'</span></code> containing tensors of shape <code class="docutils literal notranslate"><span class="pre">(batch_size,</span> <span class="pre">encoding_length,</span> <span class="pre">n_features)</span></code>. Should return a dictionary of encoder outputs that will be passed to the decoder.</p></li>
+<li><p><strong>``decode_eval(inputs)``</strong>: Generate predictions during evaluation/inference. Receives a dictionary combining the original inputs and encoder outputs. Should return a dictionary with head tags as keys (e.g., <code class="docutils literal notranslate"><span class="pre">'head.targets'</span></code>) and prediction tensors as values.</p></li>
+<li><p><strong>``decode_train(inputs)``</strong>: (Optional) Generate predictions during training. Defaults to <code class="docutils literal notranslate"><span class="pre">decode_eval()</span></code> if not overridden. Can be used to implement teacher forcing or other training-specific behaviors.</p></li>
+<li><p><strong>``make_chunk_specs()``</strong>: Generate chunk specifications based on model parameters. Should return a list of <code class="docutils literal notranslate"><span class="pre">BaseChunkSpec</span></code> instances that define the input/output structure. This is used by <code class="docutils literal notranslate"><span class="pre">TimeSeriesDataset</span></code> to extract the correct data windows.</p></li>
+</ul>
+<p><strong>Key Methods:</strong></p>
+<ul class="simple">
+<li><p><strong>``forward(inputs)``</strong>: Main forward pass that combines encoding and decoding. Automatically merges encoder outputs with inputs for the decoder. Returns the final output dictionary.</p></li>
+<li><p><strong>``calculate_loss(outputs, batch)``</strong>: Computes the total loss by aggregating losses from all heads with their respective weights. Returns a scalar tensor.</p></li>
+<li><p><strong>``training_step(batch, batch_idx)``</strong>: PyTorch Lightning training step. Computes forward pass, loss, and metrics. Automatically called during training.</p></li>
+<li><p><strong>``validation_step(batch, batch_idx)``</strong>: PyTorch Lightning validation step. Computes forward pass and loss, updates metrics. Metrics are computed at epoch end.</p></li>
+<li><p><strong>``test_step(batch, batch_idx)``</strong>: PyTorch Lightning test step. Similar to validation step but for testing.</p></li>
+<li><p><strong>``forward_metrics(outputs, batch, stage)``</strong>: Computes metrics for the current batch. Returns a dictionary of metric values.</p></li>
+<li><p><strong>``update_metrics(outputs, batch, stage)``</strong>: Updates metric states without computing values. Used during validation/test.</p></li>
+<li><p><strong>``compute_metrics(stage)``</strong>: Computes final metric values from accumulated states. Called at epoch end.</p></li>
+<li><p><strong>``reset_metrics(stage)``</strong>: Resets metric states. Called at the start of each epoch.</p></li>
+</ul>
+<p><strong>Properties:</strong></p>
+<ul class="simple">
+<li><p><strong>``encoding_length``</strong> (int): Length of the input window for encoding. Must be a positive integer.</p></li>
+<li><p><strong>``decoding_length``</strong> (int): Length of the prediction window. Must be a positive integer.</p></li>
+<li><p><strong>``head``</strong> (BaseHead): Single output head (convenience property when using a single head). Raises an error if multiple heads are defined.</p></li>
+<li><p><strong>``heads``</strong> (list[BaseHead]): List of output heads. Supports multi-head models where different heads can predict different targets or use different loss functions.</p></li>
+</ul>
+<span class="target" id="module-deep_time_series.core"></span><dl class="py class">
+<dt class="sig sig-object py" id="deep_time_series.core.BaseHead">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseHead</span></span><a class="reference internal" href="../_modules/deep_time_series/core.html#BaseHead"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.BaseHead" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Base class of all Head classes.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.BaseHead.calculate_loss">
+<span class="sig-name descname"><span class="pre">calculate_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#BaseHead.calculate_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.BaseHead.calculate_loss" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>outputs</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+<li><p><strong>batch</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Tensor</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.BaseHead.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#BaseHead.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.BaseHead.forward" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>Any</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Tensor</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.BaseHead.get_outputs">
+<span class="sig-name descname"><span class="pre">get_outputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#BaseHead.get_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.BaseHead.get_outputs" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, <em>Any</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="deep_time_series.core.BaseHead.has_metrics">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_metrics</span></span><a class="headerlink" href="#deep_time_series.core.BaseHead.has_metrics" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="deep_time_series.core.BaseHead.label_tag">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">label_tag</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#deep_time_series.core.BaseHead.label_tag" title="Permalink to this definition">#</a></dt>
+<dd><p>Tag of target label. If the tag of head is “head.my_tag” then
+label_tag is “label.my_tag”.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="deep_time_series.core.BaseHead.loss_weight">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">loss_weight</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#deep_time_series.core.BaseHead.loss_weight" title="Permalink to this definition">#</a></dt>
+<dd><p>Loss weight for loss calculations.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="deep_time_series.core.BaseHead.metrics">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metrics</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#id43" title="deep_time_series.core.MetricModule"><span class="pre">MetricModule</span></a></em><a class="headerlink" href="#deep_time_series.core.BaseHead.metrics" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.BaseHead.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#BaseHead.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.BaseHead.reset" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="deep_time_series.core.BaseHead.tag">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tag</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#deep_time_series.core.BaseHead.tag" title="Permalink to this definition">#</a></dt>
+<dd><p>Tag for a head. Prefix ‘head.’ is added automatically.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="deep_time_series.core.DistributionHead">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DistributionHead</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#DistributionHead"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.DistributionHead" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#id23" title="deep_time_series.core.BaseHead"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseHead</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>str</em>) – </p></li>
+<li><p><strong>distribution</strong> (<em>Distribution</em>) – </p></li>
+<li><p><strong>in_features</strong> (<em>int</em>) – </p></li>
+<li><p><strong>out_features</strong> (<em>int</em>) – </p></li>
+<li><p><strong>loss_weight</strong> (<em>float</em>) – </p></li>
+<li><p><strong>metrics</strong> (<em>Metric</em><em> | </em><em>list</em><em>[</em><em>torchmetrics.metric.Metric</em><em>] </em><em>| </em><em>dict</em><em>[</em><em>str</em><em>, </em><em>torchmetrics.metric.Metric</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.DistributionHead.calculate_loss">
+<span class="sig-name descname"><span class="pre">calculate_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#DistributionHead.calculate_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.DistributionHead.calculate_loss" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tensor</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.DistributionHead.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#DistributionHead.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.DistributionHead.forward" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.DistributionHead.get_outputs">
+<span class="sig-name descname"><span class="pre">get_outputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#DistributionHead.get_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.DistributionHead.get_outputs" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.DistributionHead.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#DistributionHead.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.DistributionHead.reset" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ForecastingModule</span></span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.ForecastingModule" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">LightningModule</span></code></p>
+<p>Base class of all forecasting modules.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.calculate_loss">
+<span class="sig-name descname"><span class="pre">calculate_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.calculate_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.ForecastingModule.calculate_loss" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>outputs</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+<li><p><strong>batch</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, <em>Any</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.compute_metrics">
+<span class="sig-name descname"><span class="pre">compute_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.compute_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.ForecastingModule.compute_metrics" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>stage</strong> (<em>str</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, <em>Any</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.ForecastingModule.decode" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.decode_eval">
+<span class="sig-name descname"><span class="pre">decode_eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.decode_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.ForecastingModule.decode_eval" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, <em>Any</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.decode_train">
+<span class="sig-name descname"><span class="pre">decode_train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.decode_train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.ForecastingModule.decode_train" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, <em>Any</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.decoding_length">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">decoding_length</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#deep_time_series.core.ForecastingModule.decoding_length" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.encode">
+<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.ForecastingModule.encode" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, <em>Any</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.encoding_length">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">encoding_length</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#deep_time_series.core.ForecastingModule.encoding_length" title="Permalink to this definition">#</a></dt>
+<dd><p>Encoding length.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.ForecastingModule.forward" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, <em>Any</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.forward_metrics">
+<span class="sig-name descname"><span class="pre">forward_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.forward_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.ForecastingModule.forward_metrics" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>outputs</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+<li><p><strong>batch</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+<li><p><strong>stage</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, <em>Any</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.head">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">head</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#id23" title="deep_time_series.core.BaseHead"><span class="pre">BaseHead</span></a></em><a class="headerlink" href="#deep_time_series.core.ForecastingModule.head" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.heads">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">heads</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#id23" title="deep_time_series.core.BaseHead"><span class="pre">deep_time_series.core.BaseHead</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#deep_time_series.core.ForecastingModule.heads" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.make_chunk_specs">
+<span class="sig-name descname"><span class="pre">make_chunk_specs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.make_chunk_specs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.ForecastingModule.make_chunk_specs" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.on_test_epoch_end">
+<span class="sig-name descname"><span class="pre">on_test_epoch_end</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.on_test_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.ForecastingModule.on_test_epoch_end" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.on_train_epoch_end">
+<span class="sig-name descname"><span class="pre">on_train_epoch_end</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.on_train_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.ForecastingModule.on_train_epoch_end" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.on_validation_epoch_end">
+<span class="sig-name descname"><span class="pre">on_validation_epoch_end</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.on_validation_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.ForecastingModule.on_validation_epoch_end" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.reset_metrics">
+<span class="sig-name descname"><span class="pre">reset_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.reset_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.ForecastingModule.reset_metrics" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>stage</strong> (<em>str</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.test_step">
+<span class="sig-name descname"><span class="pre">test_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataloader_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.test_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.ForecastingModule.test_step" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>batch</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+<li><p><strong>batch_idx</strong> (<em>int</em>) – </p></li>
+<li><p><strong>dataloader_idx</strong> (<em>int</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.training_step">
+<span class="sig-name descname"><span class="pre">training_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.training_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.ForecastingModule.training_step" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>batch</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+<li><p><strong>batch_idx</strong> (<em>int</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, <em>Any</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.update_metrics">
+<span class="sig-name descname"><span class="pre">update_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.update_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.ForecastingModule.update_metrics" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>outputs</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+<li><p><strong>batch</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+<li><p><strong>stage</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.ForecastingModule.validation_step">
+<span class="sig-name descname"><span class="pre">validation_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataloader_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.validation_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.ForecastingModule.validation_step" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>batch</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+<li><p><strong>batch_idx</strong> (<em>int</em>) – </p></li>
+<li><p><strong>dataloader_idx</strong> (<em>int</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="deep_time_series.core.Head">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Head</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#Head"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.Head" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#id23" title="deep_time_series.core.BaseHead"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseHead</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>str</em>) – </p></li>
+<li><p><strong>output_module</strong> (<em>Module</em>) – </p></li>
+<li><p><strong>loss_fn</strong> (<em>Callable</em><em>[</em><em>[</em><em>Tensor</em><em>, </em><em>Tensor</em><em>]</em><em>, </em><em>Tensor</em><em>]</em>) – </p></li>
+<li><p><strong>loss_weight</strong> (<em>float</em>) – </p></li>
+<li><p><strong>metrics</strong> (<em>Metric</em><em> | </em><em>list</em><em>[</em><em>torchmetrics.metric.Metric</em><em>] </em><em>| </em><em>dict</em><em>[</em><em>str</em><em>, </em><em>torchmetrics.metric.Metric</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.Head.calculate_loss">
+<span class="sig-name descname"><span class="pre">calculate_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#Head.calculate_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.Head.calculate_loss" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>outputs</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+<li><p><strong>batch</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Tensor</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.Head.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#Head.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.Head.forward" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>Any</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Tensor</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.Head.get_outputs">
+<span class="sig-name descname"><span class="pre">get_outputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#Head.get_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.Head.get_outputs" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.Head.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#Head.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.Head.reset" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="deep_time_series.core.MetricModule">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MetricModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#MetricModule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.MetricModule" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>str</em>) – </p></li>
+<li><p><strong>metrics</strong> (<em>Metric</em><em> | </em><em>list</em><em>[</em><em>torchmetrics.metric.Metric</em><em>] </em><em>| </em><em>dict</em><em>[</em><em>str</em><em>, </em><em>torchmetrics.metric.Metric</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.MetricModule.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#MetricModule.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.MetricModule.compute" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.MetricModule.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#MetricModule.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.MetricModule.forward" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.MetricModule.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#MetricModule.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.MetricModule.reset" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.core.MetricModule.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#MetricModule.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.core.MetricModule.update" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<section id="id1">
+<h3>ForecastingModule<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="id0">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ForecastingModule</span></span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">LightningModule</span></code></p>
+<p>Base class of all forecasting modules.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">calculate_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.calculate_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>outputs</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+<li><p><strong>batch</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, <em>Any</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">compute_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.compute_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>stage</strong> (<em>str</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, <em>Any</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">decode_eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.decode_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, <em>Any</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">decode_train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.decode_train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id6" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, <em>Any</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id7">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">decoding_length</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#id7" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id8" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, <em>Any</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id9">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">encoding_length</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#id9" title="Permalink to this definition">#</a></dt>
+<dd><p>Encoding length.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id10" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, <em>Any</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">forward_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.forward_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id11" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>outputs</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+<li><p><strong>batch</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+<li><p><strong>stage</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, <em>Any</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id12">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">head</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#id23" title="deep_time_series.core.BaseHead"><span class="pre">BaseHead</span></a></em><a class="headerlink" href="#id12" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id13">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">heads</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#id23" title="deep_time_series.core.BaseHead"><span class="pre">deep_time_series.core.BaseHead</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id13" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id14">
+<span class="sig-name descname"><span class="pre">make_chunk_specs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.make_chunk_specs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id14" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id15">
+<span class="sig-name descname"><span class="pre">on_test_epoch_end</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.on_test_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id15" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id16">
+<span class="sig-name descname"><span class="pre">on_train_epoch_end</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.on_train_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id16" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id17">
+<span class="sig-name descname"><span class="pre">on_validation_epoch_end</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.on_validation_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id17" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id18">
+<span class="sig-name descname"><span class="pre">reset_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.reset_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id18" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>stage</strong> (<em>str</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id19">
+<span class="sig-name descname"><span class="pre">test_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataloader_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.test_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id19" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>batch</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+<li><p><strong>batch_idx</strong> (<em>int</em>) – </p></li>
+<li><p><strong>dataloader_idx</strong> (<em>int</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id20">
+<span class="sig-name descname"><span class="pre">training_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.training_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id20" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>batch</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+<li><p><strong>batch_idx</strong> (<em>int</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, <em>Any</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id21">
+<span class="sig-name descname"><span class="pre">update_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.update_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id21" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>outputs</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+<li><p><strong>batch</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+<li><p><strong>stage</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id22">
+<span class="sig-name descname"><span class="pre">validation_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataloader_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#ForecastingModule.validation_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id22" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>batch</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+<li><p><strong>batch_idx</strong> (<em>int</em>) – </p></li>
+<li><p><strong>dataloader_idx</strong> (<em>int</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="basehead">
+<h3>BaseHead<a class="headerlink" href="#basehead" title="Permalink to this heading">#</a></h3>
+<p>Base class for all head modules. Heads are responsible for producing model outputs and calculating losses.</p>
+<p><strong>Purpose:</strong></p>
+<p>Heads serve as the output layer of forecasting models. They:
+- Transform encoder/decoder outputs into predictions
+- Calculate loss between predictions and targets
+- Track metrics (e.g., MAE, MSE, RMSE)
+- Support both deterministic (point predictions) and probabilistic (distribution-based) forecasting</p>
+<p><strong>Key Properties:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tag</span></code>: Unique identifier for the head (automatically prefixed with <code class="docutils literal notranslate"><span class="pre">'head.'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">loss_weight</span></code>: Weight for this head’s loss in the total loss calculation (default: 1.0)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metrics</span></code>: Optional metrics to track (e.g., <code class="docutils literal notranslate"><span class="pre">torchmetrics.MeanAbsoluteError</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">label_tag</span></code>: Corresponding label tag (e.g., <code class="docutils literal notranslate"><span class="pre">'label.targets'</span></code> for <code class="docutils literal notranslate"><span class="pre">'head.targets'</span></code>)</p></li>
+</ul>
+<p><strong>Required Methods to Implement:</strong></p>
+<ul class="simple">
+<li><p><strong>``forward(inputs)``</strong>: Process inputs and produce predictions. This method is called during autoregressive decoding for each time step. Should return a tensor representing the prediction for the current step. The head accumulates these predictions internally.</p></li>
+<li><p><strong>``get_outputs()``</strong>: Return all accumulated outputs as a dictionary. After autoregressive decoding completes, this method concatenates all predictions from <code class="docutils literal notranslate"><span class="pre">forward()</span></code> calls. Returns a dictionary with the head tag as key and a tensor of shape <code class="docutils literal notranslate"><span class="pre">(batch_size,</span> <span class="pre">decoding_length,</span> <span class="pre">n_features)</span></code> as value.</p></li>
+<li><p><strong>``reset()``</strong>: Reset internal state (called at the start of each forward pass). Clears any accumulated predictions or internal state. Must be called before starting a new autoregressive decoding sequence.</p></li>
+<li><p><strong>``calculate_loss(outputs, batch)``</strong>: Calculate loss between outputs and labels. Receives the output dictionary from <code class="docutils literal notranslate"><span class="pre">get_outputs()</span></code> and the batch dictionary containing labels. Should return a scalar tensor representing the loss.</p></li>
+</ul>
+<p><strong>Key Properties:</strong></p>
+<ul class="simple">
+<li><p><strong>``tag``</strong> (str): Unique identifier for the head. Automatically prefixed with <code class="docutils literal notranslate"><span class="pre">'head.'</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">'head.targets'</span></code>).</p></li>
+<li><p><strong>``loss_weight``</strong> (float): Weight for this head’s loss in the total loss calculation. Default is 1.0. Used when multiple heads are present to balance their contributions.</p></li>
+<li><p><strong>``metrics``</strong> (MetricModule | None): Optional metrics to track. If set, metrics are automatically updated during training/validation/test steps.</p></li>
+<li><p><strong>``label_tag``</strong> (str): Corresponding label tag. Automatically derived from the head tag (e.g., <code class="docutils literal notranslate"><span class="pre">'head.targets'</span></code> → <code class="docutils literal notranslate"><span class="pre">'label.targets'</span></code>).</p></li>
+<li><p><strong>``has_metrics``</strong> (bool): Whether metrics are configured for this head.</p></li>
+</ul>
+<p><strong>Creating Custom Heads:</strong></p>
+<p>To create a custom head, inherit from <code class="docutils literal notranslate"><span class="pre">BaseHead</span></code> and implement the required methods:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseHead</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomHead</span><span class="p">(</span><span class="n">BaseHead</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">output_module</span><span class="p">,</span> <span class="n">loss_fn</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">tag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_module</span> <span class="o">=</span> <span class="n">output_module</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_fn</span> <span class="o">=</span> <span class="n">loss_fn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_module</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">batch</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_fn</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="p">],</span> <span class="n">batch</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">label_tag</span><span class="p">])</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="id23">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseHead</span></span><a class="reference internal" href="../_modules/deep_time_series/core.html#BaseHead"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id23" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Base class of all Head classes.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="id24">
+<span class="sig-name descname"><span class="pre">calculate_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#BaseHead.calculate_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id24" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>outputs</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+<li><p><strong>batch</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Tensor</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id25">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#BaseHead.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id25" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>Any</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Tensor</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id26">
+<span class="sig-name descname"><span class="pre">get_outputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#BaseHead.get_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id26" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, <em>Any</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id27">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_metrics</span></span><a class="headerlink" href="#id27" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id28">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">label_tag</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id28" title="Permalink to this definition">#</a></dt>
+<dd><p>Tag of target label. If the tag of head is “head.my_tag” then
+label_tag is “label.my_tag”.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id29">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">loss_weight</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#id29" title="Permalink to this definition">#</a></dt>
+<dd><p>Loss weight for loss calculations.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id30">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metrics</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#id43" title="deep_time_series.core.MetricModule"><span class="pre">MetricModule</span></a></em><a class="headerlink" href="#id30" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id31">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#BaseHead.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id31" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id32">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tag</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id32" title="Permalink to this definition">#</a></dt>
+<dd><p>Tag for a head. Prefix ‘head.’ is added automatically.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="head">
+<h3>Head<a class="headerlink" href="#head" title="Permalink to this heading">#</a></h3>
+<p>Deterministic head for producing point predictions.</p>
+<p><strong>Purpose:</strong></p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">Head</span></code> when you want to produce single point predictions (deterministic forecasting). This is the most common type of head for time series forecasting.</p>
+<p><strong>Key Features:</strong></p>
+<ul class="simple">
+<li><p>Accumulates predictions during autoregressive decoding step by step</p></li>
+<li><p>Supports custom loss functions (default: <code class="docutils literal notranslate"><span class="pre">nn.MSELoss()</span></code>)</p></li>
+<li><p>Optional metric tracking via TorchMetrics</p></li>
+<li><p>Configurable loss weight for multi-head models</p></li>
+</ul>
+<p><strong>Initialization Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tag</span></code> (str): Unique identifier for the head (e.g., <code class="docutils literal notranslate"><span class="pre">'targets'</span></code>). Will be prefixed with <code class="docutils literal notranslate"><span class="pre">'head.'</span></code> automatically.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output_module</span></code> (nn.Module): PyTorch module that transforms hidden states to predictions. Typically a <code class="docutils literal notranslate"><span class="pre">nn.Linear</span></code> layer mapping from hidden size to number of output features.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">loss_fn</span></code> (Callable): Loss function that takes predictions and targets as arguments. Should return a scalar tensor. Default is <code class="docutils literal notranslate"><span class="pre">nn.MSELoss()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">loss_weight</span></code> (float): Weight for this head’s loss in multi-head models. Default is 1.0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metrics</span></code> (Metric | list[Metric] | dict[str, Metric] | None): Optional metrics to track. Can be a single metric, list of metrics, or dictionary of metrics. Examples: <code class="docutils literal notranslate"><span class="pre">MeanAbsoluteError()</span></code>, <code class="docutils literal notranslate"><span class="pre">MeanSquaredError()</span></code>.</p></li>
+</ul>
+<p><strong>How It Works:</strong></p>
+<p>During autoregressive decoding:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">reset()</span></code> is called to clear internal state</p></li>
+<li><p>For each time step, <code class="docutils literal notranslate"><span class="pre">forward(inputs)</span></code> is called, which:
+- Processes inputs through <code class="docutils literal notranslate"><span class="pre">output_module</span></code>
+- Accumulates predictions internally
+- Returns the prediction for the current step</p></li>
+<li><p>After all steps, <code class="docutils literal notranslate"><span class="pre">get_outputs()</span></code> concatenates all predictions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">calculate_loss()</span></code> computes the loss using the accumulated outputs</p></li>
+</ol>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Head</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchmetrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">MeanAbsoluteError</span>
+
+<span class="n">head</span> <span class="o">=</span> <span class="n">Head</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
+    <span class="n">output_module</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">n_outputs</span><span class="p">),</span>
+    <span class="n">loss_fn</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">(),</span>
+    <span class="n">loss_weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">metrics</span><span class="o">=</span><span class="n">MeanAbsoluteError</span><span class="p">(),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Note:</strong></p>
+<p>During autoregressive decoding, <code class="docutils literal notranslate"><span class="pre">Head</span></code> accumulates predictions step by step. Call <code class="docutils literal notranslate"><span class="pre">reset()</span></code> before each forward pass and <code class="docutils literal notranslate"><span class="pre">get_outputs()</span></code> after to retrieve all predictions.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="id33">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Head</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#Head"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id33" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#id23" title="deep_time_series.core.BaseHead"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseHead</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>str</em>) – </p></li>
+<li><p><strong>output_module</strong> (<em>Module</em>) – </p></li>
+<li><p><strong>loss_fn</strong> (<em>Callable</em><em>[</em><em>[</em><em>Tensor</em><em>, </em><em>Tensor</em><em>]</em><em>, </em><em>Tensor</em><em>]</em>) – </p></li>
+<li><p><strong>loss_weight</strong> (<em>float</em>) – </p></li>
+<li><p><strong>metrics</strong> (<em>Metric</em><em> | </em><em>list</em><em>[</em><em>torchmetrics.metric.Metric</em><em>] </em><em>| </em><em>dict</em><em>[</em><em>str</em><em>, </em><em>torchmetrics.metric.Metric</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="id34">
+<span class="sig-name descname"><span class="pre">calculate_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#Head.calculate_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id34" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>outputs</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+<li><p><strong>batch</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Tensor</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id35">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#Head.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id35" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>Any</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Tensor</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id36">
+<span class="sig-name descname"><span class="pre">get_outputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#Head.get_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id36" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id37">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#Head.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id37" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="distributionhead">
+<h3>DistributionHead<a class="headerlink" href="#distributionhead" title="Permalink to this heading">#</a></h3>
+<p>Probabilistic head for producing distribution-based predictions.</p>
+<p><strong>Purpose:</strong></p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">DistributionHead</span></code> when you want to model uncertainty in predictions. Instead of producing a single value, it produces a probability distribution from which you can sample or compute statistics.</p>
+<p><strong>Key Features:</strong></p>
+<ul class="simple">
+<li><p>Supports any PyTorch distribution (e.g., <code class="docutils literal notranslate"><span class="pre">torch.distributions.Normal</span></code>, <code class="docutils literal notranslate"><span class="pre">torch.distributions.StudentT</span></code>)</p></li>
+<li><p>Automatically creates linear layers for distribution parameters</p></li>
+<li><p>Applies appropriate transformations to ensure valid parameter values (e.g., softplus for scale parameters)</p></li>
+<li><p>Uses negative log-likelihood as the loss function</p></li>
+</ul>
+<p><strong>Initialization Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tag</span></code> (str): Unique identifier for the head (e.g., <code class="docutils literal notranslate"><span class="pre">'targets'</span></code>). Will be prefixed with <code class="docutils literal notranslate"><span class="pre">'head.'</span></code> automatically.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">distribution</span></code> (torch.distributions.Distribution): The distribution class to use (not an instance). Common choices include <code class="docutils literal notranslate"><span class="pre">dist.Normal</span></code>, <code class="docutils literal notranslate"><span class="pre">dist.StudentT</span></code>, <code class="docutils literal notranslate"><span class="pre">dist.Gamma</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">in_features</span></code> (int): Number of input features (hidden size from the model).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">out_features</span></code> (int): Number of output features (number of targets to predict).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">loss_weight</span></code> (float): Weight for this head’s loss. Default is 1.0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metrics</span></code> (Metric | list[Metric] | dict[str, Metric] | None): Optional metrics to track.</p></li>
+</ul>
+<p><strong>How It Works:</strong></p>
+<ol class="arabic simple">
+<li><p>For each distribution parameter (e.g., <code class="docutils literal notranslate"><span class="pre">loc</span></code>, <code class="docutils literal notranslate"><span class="pre">scale</span></code> for Normal), a linear layer is created</p></li>
+<li><p>During forward pass, inputs are passed through these linear layers</p></li>
+<li><p>Transformations are applied to ensure valid parameter values (e.g., <code class="docutils literal notranslate"><span class="pre">transform_to(constraint)</span></code>)</p></li>
+<li><p>A distribution instance is created with these parameters</p></li>
+<li><p>A sample is drawn from the distribution as the prediction</p></li>
+<li><p>Both the sample and the parameters are stored in outputs</p></li>
+<li><p>Loss is computed as negative log-likelihood: <code class="docutils literal notranslate"><span class="pre">-log_prob(targets)</span></code></p></li>
+</ol>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">DistributionHead</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.distributions</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dist</span>
+
+<span class="n">head</span> <span class="o">=</span> <span class="n">DistributionHead</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
+    <span class="n">distribution</span><span class="o">=</span><span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">,</span>
+    <span class="n">in_features</span><span class="o">=</span><span class="n">hidden_size</span><span class="p">,</span>
+    <span class="n">out_features</span><span class="o">=</span><span class="n">n_outputs</span><span class="p">,</span>
+    <span class="n">loss_weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Supported Distributions:</strong></p>
+<p>Any PyTorch distribution can be used. Common choices include:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dist.Normal</span></code>: For normally distributed targets</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dist.StudentT</span></code>: For heavy-tailed distributions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dist.Gamma</span></code>: For positive-valued targets</p></li>
+</ul>
+<p><strong>Output Format:</strong></p>
+<p>The head produces multiple outputs:
+- <code class="docutils literal notranslate"><span class="pre">head.{tag}</span></code>: Sampled values from the distribution
+- <code class="docutils literal notranslate"><span class="pre">head.{tag}.{param}</span></code>: Distribution parameters (e.g., <code class="docutils literal notranslate"><span class="pre">head.targets.loc</span></code>, <code class="docutils literal notranslate"><span class="pre">head.targets.scale</span></code> for Normal)</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="id38">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DistributionHead</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#DistributionHead"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id38" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#id23" title="deep_time_series.core.BaseHead"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseHead</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>str</em>) – </p></li>
+<li><p><strong>distribution</strong> (<em>Distribution</em>) – </p></li>
+<li><p><strong>in_features</strong> (<em>int</em>) – </p></li>
+<li><p><strong>out_features</strong> (<em>int</em>) – </p></li>
+<li><p><strong>loss_weight</strong> (<em>float</em>) – </p></li>
+<li><p><strong>metrics</strong> (<em>Metric</em><em> | </em><em>list</em><em>[</em><em>torchmetrics.metric.Metric</em><em>] </em><em>| </em><em>dict</em><em>[</em><em>str</em><em>, </em><em>torchmetrics.metric.Metric</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="id39">
+<span class="sig-name descname"><span class="pre">calculate_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#DistributionHead.calculate_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id39" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tensor</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id40">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#DistributionHead.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id40" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id41">
+<span class="sig-name descname"><span class="pre">get_outputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#DistributionHead.get_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id41" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id42">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#DistributionHead.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id42" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="metricmodule">
+<h3>MetricModule<a class="headerlink" href="#metricmodule" title="Permalink to this heading">#</a></h3>
+<p>Module for tracking and computing metrics during training, validation, and testing.</p>
+<p><strong>Purpose:</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">MetricModule</span></code> wraps TorchMetrics to provide stage-aware metric tracking. It automatically creates separate metric instances for training, validation, and testing phases, ensuring metrics are properly isolated and logged.</p>
+<p><strong>Key Features:</strong></p>
+<ul class="simple">
+<li><p>Automatic stage separation (train/val/test) with separate metric instances</p></li>
+<li><p>Prefix management for logging (e.g., <code class="docutils literal notranslate"><span class="pre">train/targets.mae</span></code>, <code class="docutils literal notranslate"><span class="pre">val/targets.mae</span></code>)</p></li>
+<li><p>Tag-based organization (automatically links head tags to label tags)</p></li>
+</ul>
+<p><strong>Initialization Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tag</span></code> (str): The head tag (e.g., <code class="docutils literal notranslate"><span class="pre">'targets'</span></code> or <code class="docutils literal notranslate"><span class="pre">'head.targets'</span></code>). Used to generate logging prefixes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metrics</span></code> (Metric | list[Metric] | dict[str, Metric]): The metrics to track. Can be a single metric, list, or dictionary. Examples: <code class="docutils literal notranslate"><span class="pre">MeanAbsoluteError()</span></code>, <code class="docutils literal notranslate"><span class="pre">[MeanAbsoluteError(),</span> <span class="pre">MeanSquaredError()]</span></code>.</p></li>
+</ul>
+<p><strong>Methods:</strong></p>
+<ul class="simple">
+<li><p><strong>``forward(outputs, batch, stage)``</strong>: Computes metrics for the current batch. Returns a dictionary of metric values with stage prefix.</p></li>
+<li><p><strong>``update(outputs, batch, stage)``</strong>: Updates metric states without computing values. Used during validation/test to accumulate statistics.</p></li>
+<li><p><strong>``compute(stage)``</strong>: Computes final metric values from accumulated states. Called at epoch end.</p></li>
+<li><p><strong>``reset(stage)``</strong>: Resets metric states for the given stage. Called at the start of each epoch.</p></li>
+</ul>
+<p><strong>Internal Properties:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">head_tag</span></code> (str): The full head tag (e.g., <code class="docutils literal notranslate"><span class="pre">'head.targets'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">label_tag</span></code> (str): The corresponding label tag (e.g., <code class="docutils literal notranslate"><span class="pre">'label.targets'</span></code>)</p></li>
+</ul>
+<p><strong>Usage:</strong></p>
+<p>Typically, you don’t instantiate <code class="docutils literal notranslate"><span class="pre">MetricModule</span></code> directly. Instead, assign metrics to a head:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Head</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchmetrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">MeanAbsoluteError</span><span class="p">,</span> <span class="n">MeanSquaredError</span>
+
+<span class="n">head</span> <span class="o">=</span> <span class="n">Head</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
+    <span class="n">output_module</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">n_outputs</span><span class="p">),</span>
+    <span class="n">loss_fn</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">(),</span>
+    <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">MeanAbsoluteError</span><span class="p">(),</span> <span class="n">MeanSquaredError</span><span class="p">()],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">ForecastingModule</span></code> automatically calls the metrics during training/validation/test steps.</p>
+<p><strong>Metric Tagging:</strong></p>
+<ul class="simple">
+<li><p>Head tag: <code class="docutils literal notranslate"><span class="pre">head.{tag}</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">head.targets</span></code>)</p></li>
+<li><p>Label tag: <code class="docutils literal notranslate"><span class="pre">label.{tag}</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">label.targets</span></code>)</p></li>
+<li><p>Logged as: <code class="docutils literal notranslate"><span class="pre">{stage}/{tag}.{metric_name}</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">train/targets.mae</span></code>)</p></li>
+</ul>
+<dl class="py class">
+<dt class="sig sig-object py" id="id43">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MetricModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#MetricModule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id43" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>str</em>) – </p></li>
+<li><p><strong>metrics</strong> (<em>Metric</em><em> | </em><em>list</em><em>[</em><em>torchmetrics.metric.Metric</em><em>] </em><em>| </em><em>dict</em><em>[</em><em>str</em><em>, </em><em>torchmetrics.metric.Metric</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="id44">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#MetricModule.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id44" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id45">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#MetricModule.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id45" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id46">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#MetricModule.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id46" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id47">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/core.html#MetricModule.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id47" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">API Reference</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="chunk.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Chunk Specification</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#forecastingmodule">ForecastingModule</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.BaseHead"><code class="docutils literal notranslate"><span class="pre">BaseHead</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.BaseHead.calculate_loss"><code class="docutils literal notranslate"><span class="pre">BaseHead.calculate_loss()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.BaseHead.forward"><code class="docutils literal notranslate"><span class="pre">BaseHead.forward()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.BaseHead.get_outputs"><code class="docutils literal notranslate"><span class="pre">BaseHead.get_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.BaseHead.has_metrics"><code class="docutils literal notranslate"><span class="pre">BaseHead.has_metrics</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.BaseHead.label_tag"><code class="docutils literal notranslate"><span class="pre">BaseHead.label_tag</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.BaseHead.loss_weight"><code class="docutils literal notranslate"><span class="pre">BaseHead.loss_weight</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.BaseHead.metrics"><code class="docutils literal notranslate"><span class="pre">BaseHead.metrics</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.BaseHead.reset"><code class="docutils literal notranslate"><span class="pre">BaseHead.reset()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.BaseHead.tag"><code class="docutils literal notranslate"><span class="pre">BaseHead.tag</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.DistributionHead"><code class="docutils literal notranslate"><span class="pre">DistributionHead</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.DistributionHead.calculate_loss"><code class="docutils literal notranslate"><span class="pre">DistributionHead.calculate_loss()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.DistributionHead.forward"><code class="docutils literal notranslate"><span class="pre">DistributionHead.forward()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.DistributionHead.get_outputs"><code class="docutils literal notranslate"><span class="pre">DistributionHead.get_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.DistributionHead.reset"><code class="docutils literal notranslate"><span class="pre">DistributionHead.reset()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule"><code class="docutils literal notranslate"><span class="pre">ForecastingModule</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.calculate_loss"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.calculate_loss()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.compute_metrics"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.compute_metrics()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.decode"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.decode()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.decode_eval"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.decode_eval()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.decode_train"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.decode_train()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.decoding_length"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.decoding_length</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.encode"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.encode()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.encoding_length"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.encoding_length</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.forward"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.forward()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.forward_metrics"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.forward_metrics()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.head"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.head</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.heads"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.heads</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.make_chunk_specs"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.make_chunk_specs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.on_test_epoch_end"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.on_test_epoch_end()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.on_train_epoch_end"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.on_train_epoch_end()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.on_validation_epoch_end"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.on_validation_epoch_end()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.reset_metrics"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.reset_metrics()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.test_step"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.test_step()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.training_step"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.training_step()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.update_metrics"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.update_metrics()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.ForecastingModule.validation_step"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.validation_step()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.Head"><code class="docutils literal notranslate"><span class="pre">Head</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.Head.calculate_loss"><code class="docutils literal notranslate"><span class="pre">Head.calculate_loss()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.Head.forward"><code class="docutils literal notranslate"><span class="pre">Head.forward()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.Head.get_outputs"><code class="docutils literal notranslate"><span class="pre">Head.get_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.Head.reset"><code class="docutils literal notranslate"><span class="pre">Head.reset()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.MetricModule"><code class="docutils literal notranslate"><span class="pre">MetricModule</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.MetricModule.compute"><code class="docutils literal notranslate"><span class="pre">MetricModule.compute()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.MetricModule.forward"><code class="docutils literal notranslate"><span class="pre">MetricModule.forward()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.MetricModule.reset"><code class="docutils literal notranslate"><span class="pre">MetricModule.reset()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.core.MetricModule.update"><code class="docutils literal notranslate"><span class="pre">MetricModule.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">ForecastingModule</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id0"><code class="docutils literal notranslate"><span class="pre">ForecastingModule</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id2"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.calculate_loss()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id3"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.compute_metrics()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id4"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.decode()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id5"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.decode_eval()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id6"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.decode_train()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id7"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.decoding_length</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id8"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.encode()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id9"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.encoding_length</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id10"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.forward()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id11"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.forward_metrics()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id12"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.head</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id13"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.heads</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id14"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.make_chunk_specs()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id15"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.on_test_epoch_end()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id16"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.on_train_epoch_end()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id17"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.on_validation_epoch_end()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id18"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.reset_metrics()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id19"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.test_step()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id20"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.training_step()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id21"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.update_metrics()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id22"><code class="docutils literal notranslate"><span class="pre">ForecastingModule.validation_step()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basehead">BaseHead</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id23"><code class="docutils literal notranslate"><span class="pre">BaseHead</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id24"><code class="docutils literal notranslate"><span class="pre">BaseHead.calculate_loss()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id25"><code class="docutils literal notranslate"><span class="pre">BaseHead.forward()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id26"><code class="docutils literal notranslate"><span class="pre">BaseHead.get_outputs()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id27"><code class="docutils literal notranslate"><span class="pre">BaseHead.has_metrics</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id28"><code class="docutils literal notranslate"><span class="pre">BaseHead.label_tag</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id29"><code class="docutils literal notranslate"><span class="pre">BaseHead.loss_weight</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id30"><code class="docutils literal notranslate"><span class="pre">BaseHead.metrics</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id31"><code class="docutils literal notranslate"><span class="pre">BaseHead.reset()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id32"><code class="docutils literal notranslate"><span class="pre">BaseHead.tag</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#head">Head</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id33"><code class="docutils literal notranslate"><span class="pre">Head</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id34"><code class="docutils literal notranslate"><span class="pre">Head.calculate_loss()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id35"><code class="docutils literal notranslate"><span class="pre">Head.forward()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id36"><code class="docutils literal notranslate"><span class="pre">Head.get_outputs()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id37"><code class="docutils literal notranslate"><span class="pre">Head.reset()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distributionhead">DistributionHead</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id38"><code class="docutils literal notranslate"><span class="pre">DistributionHead</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id39"><code class="docutils literal notranslate"><span class="pre">DistributionHead.calculate_loss()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id40"><code class="docutils literal notranslate"><span class="pre">DistributionHead.forward()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id41"><code class="docutils literal notranslate"><span class="pre">DistributionHead.get_outputs()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id42"><code class="docutils literal notranslate"><span class="pre">DistributionHead.reset()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metricmodule">MetricModule</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id43"><code class="docutils literal notranslate"><span class="pre">MetricModule</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id44"><code class="docutils literal notranslate"><span class="pre">MetricModule.compute()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id45"><code class="docutils literal notranslate"><span class="pre">MetricModule.forward()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id46"><code class="docutils literal notranslate"><span class="pre">MetricModule.reset()</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id47"><code class="docutils literal notranslate"><span class="pre">MetricModule.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/core.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, betlab and dartwork.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,962 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Models &#8212; DeepTimeSeries  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/models';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Layers" href="layers.html" />
+    <link rel="prev" title="Data Transformation" href="transform.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DeepTimeSeries  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chunk.html">Chunk Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataset.html">Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform.html">Data Transformation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layers.html">Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">API Reference</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Models</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="models">
+<h1>Models<a class="headerlink" href="#models" title="Permalink to this heading">#</a></h1>
+<p>The model module provides pre-implemented forecasting models. All models inherit from <a class="reference internal" href="core.html#id0" title="deep_time_series.core.ForecastingModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForecastingModule</span></code></a> and support both deterministic and probabilistic forecasting.</p>
+<p><strong>Common Features:</strong></p>
+<p>All models share these capabilities:
+- <strong>Deterministic Forecasting</strong>: Point predictions using <a class="reference internal" href="core.html#id33" title="deep_time_series.core.Head"><code class="xref py py-class docutils literal notranslate"><span class="pre">Head</span></code></a>
+- <strong>Probabilistic Forecasting</strong>: Distribution-based predictions using <a class="reference internal" href="core.html#id38" title="deep_time_series.core.DistributionHead"><code class="xref py py-class docutils literal notranslate"><span class="pre">DistributionHead</span></code></a>
+- <strong>Target and Non-target Features</strong>: Support for both features to predict and exogenous variables
+- <strong>PyTorch Lightning Integration</strong>: Automatic training, validation, and testing loops
+- <strong>Customizable</strong>: All hyperparameters can be customized, including optimizer, loss function, and metrics</p>
+<p><strong>Model Selection Guide:</strong></p>
+<ul class="simple">
+<li><p><strong>MLP</strong>: Simple and fast, good for short-term dependencies</p></li>
+<li><p><strong>Dilated CNN</strong>: Captures long-range dependencies efficiently, good for long sequences</p></li>
+<li><p><strong>RNN</strong>: Natural for sequential data, supports LSTM/GRU variants</p></li>
+<li><p><strong>Single Shot Transformer</strong>: Best for complex patterns, generates all predictions at once</p></li>
+</ul>
+<span class="target" id="module-deep_time_series.model"></span><section id="mlp">
+<h2>MLP<a class="headerlink" href="#mlp" title="Permalink to this heading">#</a></h2>
+<p>Multi-layer perceptron model for time series forecasting. This model flattens the encoding window and processes it through fully connected layers.</p>
+<p><strong>Purpose:</strong></p>
+<p>A simple feedforward neural network that treats time series forecasting as a sequence-to-sequence problem. Good for baseline comparisons and simple patterns.</p>
+<p><strong>Architecture:</strong></p>
+<ol class="arabic simple">
+<li><p>Flattens the encoding window into a 1D vector</p></li>
+<li><p>Passes through multiple fully connected layers with activation</p></li>
+<li><p>Uses autoregressive decoding: predicts one step at a time, feeding predictions back</p></li>
+</ol>
+<p><strong>Initialization Parameters:</strong></p>
+<p><strong>Required Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">hidden_size</span></code> (int): Number of neurons in hidden layers. Typically 32-256, larger for more complex patterns.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">encoding_length</span></code> (int): Length of the input window. Typically 10-50 time steps for MLP.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">decoding_length</span></code> (int): Length of the prediction horizon.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">target_names</span></code> (list[str]): List of column names to predict. These are the target variables.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nontarget_names</span></code> (list[str]): List of column names for exogenous variables. Can be empty list if no exogenous variables.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_hidden_layers</span></code> (int): Number of hidden layers. Typically 1-4 layers. Deeper networks may overfit.</p></li>
+</ul>
+<p><strong>Optional Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">activation</span></code> (nn.Module): Activation function class. Default is <code class="docutils literal notranslate"><span class="pre">nn.ELU</span></code>. Common choices: <code class="docutils literal notranslate"><span class="pre">nn.ReLU</span></code>, <code class="docutils literal notranslate"><span class="pre">nn.ELU</span></code>, <code class="docutils literal notranslate"><span class="pre">nn.GELU</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dropout_rate</span></code> (float): Dropout probability. Default is 0.0. Use 0.0-0.3 for regularization.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lr</span></code> (float): Learning rate. Default is 1e-3.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">optimizer</span></code> (torch.optim.Optimizer): Optimizer class. Default is <code class="docutils literal notranslate"><span class="pre">torch.optim.Adam</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">optimizer_options</span></code> (dict | None): Additional optimizer options. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code> (empty dict).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">loss_fn</span></code> (Callable | None): Loss function. Default is <code class="docutils literal notranslate"><span class="pre">nn.MSELoss()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metrics</span></code> (Metric | list[Metric] | dict[str, Metric] | None): Metrics to track. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">head</span></code> (BaseHead | None): Custom head. If provided, overrides default head creation. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+<p><strong>Methods:</strong></p>
+<ul class="simple">
+<li><p><strong>``encode(inputs)``</strong>: Processes the encoding window. Concatenates target and non-target features, then flattens them. Returns a dictionary with key <code class="docutils literal notranslate"><span class="pre">'x'</span></code> containing the flattened features.</p></li>
+<li><p><strong>``decode(inputs)``</strong>: Autoregressive decoding. For each time step:
+1. Processes the current window through the MLP body
+2. Generates prediction using the head
+3. Updates the window by shifting and appending the prediction
+4. Returns accumulated predictions from the head</p></li>
+<li><p><strong>``make_chunk_specs()``</strong>: Generates chunk specifications for this model. Creates encoding and label chunks for targets, and encoding/decoding chunks for non-targets if present.</p></li>
+<li><p><strong>``configure_optimizers()``</strong>: PyTorch Lightning method that configures the optimizer. Returns the optimizer instance.</p></li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul class="simple">
+<li><p>Short-term dependencies (encoding_length &lt; 50)</p></li>
+<li><p>Simple patterns that don’t require complex temporal modeling</p></li>
+<li><p>Fast training and inference required</p></li>
+<li><p>Baseline model for comparison</p></li>
+</ul>
+<p><strong>Strengths:</strong></p>
+<ul class="simple">
+<li><p>Simple and interpretable</p></li>
+<li><p>Fast training and inference</p></li>
+<li><p>Low memory requirements</p></li>
+<li><p>Works well with small datasets</p></li>
+</ul>
+<p><strong>Limitations:</strong></p>
+<ul class="simple">
+<li><p>Limited ability to capture long-range dependencies</p></li>
+<li><p>Doesn’t explicitly model temporal structure</p></li>
+<li><p>May struggle with complex patterns</p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">MLP</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchmetrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">MeanAbsoluteError</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span>
+    <span class="n">hidden_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">encoding_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">decoding_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">],</span>
+    <span class="n">nontarget_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;humidity&#39;</span><span class="p">,</span> <span class="s1">&#39;pressure&#39;</span><span class="p">],</span>
+    <span class="n">n_hidden_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">activation</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">,</span>
+    <span class="n">dropout_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+    <span class="n">loss_fn</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">(),</span>
+    <span class="n">metrics</span><span class="o">=</span><span class="n">MeanAbsoluteError</span><span class="p">(),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="deep_time_series.model.MLP">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MLP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hidden_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoding_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nontarget_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_hidden_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ELU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_rate=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr=0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer=&lt;class</span> <span class="pre">'torch.optim.adam.Adam'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_options=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/mlp.html#MLP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.MLP" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="core.html#id0" title="deep_time_series.core.ForecastingModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForecastingModule</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>optimizer</strong> (<em>Optimizer</em>) – </p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.model.MLP.configure_optimizers">
+<span class="sig-name descname"><span class="pre">configure_optimizers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/mlp.html#MLP.configure_optimizers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.MLP.configure_optimizers" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.model.MLP.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/mlp.html#MLP.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.MLP.decode" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.model.MLP.encode">
+<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/mlp.html#MLP.encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.MLP.encode" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.model.MLP.make_chunk_specs">
+<span class="sig-name descname"><span class="pre">make_chunk_specs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/mlp.html#MLP.make_chunk_specs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.MLP.make_chunk_specs" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="dilated-cnn">
+<h2>Dilated CNN<a class="headerlink" href="#dilated-cnn" title="Permalink to this heading">#</a></h2>
+<p>Dilated convolutional neural network for capturing long-range dependencies in time series. Uses dilated convolutions with exponentially increasing dilation rates to capture patterns at multiple time scales.</p>
+<p><strong>Purpose:</strong></p>
+<p>A convolutional model that efficiently captures long-range dependencies through dilated convolutions. Each layer operates at a different time scale, allowing the model to capture both local and global patterns.</p>
+<p><strong>Architecture:</strong></p>
+<ol class="arabic simple">
+<li><p>Stacked dilated 1D convolutions with exponentially increasing dilation rates</p></li>
+<li><p>Each layer captures patterns at different time scales</p></li>
+<li><p>Left padding ensures causal (non-leaking) convolutions</p></li>
+<li><p>Autoregressive decoding for predictions</p></li>
+</ol>
+<p><strong>Initialization Parameters:</strong></p>
+<p><strong>Required Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">hidden_size</span></code> (int): Number of channels in convolutional layers. Typically 32-256.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">encoding_length</span></code> (int): Length of the input window. Can handle 50-500+ time steps effectively.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">decoding_length</span></code> (int): Length of the prediction horizon.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">target_names</span></code> (list[str]): List of column names to predict.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nontarget_names</span></code> (list[str]): List of column names for exogenous variables.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dilation_base</span></code> (int): Base for exponential dilation. Typically 2 or 3. Controls how fast dilation increases across layers. Must satisfy <code class="docutils literal notranslate"><span class="pre">dilation_base</span> <span class="pre">&lt;=</span> <span class="pre">kernel_size</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kernel_size</span></code> (int): Size of convolutional kernel. Typically 2-5. Larger kernels capture broader patterns. Must satisfy <code class="docutils literal notranslate"><span class="pre">kernel_size</span> <span class="pre">&gt;=</span> <span class="pre">dilation_base</span></code>.</p></li>
+</ul>
+<p><strong>Optional Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">activation</span></code> (nn.Module): Activation function class. Default is <code class="docutils literal notranslate"><span class="pre">nn.ELU</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dropout_rate</span></code> (float): Dropout probability. Default is 0.0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lr</span></code> (float): Learning rate. Default is 1e-3.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">optimizer</span></code> (torch.optim.Optimizer): Optimizer class. Default is <code class="docutils literal notranslate"><span class="pre">torch.optim.Adam</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">optimizer_options</span></code> (dict | None): Additional optimizer options. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">loss_fn</span></code> (Callable | None): Loss function. Default is <code class="docutils literal notranslate"><span class="pre">nn.MSELoss()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metrics</span></code> (Metric | list[Metric] | dict[str, Metric] | None): Metrics to track. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">head</span></code> (BaseHead | None): Custom head. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+<p><strong>Methods:</strong></p>
+<ul class="simple">
+<li><p><strong>``encode(inputs)``</strong>: Processes the encoding window through stacked dilated convolutions. Concatenates target and non-target features, applies convolutions with increasing dilation rates. Returns a dictionary with processed features.</p></li>
+<li><p><strong>``decode(inputs)``</strong>: Autoregressive decoding similar to MLP, but uses the convolutional features. Generates predictions step by step.</p></li>
+<li><p><strong>``make_chunk_specs()``</strong>: Generates chunk specifications. Similar to MLP but with different time ranges for non-targets.</p></li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul class="simple">
+<li><p>Long-range dependencies (encoding_length &gt; 50)</p></li>
+<li><p>Multiple time scales in the data</p></li>
+<li><p>Need efficient processing of long sequences</p></li>
+<li><p>Want to capture both local and global patterns</p></li>
+</ul>
+<p><strong>Strengths:</strong></p>
+<ul class="simple">
+<li><p>Efficiently captures long-range dependencies</p></li>
+<li><p>Parallel processing during encoding</p></li>
+<li><p>Good performance on long sequences</p></li>
+<li><p>Less prone to vanishing gradients than RNNs</p></li>
+</ul>
+<p><strong>Limitations:</strong></p>
+<ul class="simple">
+<li><p>Requires careful tuning of dilation_base and kernel_size</p></li>
+<li><p>May miss very short-term patterns if dilation is too large</p></li>
+<li><p>Less interpretable than simpler models</p></li>
+</ul>
+<p><strong>Important Constraint:</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">kernel_size</span> <span class="pre">&gt;=</span> <span class="pre">dilation_base</span></code> must be satisfied. The number of layers is automatically calculated based on encoding_length, dilation_base, and kernel_size.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">DilatedCNN</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">DilatedCNN</span><span class="p">(</span>
+    <span class="n">hidden_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+    <span class="n">encoding_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">decoding_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">],</span>
+    <span class="n">nontarget_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;humidity&#39;</span><span class="p">],</span>
+    <span class="n">dilation_base</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">activation</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">ELU</span><span class="p">,</span>
+    <span class="n">dropout_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="deep_time_series.model.DilatedCNN">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DilatedCNN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hidden_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoding_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nontarget_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dilation_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ELU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_rate=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr=0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer=&lt;class</span> <span class="pre">'torch.optim.adam.Adam'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_options=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/dilated_cnn.html#DilatedCNN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.DilatedCNN" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="core.html#id0" title="deep_time_series.core.ForecastingModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForecastingModule</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>optimizer</strong> (<em>Optimizer</em>) – </p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.model.DilatedCNN.configure_optimizers">
+<span class="sig-name descname"><span class="pre">configure_optimizers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/dilated_cnn.html#DilatedCNN.configure_optimizers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.DilatedCNN.configure_optimizers" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.model.DilatedCNN.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/dilated_cnn.html#DilatedCNN.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.DilatedCNN.decode" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.model.DilatedCNN.encode">
+<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/dilated_cnn.html#DilatedCNN.encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.DilatedCNN.encode" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.model.DilatedCNN.make_chunk_specs">
+<span class="sig-name descname"><span class="pre">make_chunk_specs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/dilated_cnn.html#DilatedCNN.make_chunk_specs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.DilatedCNN.make_chunk_specs" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="rnn">
+<h2>RNN<a class="headerlink" href="#rnn" title="Permalink to this heading">#</a></h2>
+<p>Recurrent neural network model supporting vanilla RNN, LSTM, and GRU variants. Uses an encoder-decoder architecture where the encoder processes the encoding window and the decoder generates predictions autoregressively.</p>
+<p><strong>Purpose:</strong></p>
+<p>A recurrent model that processes sequences step by step, naturally modeling temporal dependencies. Supports multiple RNN variants for different use cases.</p>
+<p><strong>Architecture:</strong></p>
+<ol class="arabic simple">
+<li><p>Encoder RNN processes the encoding window sequentially</p></li>
+<li><p>Final hidden state captures the context</p></li>
+<li><p>Decoder RNN generates predictions autoregressively</p></li>
+<li><p>Same RNN instance used for both encoding and decoding</p></li>
+</ol>
+<p><strong>Initialization Parameters:</strong></p>
+<p><strong>Required Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">hidden_size</span></code> (int): Size of hidden state. Typically 32-256, larger for more complex patterns.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">encoding_length</span></code> (int): Length of the input window.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">decoding_length</span></code> (int): Length of the prediction horizon.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">target_names</span></code> (list[str]): List of column names to predict.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nontarget_names</span></code> (list[str]): List of column names for exogenous variables.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_layers</span></code> (int): Number of RNN layers. Typically 1-3 layers. Deeper may help but increases complexity.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rnn_class</span></code> (nn.Module): RNN class to use. Must be <code class="docutils literal notranslate"><span class="pre">nn.RNN</span></code>, <code class="docutils literal notranslate"><span class="pre">nn.LSTM</span></code>, or <code class="docutils literal notranslate"><span class="pre">nn.GRU</span></code>. Recommended: <code class="docutils literal notranslate"><span class="pre">nn.LSTM</span></code> or <code class="docutils literal notranslate"><span class="pre">nn.GRU</span></code>.</p></li>
+</ul>
+<p><strong>Optional Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dropout_rate</span></code> (float): Dropout probability applied between RNN layers. Default is 0.0. Use 0.0-0.3.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lr</span></code> (float): Learning rate. Default is 1e-3.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">optimizer</span></code> (torch.optim.Optimizer): Optimizer class. Default is <code class="docutils literal notranslate"><span class="pre">torch.optim.Adam</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">optimizer_options</span></code> (dict | None): Additional optimizer options. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">loss_fn</span></code> (Callable | None): Loss function. Default is <code class="docutils literal notranslate"><span class="pre">nn.MSELoss()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metrics</span></code> (Metric | list[Metric] | dict[str, Metric] | None): Metrics to track. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">head</span></code> (BaseHead | None): Custom head. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+<p><strong>Methods:</strong></p>
+<ul class="simple">
+<li><p><strong>``encode(inputs)``</strong>: Processes the encoding window through the RNN encoder. Concatenates target and non-target features, processes sequentially, and returns the final hidden state and memory (for LSTM/GRU).</p></li>
+<li><p><strong>``decode(inputs)``</strong>: Autoregressive decoding using the RNN decoder. Starts from the encoder’s final hidden state, generates predictions step by step, and updates the hidden state.</p></li>
+<li><p><strong>``make_chunk_specs()``</strong>: Generates chunk specifications for this model.</p></li>
+</ul>
+<p><strong>RNN Variants:</strong></p>
+<ul class="simple">
+<li><p><strong>Vanilla RNN</strong> (<code class="docutils literal notranslate"><span class="pre">nn.RNN</span></code>): Simple but may suffer from vanishing gradients. Not recommended for long sequences.</p></li>
+<li><p><strong>LSTM</strong> (<code class="docutils literal notranslate"><span class="pre">nn.LSTM</span></code>): Long short-term memory, handles long dependencies well. Recommended for most cases.</p></li>
+<li><p><strong>GRU</strong> (<code class="docutils literal notranslate"><span class="pre">nn.GRU</span></code>): Gated recurrent unit, similar to LSTM but simpler and faster. Good alternative to LSTM.</p></li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul class="simple">
+<li><p>Sequential patterns with clear temporal dependencies</p></li>
+<li><p>Need to model order and sequence structure explicitly</p></li>
+<li><p>Variable-length sequences (though fixed length in current implementation)</p></li>
+<li><p>Natural fit for time series data</p></li>
+</ul>
+<p><strong>Strengths:</strong></p>
+<ul class="simple">
+<li><p>Natural modeling of sequential dependencies</p></li>
+<li><p>LSTM/GRU handle long-range dependencies well</p></li>
+<li><p>Interpretable hidden states</p></li>
+<li><p>Well-established architecture</p></li>
+</ul>
+<p><strong>Limitations:</strong></p>
+<ul class="simple">
+<li><p>Sequential processing (slower than parallel architectures)</p></li>
+<li><p>May struggle with very long sequences</p></li>
+<li><p>Requires careful initialization and regularization</p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">RNN</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+
+<span class="c1"># LSTM variant</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">RNN</span><span class="p">(</span>
+    <span class="n">hidden_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+    <span class="n">encoding_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="n">decoding_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">],</span>
+    <span class="n">nontarget_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;humidity&#39;</span><span class="p">],</span>
+    <span class="n">n_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">rnn_class</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">,</span>  <span class="c1"># or nn.GRU, nn.RNN</span>
+    <span class="n">dropout_rate</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="deep_time_series.model.RNN">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RNN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hidden_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoding_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nontarget_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rnn_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_rate=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr=0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer=&lt;class</span> <span class="pre">'torch.optim.adam.Adam'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_options=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/rnn.html#RNN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.RNN" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="core.html#id0" title="deep_time_series.core.ForecastingModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForecastingModule</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>optimizer</strong> (<em>Optimizer</em>) – </p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.model.RNN.configure_optimizers">
+<span class="sig-name descname"><span class="pre">configure_optimizers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/rnn.html#RNN.configure_optimizers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.RNN.configure_optimizers" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.model.RNN.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/rnn.html#RNN.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.RNN.decode" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.model.RNN.encode">
+<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/rnn.html#RNN.encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.RNN.encode" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.model.RNN.make_chunk_specs">
+<span class="sig-name descname"><span class="pre">make_chunk_specs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/rnn.html#RNN.make_chunk_specs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.RNN.make_chunk_specs" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="single-shot-transformer">
+<h2>Single Shot Transformer<a class="headerlink" href="#single-shot-transformer" title="Permalink to this heading">#</a></h2>
+<p>Transformer-based model for time series forecasting using encoder-decoder architecture. The encoder processes the encoding window, and the decoder generates all predictions in a single forward pass (single-shot) rather than autoregressively.</p>
+<p><strong>Purpose:</strong></p>
+<p>A transformer-based model that uses attention mechanisms to capture complex temporal relationships. Unlike other models, it generates all predictions simultaneously rather than autoregressively, making inference faster.</p>
+<p><strong>Architecture:</strong></p>
+<ol class="arabic simple">
+<li><p>Encoder: Multi-head self-attention processes the encoding window</p></li>
+<li><p>Decoder: Multi-head cross-attention between decoder inputs and encoder outputs</p></li>
+<li><p>Positional encoding adds temporal information</p></li>
+<li><p>Single-shot prediction: All future steps predicted simultaneously</p></li>
+</ol>
+<p><strong>Initialization Parameters:</strong></p>
+<p><strong>Required Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">encoding_length</span></code> (int): Length of the input window.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">decoding_length</span></code> (int): Length of the prediction horizon.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">target_names</span></code> (list[str]): List of column names to predict.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nontarget_names</span></code> (list[str]): List of column names for exogenous variables.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">d_model</span></code> (int): Embedding dimension. Typically 64-512. Larger values provide more capacity but require more computation. Must be divisible by <code class="docutils literal notranslate"><span class="pre">n_heads</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_heads</span></code> (int): Number of attention heads. Typically 4-16. <code class="docutils literal notranslate"><span class="pre">d_model</span></code> must be divisible by <code class="docutils literal notranslate"><span class="pre">n_heads</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_layers</span></code> (int): Number of transformer layers. Typically 2-6. Deeper for more complex patterns.</p></li>
+</ul>
+<p><strong>Optional Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dim_feedforward</span></code> (int | None): Dimension of feedforward network. Default is <code class="docutils literal notranslate"><span class="pre">4</span> <span class="pre">*</span> <span class="pre">d_model</span></code>. Typically 4 times d_model.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dropout_rate</span></code> (float): Dropout probability. Default is 0.0. Use 0.1-0.3 for regularization.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lr</span></code> (float): Learning rate. Default is 1e-3.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">optimizer</span></code> (torch.optim.Optimizer): Optimizer class. Default is <code class="docutils literal notranslate"><span class="pre">torch.optim.Adam</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">optimizer_options</span></code> (dict | None): Additional optimizer options. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">loss_fn</span></code> (Callable | None): Loss function. Default is <code class="docutils literal notranslate"><span class="pre">nn.MSELoss()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metrics</span></code> (Metric | list[Metric] | dict[str, Metric] | None): Metrics to track. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">head</span></code> (BaseHead | None): Custom head. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+<p><strong>Methods:</strong></p>
+<ul class="simple">
+<li><p><strong>``encode(inputs)``</strong>: Processes the encoding window through the transformer encoder. Applies positional encoding, then processes through multiple encoder layers with self-attention. Returns encoder outputs.</p></li>
+<li><p><strong>``decode(inputs)``</strong>: Processes decoder inputs through the transformer decoder. Uses cross-attention to attend to encoder outputs. Generates all predictions in a single forward pass (not autoregressive).</p></li>
+<li><p><strong>``make_chunk_specs()``</strong>: Generates chunk specifications for this model.</p></li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul class="simple">
+<li><p>Complex patterns requiring attention mechanisms</p></li>
+<li><p>Need to model relationships between distant time steps</p></li>
+<li><p>Want parallel prediction (faster inference than autoregressive)</p></li>
+<li><p>Large datasets with sufficient computational resources</p></li>
+</ul>
+<p><strong>Strengths:</strong></p>
+<ul class="simple">
+<li><p>Captures complex temporal relationships via attention</p></li>
+<li><p>Parallel prediction (faster inference)</p></li>
+<li><p>State-of-the-art performance potential</p></li>
+<li><p>Flexible architecture</p></li>
+</ul>
+<p><strong>Limitations:</strong></p>
+<ul class="simple">
+<li><p>Requires more data and computation</p></li>
+<li><p>May overfit on small datasets</p></li>
+<li><p>Less interpretable than simpler models</p></li>
+<li><p>Memory usage scales with sequence length squared (O(n²) attention complexity)</p></li>
+</ul>
+<p><strong>Important Notes:</strong></p>
+<ul class="simple">
+<li><p>Unlike other models, this generates all predictions in one forward pass rather than autoregressively. This makes inference faster but may reduce accuracy for very long prediction horizons.</p></li>
+<li><p>The model uses <code class="docutils literal notranslate"><span class="pre">nn.TransformerEncoder</span></code> and <code class="docutils literal notranslate"><span class="pre">nn.TransformerDecoder</span></code> from PyTorch, with batch-first format.</p></li>
+<li><p>Positional encoding is applied to both encoder and decoder inputs to provide temporal information.</p></li>
+</ul>
+<dl class="py class">
+<dt class="sig sig-object py" id="deep_time_series.model.SingleShotTransformer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SingleShotTransformer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoding_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoding_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nontarget_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_heads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_feedforward=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_rate=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr=0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer=&lt;class</span> <span class="pre">'torch.optim.adam.Adam'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_options=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/single_shot_transformer.html#SingleShotTransformer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.SingleShotTransformer" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="core.html#id0" title="deep_time_series.core.ForecastingModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForecastingModule</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>optimizer</strong> (<em>Optimizer</em>) – </p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.model.SingleShotTransformer.configure_optimizers">
+<span class="sig-name descname"><span class="pre">configure_optimizers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/single_shot_transformer.html#SingleShotTransformer.configure_optimizers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.SingleShotTransformer.configure_optimizers" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.model.SingleShotTransformer.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/single_shot_transformer.html#SingleShotTransformer.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.SingleShotTransformer.decode" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.model.SingleShotTransformer.encode">
+<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/single_shot_transformer.html#SingleShotTransformer.encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.SingleShotTransformer.encode" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.model.SingleShotTransformer.generate_square_subsequent_mask">
+<span class="sig-name descname"><span class="pre">generate_square_subsequent_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sz</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/single_shot_transformer.html#SingleShotTransformer.generate_square_subsequent_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.SingleShotTransformer.generate_square_subsequent_mask" title="Permalink to this definition">#</a></dt>
+<dd><p>Generate a square mask for the sequence.
+The masked positions are filled with float(‘-inf’).
+Unmasked positions are filled with float(0.0).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.model.SingleShotTransformer.make_chunk_specs">
+<span class="sig-name descname"><span class="pre">make_chunk_specs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/model/single_shot_transformer.html#SingleShotTransformer.make_chunk_specs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.model.SingleShotTransformer.make_chunk_specs" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="transform.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Data Transformation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="layers.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Layers</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mlp">MLP</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.MLP"><code class="docutils literal notranslate"><span class="pre">MLP</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.MLP.configure_optimizers"><code class="docutils literal notranslate"><span class="pre">MLP.configure_optimizers()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.MLP.decode"><code class="docutils literal notranslate"><span class="pre">MLP.decode()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.MLP.encode"><code class="docutils literal notranslate"><span class="pre">MLP.encode()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.MLP.make_chunk_specs"><code class="docutils literal notranslate"><span class="pre">MLP.make_chunk_specs()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dilated-cnn">Dilated CNN</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.DilatedCNN"><code class="docutils literal notranslate"><span class="pre">DilatedCNN</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.DilatedCNN.configure_optimizers"><code class="docutils literal notranslate"><span class="pre">DilatedCNN.configure_optimizers()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.DilatedCNN.decode"><code class="docutils literal notranslate"><span class="pre">DilatedCNN.decode()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.DilatedCNN.encode"><code class="docutils literal notranslate"><span class="pre">DilatedCNN.encode()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.DilatedCNN.make_chunk_specs"><code class="docutils literal notranslate"><span class="pre">DilatedCNN.make_chunk_specs()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rnn">RNN</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.RNN"><code class="docutils literal notranslate"><span class="pre">RNN</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.RNN.configure_optimizers"><code class="docutils literal notranslate"><span class="pre">RNN.configure_optimizers()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.RNN.decode"><code class="docutils literal notranslate"><span class="pre">RNN.decode()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.RNN.encode"><code class="docutils literal notranslate"><span class="pre">RNN.encode()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.RNN.make_chunk_specs"><code class="docutils literal notranslate"><span class="pre">RNN.make_chunk_specs()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#single-shot-transformer">Single Shot Transformer</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.SingleShotTransformer"><code class="docutils literal notranslate"><span class="pre">SingleShotTransformer</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.SingleShotTransformer.configure_optimizers"><code class="docutils literal notranslate"><span class="pre">SingleShotTransformer.configure_optimizers()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.SingleShotTransformer.decode"><code class="docutils literal notranslate"><span class="pre">SingleShotTransformer.decode()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.SingleShotTransformer.encode"><code class="docutils literal notranslate"><span class="pre">SingleShotTransformer.encode()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.SingleShotTransformer.generate_square_subsequent_mask"><code class="docutils literal notranslate"><span class="pre">SingleShotTransformer.generate_square_subsequent_mask()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.model.SingleShotTransformer.make_chunk_specs"><code class="docutils literal notranslate"><span class="pre">SingleShotTransformer.make_chunk_specs()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/models.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, betlab and dartwork.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

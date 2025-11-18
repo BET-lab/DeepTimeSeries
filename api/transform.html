@@ -1,0 +1,764 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Data Transformation &#8212; DeepTimeSeries  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/transform';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Models" href="models.html" />
+    <link rel="prev" title="Dataset" href="dataset.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DeepTimeSeries  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chunk.html">Chunk Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataset.html">Dataset</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Data Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layers.html">Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">API Reference</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Data Transformation</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="data-transformation">
+<h1>Data Transformation<a class="headerlink" href="#data-transformation" title="Permalink to this heading">#</a></h1>
+<p>The transform module provides data preprocessing utilities for time series data. The main class is <code class="xref py py-class docutils literal notranslate"><span class="pre">ColumnTransformer</span></code>, which allows applying different transformers to different columns of a DataFrame.</p>
+<section id="columntransformer">
+<h2>ColumnTransformer<a class="headerlink" href="#columntransformer" title="Permalink to this heading">#</a></h2>
+<p>A transformer that applies sklearn-style transformers to specific columns of a pandas DataFrame. It supports both dictionary and tuple-based transformer specifications.</p>
+<p><strong>Purpose:</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">ColumnTransformer</span></code> provides a convenient way to apply different preprocessing transformers to different columns of a DataFrame. It follows the sklearn API pattern, making it easy to integrate with existing sklearn workflows.</p>
+<p><strong>Key Features:</strong></p>
+<ul class="simple">
+<li><p><strong>sklearn-Compatible Interface</strong>: Follows the <code class="docutils literal notranslate"><span class="pre">fit()</span></code>, <code class="docutils literal notranslate"><span class="pre">transform()</span></code>, <code class="docutils literal notranslate"><span class="pre">fit_transform()</span></code>, and <code class="docutils literal notranslate"><span class="pre">inverse_transform()</span></code> pattern</p></li>
+<li><p><strong>Column-Specific Transformers</strong>: Apply different transformers to different columns</p></li>
+<li><p><strong>Multiple DataFrame Support</strong>: Can fit and transform single or multiple DataFrames</p></li>
+<li><p><strong>Deep Copy Safety</strong>: Each column gets its own transformer instance (no shared state)</p></li>
+</ul>
+<p><strong>Initialization Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">transformer_dict</span></code> (dict[str, Transformer] | None): Dictionary mapping column names to transformer instances. Each column name maps to a transformer that will be applied to that column. Either <code class="docutils literal notranslate"><span class="pre">transformer_dict</span></code> or <code class="docutils literal notranslate"><span class="pre">transformer_tuples</span></code> must be provided, but not both.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">transformer_tuples</span></code> (list[tuple[Transformer, list[str]]] | None): List of tuples, each containing a transformer instance and a list of column names. The transformer will be deep-copied for each column. This is more convenient when applying the same transformer to multiple columns.</p></li>
+</ul>
+<p><strong>Methods:</strong></p>
+<ul>
+<li><p><strong>``fit(data_frames)``</strong>: Fits all transformers on the provided data. Computes statistics (e.g., mean, std for StandardScaler) from the data.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data_frames</span></code> (pd.DataFrame | list[pd.DataFrame]): Training data. Can be a single DataFrame or a list of DataFrames. If multiple DataFrames are provided, they are concatenated before fitting.</p></li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">self</span></code>: Returns self for method chaining.</p></li>
+</ul>
+</li>
+<li><p><strong>``transform(data_frames)``</strong>: Applies the fitted transformers to the data. Only transforms columns that were specified during initialization.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data_frames</span></code> (pd.DataFrame | list[pd.DataFrame]): Data to transform. Can be a single DataFrame or a list of DataFrames.</p></li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pd.DataFrame</span> <span class="pre">|</span> <span class="pre">list[pd.DataFrame]</span></code>: Transformed data with the same structure as input. Columns not specified in transformers remain unchanged.</p></li>
+</ul>
+</li>
+<li><p><strong>``fit_transform(data_frames)``</strong>: Convenience method that fits and transforms in one step. Equivalent to calling <code class="docutils literal notranslate"><span class="pre">fit()</span></code> followed by <code class="docutils literal notranslate"><span class="pre">transform()</span></code>.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data_frames</span></code> (pd.DataFrame | list[pd.DataFrame]): Data to fit and transform.</p></li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pd.DataFrame</span> <span class="pre">|</span> <span class="pre">list[pd.DataFrame]</span></code>: Transformed data.</p></li>
+</ul>
+</li>
+<li><p><strong>``inverse_transform(data_frames)``</strong>: Applies the inverse transformation to convert data back to the original scale. Useful for converting model predictions back to the original data scale.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data_frames</span></code> (pd.DataFrame | list[pd.DataFrame]): Transformed data to invert.</p></li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pd.DataFrame</span> <span class="pre">|</span> <span class="pre">list[pd.DataFrame]</span></code>: Data in original scale.</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Internal Methods:</strong></p>
+<ul class="simple">
+<li><p><strong>``_apply_to_single_feature(series, func)``</strong>: Internal helper method that applies a transformer function to a single pandas Series. Handles reshaping and type conversion.</p></li>
+<li><p><strong>``_get_valid_names(names)``</strong>: Internal helper method that returns the intersection of column names in the transformer dictionary and the provided names. Ensures only valid columns are transformed.</p></li>
+</ul>
+<p><strong>Typical Use Cases:</strong></p>
+<ul class="simple">
+<li><p><strong>Normalization</strong>: Scale features to have zero mean and unit variance (<code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code>)</p></li>
+<li><p><strong>Min-Max Scaling</strong>: Scale features to a specific range (<code class="docutils literal notranslate"><span class="pre">MinMaxScaler</span></code>)</p></li>
+<li><p><strong>Robust Scaling</strong>: Scale using median and IQR (<code class="docutils literal notranslate"><span class="pre">RobustScaler</span></code>)</p></li>
+<li><p><strong>Custom Transformers</strong>: Apply any sklearn-compatible transformer</p></li>
+</ul>
+<p><strong>Two Initialization Methods:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Dictionary Method</strong>: Map column names directly to transformers</p></li>
+<li><p><strong>Tuple Method</strong>: Apply the same transformer to multiple columns (more convenient)</p></li>
+</ol>
+<p><strong>Example - Dictionary Method:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.transform</span><span class="w"> </span><span class="kn">import</span> <span class="n">ColumnTransformer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">MinMaxScaler</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Create sample data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="s1">&#39;humidity&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="s1">&#39;pressure&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">1013</span><span class="p">,</span>
+<span class="p">})</span>
+
+<span class="c1"># Dictionary method: map each column to a transformer</span>
+<span class="n">transformer</span> <span class="o">=</span> <span class="n">ColumnTransformer</span><span class="p">(</span>
+    <span class="n">transformer_dict</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="n">StandardScaler</span><span class="p">(),</span>
+        <span class="s1">&#39;humidity&#39;</span><span class="p">:</span> <span class="n">MinMaxScaler</span><span class="p">(),</span>
+        <span class="s1">&#39;pressure&#39;</span><span class="p">:</span> <span class="n">StandardScaler</span><span class="p">(),</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># Fit and transform</span>
+<span class="n">data_transformed</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Example - Tuple Method (Recommended):</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.transform</span><span class="w"> </span><span class="kn">import</span> <span class="n">ColumnTransformer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Tuple method: apply same transformer to multiple columns</span>
+<span class="n">transformer</span> <span class="o">=</span> <span class="n">ColumnTransformer</span><span class="p">(</span>
+    <span class="n">transformer_tuples</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;pressure&#39;</span><span class="p">]),</span>  <span class="c1"># Scale these</span>
+        <span class="c1"># Other columns remain unchanged</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">data_transformed</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Important Notes:</strong></p>
+<ul class="simple">
+<li><p><strong>Deep Copying</strong>: When using <code class="docutils literal notranslate"><span class="pre">transformer_tuples</span></code>, each column gets a deep copy of the transformer, so they don’t share state</p></li>
+<li><p><strong>Column Validation</strong>: Only columns present in both the transformer dict and the DataFrame will be transformed</p></li>
+<li><p><strong>Preservation</strong>: Columns not specified in the transformer will remain unchanged in the output</p></li>
+</ul>
+<p><strong>Workflow:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Fit</strong>: Compute statistics (mean, std, etc.) from training data</p></li>
+<li><p><strong>Transform</strong>: Apply the learned transformation to new data</p></li>
+<li><p><strong>Inverse Transform</strong>: Convert transformed data back to original scale (useful for predictions)</p></li>
+</ol>
+<p><strong>Example - Full Workflow:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.transform</span><span class="w"> </span><span class="kn">import</span> <span class="n">ColumnTransformer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Training data</span>
+<span class="n">train_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">20</span><span class="p">})</span>
+
+<span class="c1"># Create and fit transformer</span>
+<span class="n">transformer</span> <span class="o">=</span> <span class="n">ColumnTransformer</span><span class="p">(</span>
+    <span class="n">transformer_tuples</span><span class="o">=</span><span class="p">[(</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">])]</span>
+<span class="p">)</span>
+<span class="n">train_transformed</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">train_data</span><span class="p">)</span>
+
+<span class="c1"># Test data (use same transformer, don&#39;t refit)</span>
+<span class="n">test_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">20</span><span class="p">})</span>
+<span class="n">test_transformed</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span>
+
+<span class="c1"># Inverse transform predictions back to original scale</span>
+<span class="n">predictions_transformed</span> <span class="o">=</span> <span class="o">...</span>  <span class="c1"># Model predictions in transformed space</span>
+<span class="n">predictions_original</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">predictions_transformed</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Multiple DataFrames:</strong></p>
+<p>The transformer can handle lists of DataFrames, which is useful when you have multiple time series:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)})</span>
+<span class="n">data2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)})</span>
+
+<span class="n">transformer</span> <span class="o">=</span> <span class="n">ColumnTransformer</span><span class="p">(</span>
+    <span class="n">transformer_tuples</span><span class="o">=</span><span class="p">[(</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">])]</span>
+<span class="p">)</span>
+
+<span class="c1"># Fit on all data</span>
+<span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">([</span><span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">])</span>
+
+<span class="c1"># Transform all data</span>
+<span class="n">transformed_list</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">])</span>
+</pre></div>
+</div>
+<span class="target" id="module-deep_time_series.transform"></span><dl class="py class">
+<dt class="sig sig-object py" id="deep_time_series.transform.ColumnTransformer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ColumnTransformer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformer_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transformer_tuples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/transform.html#ColumnTransformer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.transform.ColumnTransformer" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.transform.ColumnTransformer.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_frames</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/transform.html#ColumnTransformer.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.transform.ColumnTransformer.fit" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data_frames</strong> (<em>DataFrame</em><em> | </em><em>list</em><em>[</em><em>pandas.core.frame.DataFrame</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.transform.ColumnTransformer.fit_transform">
+<span class="sig-name descname"><span class="pre">fit_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_frames</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/transform.html#ColumnTransformer.fit_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.transform.ColumnTransformer.fit_transform" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data_frames</strong> (<em>DataFrame</em><em> | </em><em>list</em><em>[</em><em>pandas.core.frame.DataFrame</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em> | list[pandas.core.frame.DataFrame]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.transform.ColumnTransformer.inverse_transform">
+<span class="sig-name descname"><span class="pre">inverse_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_frames</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/transform.html#ColumnTransformer.inverse_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.transform.ColumnTransformer.inverse_transform" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data_frames</strong> (<em>DataFrame</em><em> | </em><em>list</em><em>[</em><em>pandas.core.frame.DataFrame</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em> | list[pandas.core.frame.DataFrame]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deep_time_series.transform.ColumnTransformer.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_frames</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/transform.html#ColumnTransformer.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.transform.ColumnTransformer.transform" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data_frames</strong> (<em>DataFrame</em><em> | </em><em>list</em><em>[</em><em>pandas.core.frame.DataFrame</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em> | list[pandas.core.frame.DataFrame]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="id0">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ColumnTransformer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformer_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transformer_tuples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/transform.html#ColumnTransformer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_frames</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/transform.html#ColumnTransformer.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data_frames</strong> (<em>DataFrame</em><em> | </em><em>list</em><em>[</em><em>pandas.core.frame.DataFrame</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">fit_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_frames</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/transform.html#ColumnTransformer.fit_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data_frames</strong> (<em>DataFrame</em><em> | </em><em>list</em><em>[</em><em>pandas.core.frame.DataFrame</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em> | list[pandas.core.frame.DataFrame]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">inverse_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_frames</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/transform.html#ColumnTransformer.inverse_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data_frames</strong> (<em>DataFrame</em><em> | </em><em>list</em><em>[</em><em>pandas.core.frame.DataFrame</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em> | list[pandas.core.frame.DataFrame]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_frames</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/transform.html#ColumnTransformer.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data_frames</strong> (<em>DataFrame</em><em> | </em><em>list</em><em>[</em><em>pandas.core.frame.DataFrame</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em> | list[pandas.core.frame.DataFrame]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="dataset.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Dataset</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="models.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Models</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#columntransformer">ColumnTransformer</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.transform.ColumnTransformer"><code class="docutils literal notranslate"><span class="pre">ColumnTransformer</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.transform.ColumnTransformer.fit"><code class="docutils literal notranslate"><span class="pre">ColumnTransformer.fit()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.transform.ColumnTransformer.fit_transform"><code class="docutils literal notranslate"><span class="pre">ColumnTransformer.fit_transform()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.transform.ColumnTransformer.inverse_transform"><code class="docutils literal notranslate"><span class="pre">ColumnTransformer.inverse_transform()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.transform.ColumnTransformer.transform"><code class="docutils literal notranslate"><span class="pre">ColumnTransformer.transform()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id0"><code class="docutils literal notranslate"><span class="pre">ColumnTransformer</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"><code class="docutils literal notranslate"><span class="pre">ColumnTransformer.fit()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2"><code class="docutils literal notranslate"><span class="pre">ColumnTransformer.fit_transform()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3"><code class="docutils literal notranslate"><span class="pre">ColumnTransformer.inverse_transform()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4"><code class="docutils literal notranslate"><span class="pre">ColumnTransformer.transform()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/transform.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, betlab and dartwork.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

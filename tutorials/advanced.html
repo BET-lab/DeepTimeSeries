@@ -1,0 +1,1066 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Advanced Topics &#8212; DeepTimeSeries  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/advanced';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API Reference" href="../api/index.html" />
+    <link rel="prev" title="Model Tutorials" href="models.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DeepTimeSeries  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Tutorial</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="models.html">Model Tutorials</a></li>
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Advanced Topics</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">DeepTimeSeries Tutorials</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Advanced Topics</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="advanced-topics">
+<h1>Advanced Topics<a class="headerlink" href="#advanced-topics" title="Permalink to this heading">#</a></h1>
+<p>This tutorial covers advanced features of DeepTimeSeries, including probabilistic forecasting,
+custom models, multi-head models, and other advanced use cases.</p>
+<section id="probabilistic-forecasting">
+<h2>Probabilistic Forecasting<a class="headerlink" href="#probabilistic-forecasting" title="Permalink to this heading">#</a></h2>
+<p>DeepTimeSeries supports probabilistic forecasting through <code class="docutils literal notranslate"><span class="pre">DistributionHead</span></code>,
+which allows models to predict probability distributions instead of point values.</p>
+<section id="why-probabilistic-forecasting">
+<h3>Why Probabilistic Forecasting?<a class="headerlink" href="#why-probabilistic-forecasting" title="Permalink to this heading">#</a></h3>
+<p>Probabilistic forecasting provides:
+- <strong>Uncertainty quantification</strong>: Understand prediction confidence
+- <strong>Risk assessment</strong>: Evaluate worst-case scenarios
+- <strong>Better decision making</strong>: Make informed decisions under uncertainty</p>
+</section>
+<section id="using-distributionhead">
+<h3>Using DistributionHead<a class="headerlink" href="#using-distributionhead" title="Permalink to this heading">#</a></h3>
+<p>To use probabilistic forecasting, create a <code class="docutils literal notranslate"><span class="pre">DistributionHead</span></code> with a PyTorch distribution:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.distributions</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dist</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">DistributionHead</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">MLP</span>
+
+<span class="c1"># Create DistributionHead for Normal distribution</span>
+<span class="n">prob_head</span> <span class="o">=</span> <span class="n">DistributionHead</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
+    <span class="n">distribution</span><span class="o">=</span><span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">,</span>
+    <span class="n">in_features</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>  <span class="c1"># Output size from model body</span>
+    <span class="n">out_features</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># Number of target features</span>
+<span class="p">)</span>
+
+<span class="c1"># Use with MLP model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span>
+    <span class="n">hidden_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">encoding_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">decoding_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span>
+    <span class="n">nontarget_names</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">n_hidden_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">head</span><span class="o">=</span><span class="n">prob_head</span><span class="p">,</span>  <span class="c1"># Use probabilistic head</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="supported-distributions">
+<h3>Supported Distributions<a class="headerlink" href="#supported-distributions" title="Permalink to this heading">#</a></h3>
+<p>You can use any PyTorch distribution that supports the required operations:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Normal distribution (mean and std)</span>
+<span class="n">dist</span><span class="o">.</span><span class="n">Normal</span>
+
+<span class="c1"># Laplace distribution (loc and scale)</span>
+<span class="n">dist</span><span class="o">.</span><span class="n">Laplace</span>
+
+<span class="c1"># Student&#39;s t-distribution (df, loc, scale)</span>
+<span class="n">dist</span><span class="o">.</span><span class="n">StudentT</span>
+
+<span class="c1"># Log-normal distribution (loc and scale)</span>
+<span class="n">dist</span><span class="o">.</span><span class="n">LogNormal</span>
+
+<span class="c1"># And many more...</span>
+</pre></div>
+</div>
+</section>
+<section id="example-normal-distribution">
+<h3>Example: Normal Distribution<a class="headerlink" href="#example-normal-distribution" title="Permalink to this heading">#</a></h3>
+<p>Here’s a complete example using Normal distribution:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytorch_lightning</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.distributions</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dist</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">deep_time_series</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dts</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">DistributionHead</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">MLP</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.chunk</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChunkInverter</span>
+
+<span class="c1"># Prepare data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="n">transformer</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">ColumnTransformer</span><span class="p">(</span>
+    <span class="n">transformer_tuples</span><span class="o">=</span><span class="p">[(</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">])]</span>
+<span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Create probabilistic head</span>
+<span class="n">prob_head</span> <span class="o">=</span> <span class="n">DistributionHead</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
+    <span class="n">distribution</span><span class="o">=</span><span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">,</span>
+    <span class="n">in_features</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">out_features</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Create model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span>
+    <span class="n">hidden_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">encoding_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">decoding_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span>
+    <span class="n">nontarget_names</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">n_hidden_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">head</span><span class="o">=</span><span class="n">prob_head</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Train</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">TimeSeriesDataset</span><span class="p">(</span>
+    <span class="n">data_frames</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">chunk_specs</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">make_chunk_specs</span><span class="p">()</span>
+<span class="p">)</span>
+<span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span><span class="n">max_epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_dataloaders</span><span class="o">=</span><span class="n">dataloader</span><span class="p">)</span>
+
+<span class="c1"># Predict</span>
+<span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">batch</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">dataloader</span><span class="p">))</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+
+<span class="c1"># Extract distribution parameters</span>
+<span class="n">mean</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;head.targets.loc&#39;</span><span class="p">]</span>  <span class="c1"># Mean predictions</span>
+<span class="n">std</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;head.targets.scale&#39;</span><span class="p">]</span>  <span class="c1"># Standard deviation</span>
+
+<span class="c1"># Sample from distribution</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">distributions</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">std</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="accessing-distribution-parameters">
+<h3>Accessing Distribution Parameters<a class="headerlink" href="#accessing-distribution-parameters" title="Permalink to this heading">#</a></h3>
+<p>When using <code class="docutils literal notranslate"><span class="pre">DistributionHead</span></code>, the outputs dictionary contains:
+- <code class="docutils literal notranslate"><span class="pre">head.{tag}</span></code>: Sampled values
+- <code class="docutils literal notranslate"><span class="pre">head.{tag}.{param}</span></code>: Distribution parameters (e.g., <code class="docutils literal notranslate"><span class="pre">head.targets.loc</span></code>, <code class="docutils literal notranslate"><span class="pre">head.targets.scale</span></code>)</p>
+</section>
+</section>
+<section id="multi-head-models">
+<h2>Multi-Head Models<a class="headerlink" href="#multi-head-models" title="Permalink to this heading">#</a></h2>
+<p>Multi-head models allow predicting multiple targets or using different loss functions
+for different outputs.</p>
+<section id="use-cases">
+<h3>Use Cases<a class="headerlink" href="#use-cases" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Multiple targets</strong>: Predict several related variables simultaneously</p></li>
+<li><p><strong>Different loss functions</strong>: Use different losses for different outputs</p></li>
+<li><p><strong>Auxiliary tasks</strong>: Predict auxiliary information alongside main target</p></li>
+</ul>
+</section>
+<section id="creating-multi-head-models">
+<h3>Creating Multi-Head Models<a class="headerlink" href="#creating-multi-head-models" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Head</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">MLP</span>
+
+<span class="c1"># Create multiple heads</span>
+<span class="n">heads</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Head</span><span class="p">(</span>
+        <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;target1&#39;</span><span class="p">,</span>
+        <span class="n">output_module</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">loss_fn</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">(),</span>
+        <span class="n">loss_weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">Head</span><span class="p">(</span>
+        <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;target2&#39;</span><span class="p">,</span>
+        <span class="n">output_module</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">loss_fn</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">L1Loss</span><span class="p">(),</span>
+        <span class="n">loss_weight</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>  <span class="c1"># Lower weight for this head</span>
+    <span class="p">),</span>
+<span class="p">]</span>
+
+<span class="c1"># Create model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span>
+    <span class="n">hidden_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">encoding_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">decoding_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target1&#39;</span><span class="p">,</span> <span class="s1">&#39;target2&#39;</span><span class="p">],</span>  <span class="c1"># Multiple targets</span>
+    <span class="n">nontarget_names</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">n_hidden_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Set multiple heads</span>
+<span class="n">model</span><span class="o">.</span><span class="n">heads</span> <span class="o">=</span> <span class="n">heads</span>
+</pre></div>
+</div>
+</section>
+<section id="chunk-specifications-for-multi-head">
+<h3>Chunk Specifications for Multi-Head<a class="headerlink" href="#chunk-specifications-for-multi-head" title="Permalink to this heading">#</a></h3>
+<p>When using multiple heads, you need to define chunk specifications for each target:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.chunk</span><span class="w"> </span><span class="kn">import</span> <span class="n">EncodingChunkSpec</span><span class="p">,</span> <span class="n">LabelChunkSpec</span>
+
+<span class="c1"># Model will automatically create specs for all targets</span>
+<span class="n">chunk_specs</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">make_chunk_specs</span><span class="p">()</span>
+
+<span class="c1"># Or create manually</span>
+<span class="n">chunk_specs</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">EncodingChunkSpec</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;target1&#39;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target1&#39;</span><span class="p">],</span> <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+    <span class="n">LabelChunkSpec</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;target1&#39;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target1&#39;</span><span class="p">],</span> <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+    <span class="n">EncodingChunkSpec</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;target2&#39;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target2&#39;</span><span class="p">],</span> <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+    <span class="n">LabelChunkSpec</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;target2&#39;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target2&#39;</span><span class="p">],</span> <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="loss-weighting">
+<h3>Loss Weighting<a class="headerlink" href="#loss-weighting" title="Permalink to this heading">#</a></h3>
+<p>Each head can have a different loss weight:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">heads</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Head</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">loss_weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>   <span class="c1"># Main target</span>
+    <span class="n">Head</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">loss_weight</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>    <span class="c1"># Secondary target</span>
+    <span class="n">Head</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">loss_weight</span><span class="o">=</span><span class="mf">0.1</span><span class="p">),</span>    <span class="c1"># Auxiliary task</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>The total loss is: <code class="docutils literal notranslate"><span class="pre">loss</span> <span class="pre">=</span> <span class="pre">w1*loss1</span> <span class="pre">+</span> <span class="pre">w2*loss2</span> <span class="pre">+</span> <span class="pre">w3*loss3</span></code></p>
+</section>
+</section>
+<section id="custom-models">
+<h2>Custom Models<a class="headerlink" href="#custom-models" title="Permalink to this heading">#</a></h2>
+<p>You can create custom models by inheriting from <code class="docutils literal notranslate"><span class="pre">ForecastingModule</span></code>.</p>
+<section id="basic-custom-model">
+<h3>Basic Custom Model<a class="headerlink" href="#basic-custom-model" title="Permalink to this heading">#</a></h3>
+<p>Here’s a minimal example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.chunk</span><span class="w"> </span><span class="kn">import</span> <span class="n">EncodingChunkSpec</span><span class="p">,</span> <span class="n">LabelChunkSpec</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">ForecastingModule</span><span class="p">,</span> <span class="n">Head</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SimpleCustomModel</span><span class="p">(</span><span class="n">ForecastingModule</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">hidden_size</span><span class="p">,</span>
+        <span class="n">encoding_length</span><span class="p">,</span>
+        <span class="n">decoding_length</span><span class="p">,</span>
+        <span class="n">target_names</span><span class="p">,</span>
+        <span class="n">nontarget_names</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoding_length</span> <span class="o">=</span> <span class="n">encoding_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoding_length</span> <span class="o">=</span> <span class="n">decoding_length</span>
+
+        <span class="n">n_outputs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_names</span><span class="p">)</span>
+        <span class="n">n_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nontarget_names</span><span class="p">)</span> <span class="o">+</span> <span class="n">n_outputs</span>
+
+        <span class="c1"># Define encoder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">n_features</span> <span class="o">*</span> <span class="n">encoding_length</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Define decoder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">n_outputs</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Define head</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">head</span> <span class="o">=</span> <span class="n">Head</span><span class="p">(</span>
+            <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
+            <span class="n">output_module</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">n_outputs</span><span class="p">),</span>
+            <span class="n">loss_fn</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">(),</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="c1"># Concatenate target and non-target features</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">nontarget_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span>
+                <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;encoding.targets&#39;</span><span class="p">],</span>
+                <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;encoding.nontargets&#39;</span><span class="p">]</span>
+            <span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;encoding.targets&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Flatten and encode</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">x_flat</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">encoded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">x_flat</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;context&#39;</span><span class="p">:</span> <span class="n">encoded</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">decode_eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;context&#39;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decoding_length</span><span class="p">):</span>
+            <span class="c1"># Generate prediction</span>
+            <span class="n">pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">get_outputs</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_chunk_specs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding_length</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoding_length</span>
+
+        <span class="n">specs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">EncodingChunkSpec</span><span class="p">(</span>
+                <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
+                <span class="n">names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">target_names</span><span class="p">,</span>
+                <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">E</span><span class="p">),</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">LabelChunkSpec</span><span class="p">(</span>
+                <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
+                <span class="n">names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">target_names</span><span class="p">,</span>
+                <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">E</span> <span class="o">+</span> <span class="n">D</span><span class="p">),</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">nontarget_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">specs</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+                <span class="n">EncodingChunkSpec</span><span class="p">(</span>
+                    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;nontargets&#39;</span><span class="p">,</span>
+                    <span class="n">names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">nontarget_names</span><span class="p">,</span>
+                    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">E</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">specs</span>
+</pre></div>
+</div>
+</section>
+<section id="using-custom-models">
+<h3>Using Custom Models<a class="headerlink" href="#using-custom-models" title="Permalink to this heading">#</a></h3>
+<p>Use your custom model just like built-in models:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">SimpleCustomModel</span><span class="p">(</span>
+    <span class="n">hidden_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">encoding_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">decoding_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span>
+    <span class="n">nontarget_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;feature&#39;</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">TimeSeriesDataset</span><span class="p">(</span>
+    <span class="n">data_frames</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">chunk_specs</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">make_chunk_specs</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span><span class="n">max_epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_dataloaders</span><span class="o">=</span><span class="n">dataloader</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="custom-optimizers">
+<h2>Custom Optimizers<a class="headerlink" href="#custom-optimizers" title="Permalink to this heading">#</a></h2>
+<p>All models support custom optimizers:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch.optim</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">optim</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="n">optimizer</span><span class="o">=</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">,</span>
+    <span class="n">optimizer_options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;momentum&#39;</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">,</span> <span class="s1">&#39;weight_decay&#39;</span><span class="p">:</span> <span class="mf">1e-4</span><span class="p">},</span>
+    <span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Or override <code class="docutils literal notranslate"><span class="pre">configure_optimizers()</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">CustomModel</span><span class="p">(</span><span class="n">ForecastingModule</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">configure_optimizers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+        <span class="n">scheduler</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">StepLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;optimizer&#39;</span><span class="p">:</span> <span class="n">optimizer</span><span class="p">,</span>
+            <span class="s1">&#39;lr_scheduler&#39;</span><span class="p">:</span> <span class="n">scheduler</span><span class="p">,</span>
+        <span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="custom-metrics">
+<h2>Custom Metrics<a class="headerlink" href="#custom-metrics" title="Permalink to this heading">#</a></h2>
+<p>Add custom metrics to track model performance:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torchmetrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">MeanAbsoluteError</span><span class="p">,</span> <span class="n">MeanSquaredError</span><span class="p">,</span> <span class="n">R2Score</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="n">metrics</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">MeanAbsoluteError</span><span class="p">(),</span>
+        <span class="n">MeanSquaredError</span><span class="p">(),</span>
+        <span class="n">R2Score</span><span class="p">(),</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Metrics are automatically logged during training and validation.</p>
+</section>
+<section id="working-with-multiple-time-series">
+<h2>Working with Multiple Time Series<a class="headerlink" href="#working-with-multiple-time-series" title="Permalink to this heading">#</a></h2>
+<p>DeepTimeSeries supports multiple time series in a single dataset:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create multiple time series</span>
+<span class="n">series1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">))})</span>
+<span class="n">series2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">50</span><span class="p">))})</span>
+<span class="n">series3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">75</span><span class="p">)})</span>
+
+<span class="c1"># Pass as list</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">TimeSeriesDataset</span><span class="p">(</span>
+    <span class="n">data_frames</span><span class="o">=</span><span class="p">[</span><span class="n">series1</span><span class="p">,</span> <span class="n">series2</span><span class="p">,</span> <span class="n">series3</span><span class="p">],</span>
+    <span class="n">chunk_specs</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">make_chunk_specs</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="c1"># Dataset automatically handles different lengths</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total samples: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The dataset will:
+- Handle different lengths automatically
+- Create separate chunk extractors for each series
+- Combine all samples for training</p>
+</section>
+<section id="advanced-data-preprocessing">
+<h2>Advanced Data Preprocessing<a class="headerlink" href="#advanced-data-preprocessing" title="Permalink to this heading">#</a></h2>
+<section id="using-multiple-transformers">
+<h3>Using Multiple Transformers<a class="headerlink" href="#using-multiple-transformers" title="Permalink to this heading">#</a></h3>
+<p>Apply different transformations to different columns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">MinMaxScaler</span><span class="p">,</span> <span class="n">RobustScaler</span>
+
+<span class="n">transformer</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">ColumnTransformer</span><span class="p">(</span>
+    <span class="n">transformer_tuples</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]),</span>
+        <span class="p">(</span><span class="n">MinMaxScaler</span><span class="p">(),</span> <span class="p">[</span><span class="s1">&#39;feature1&#39;</span><span class="p">]),</span>
+        <span class="p">(</span><span class="n">RobustScaler</span><span class="p">(),</span> <span class="p">[</span><span class="s1">&#39;feature2&#39;</span><span class="p">]),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="using-transformer-dictionary">
+<h3>Using Transformer Dictionary<a class="headerlink" href="#using-transformer-dictionary" title="Permalink to this heading">#</a></h3>
+<p>You can also use a dictionary:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">transformer</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">ColumnTransformer</span><span class="p">(</span>
+    <span class="n">transformer_dict</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">StandardScaler</span><span class="p">(),</span>
+        <span class="s1">&#39;feature1&#39;</span><span class="p">:</span> <span class="n">MinMaxScaler</span><span class="p">(),</span>
+        <span class="s1">&#39;feature2&#39;</span><span class="p">:</span> <span class="n">RobustScaler</span><span class="p">(),</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="inverse-transformation">
+<h3>Inverse Transformation<a class="headerlink" href="#inverse-transformation" title="Permalink to this heading">#</a></h3>
+<p>To inverse transform predictions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get transformer for specific columns</span>
+<span class="n">target_transformer</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">named_transformers_</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span>
+
+<span class="c1"># Inverse transform predictions</span>
+<span class="n">predictions_original_scale</span> <span class="o">=</span> <span class="n">target_transformer</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span>
+    <span class="n">predictions_df</span><span class="o">.</span><span class="n">values</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Data Preprocessing</strong>: Always normalize/scale your data appropriately</p></li>
+<li><p><strong>Chunk Specifications</strong>: Ensure chunk ranges don’t overlap incorrectly</p></li>
+<li><p><strong>Head Reset</strong>: Remember to call <code class="docutils literal notranslate"><span class="pre">head.reset()</span></code> at the start of decoding</p></li>
+<li><p><strong>Batch Size</strong>: Adjust batch size based on sequence length and model size</p></li>
+<li><p><strong>Learning Rate</strong>: Use learning rate scheduling for better convergence</p></li>
+<li><p><strong>Validation</strong>: Always use validation data to monitor overfitting</p></li>
+<li><p><strong>Device Management</strong>: PyTorch Lightning handles device placement automatically</p></li>
+</ol>
+</section>
+<section id="debugging-tips">
+<h2>Debugging Tips<a class="headerlink" href="#debugging-tips" title="Permalink to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Check Chunk Specifications</strong>: Use <code class="docutils literal notranslate"><span class="pre">dataset.plot_chunks()</span></code> to visualize chunk ranges</p></li>
+<li><p><strong>Inspect Outputs</strong>: Print output dictionary keys to verify head tags</p></li>
+<li><p><strong>Monitor Loss</strong>: Check if loss decreases as expected</p></li>
+<li><p><strong>Shape Debugging</strong>: Print tensor shapes at each step</p></li>
+<li><p><strong>Gradient Flow</strong>: Use <code class="docutils literal notranslate"><span class="pre">torch.autograd.detect_anomaly()</span></code> to find gradient issues</p></li>
+</ol>
+</section>
+<section id="example-complete-advanced-workflow">
+<h2>Example: Complete Advanced Workflow<a class="headerlink" href="#example-complete-advanced-workflow" title="Permalink to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytorch_lightning</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.distributions</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dist</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchmetrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">MeanAbsoluteError</span><span class="p">,</span> <span class="n">MeanSquaredError</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">deep_time_series</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dts</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">DistributionHead</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">MLP</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.chunk</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChunkInverter</span>
+
+<span class="c1"># 1. Prepare multiple time series</span>
+<span class="n">series1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+    <span class="s1">&#39;feature&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+<span class="p">})</span>
+<span class="n">series2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">80</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">80</span><span class="p">),</span>
+    <span class="s1">&#39;feature&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">80</span><span class="p">))</span>
+<span class="p">})</span>
+
+<span class="c1"># 2. Preprocess</span>
+<span class="n">transformer</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">ColumnTransformer</span><span class="p">(</span>
+    <span class="n">transformer_tuples</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">,</span> <span class="s1">&#39;feature&#39;</span><span class="p">])</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">series1_transformed</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">series1</span><span class="p">)</span>
+<span class="n">series2_transformed</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">series2</span><span class="p">)</span>
+
+<span class="c1"># 3. Create probabilistic head with metrics</span>
+<span class="n">prob_head</span> <span class="o">=</span> <span class="n">DistributionHead</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span>
+    <span class="n">distribution</span><span class="o">=</span><span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">,</span>
+    <span class="n">in_features</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">out_features</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">MeanAbsoluteError</span><span class="p">(),</span> <span class="n">MeanSquaredError</span><span class="p">()],</span>
+<span class="p">)</span>
+
+<span class="c1"># 4. Create model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span>
+    <span class="n">hidden_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">encoding_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">decoding_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span>
+    <span class="n">nontarget_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;feature&#39;</span><span class="p">],</span>
+    <span class="n">n_hidden_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">head</span><span class="o">=</span><span class="n">prob_head</span><span class="p">,</span>
+    <span class="n">optimizer</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">,</span>
+    <span class="n">optimizer_options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;weight_decay&#39;</span><span class="p">:</span> <span class="mf">1e-4</span><span class="p">},</span>
+    <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># 5. Create dataset with multiple series</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">TimeSeriesDataset</span><span class="p">(</span>
+    <span class="n">data_frames</span><span class="o">=</span><span class="p">[</span><span class="n">series1_transformed</span><span class="p">,</span> <span class="n">series2_transformed</span><span class="p">],</span>
+    <span class="n">chunk_specs</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">make_chunk_specs</span><span class="p">()</span>
+<span class="p">)</span>
+<span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># 6. Train with callbacks</span>
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span>
+    <span class="n">max_epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">pl</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">EarlyStopping</span><span class="p">(</span><span class="n">monitor</span><span class="o">=</span><span class="s1">&#39;val/loss&#39;</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">pl</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">ModelCheckpoint</span><span class="p">(</span><span class="n">monitor</span><span class="o">=</span><span class="s1">&#39;val/loss&#39;</span><span class="p">),</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+<span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_dataloaders</span><span class="o">=</span><span class="n">dataloader</span><span class="p">,</span> <span class="n">val_dataloaders</span><span class="o">=</span><span class="n">dataloader</span><span class="p">)</span>
+
+<span class="c1"># 7. Predict and extract uncertainty</span>
+<span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">batch</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">dataloader</span><span class="p">))</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+
+<span class="n">mean</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;head.targets.loc&#39;</span><span class="p">]</span>
+<span class="n">std</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;head.targets.scale&#39;</span><span class="p">]</span>
+
+<span class="c1"># 8. Convert to DataFrame</span>
+<span class="n">inverter</span> <span class="o">=</span> <span class="n">ChunkInverter</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">make_chunk_specs</span><span class="p">())</span>
+<span class="n">predictions_df</span> <span class="o">=</span> <span class="n">inverter</span><span class="o">.</span><span class="n">invert</span><span class="p">(</span><span class="s1">&#39;head.targets.loc&#39;</span><span class="p">,</span> <span class="n">mean</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Predictions with uncertainty:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">predictions_df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="models.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Model Tutorials</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../api/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">API Reference</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#probabilistic-forecasting">Probabilistic Forecasting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-probabilistic-forecasting">Why Probabilistic Forecasting?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-distributionhead">Using DistributionHead</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#supported-distributions">Supported Distributions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-normal-distribution">Example: Normal Distribution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#accessing-distribution-parameters">Accessing Distribution Parameters</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-head-models">Multi-Head Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-cases">Use Cases</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-multi-head-models">Creating Multi-Head Models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chunk-specifications-for-multi-head">Chunk Specifications for Multi-Head</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loss-weighting">Loss Weighting</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-models">Custom Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-custom-model">Basic Custom Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-custom-models">Using Custom Models</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-optimizers">Custom Optimizers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-metrics">Custom Metrics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-multiple-time-series">Working with Multiple Time Series</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-data-preprocessing">Advanced Data Preprocessing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-multiple-transformers">Using Multiple Transformers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-transformer-dictionary">Using Transformer Dictionary</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inverse-transformation">Inverse Transformation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">Best Practices</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging-tips">Debugging Tips</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-complete-advanced-workflow">Example: Complete Advanced Workflow</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tutorials/advanced.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, betlab and dartwork.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

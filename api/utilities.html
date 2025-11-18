@@ -1,0 +1,791 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Utilities &#8212; DeepTimeSeries  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/utilities';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Layers" href="layers.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DeepTimeSeries  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chunk.html">Chunk Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataset.html">Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform.html">Data Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layers.html">Layers</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Utilities</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">API Reference</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Utilities</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="utilities">
+<h1>Utilities<a class="headerlink" href="#utilities" title="Permalink to this heading">#</a></h1>
+<section id="utility-functions">
+<h2>Utility Functions<a class="headerlink" href="#utility-functions" title="Permalink to this heading">#</a></h2>
+<p>The util module provides helper functions for data manipulation and dictionary operations. These are internal utilities used by the framework but may also be useful for custom implementations.</p>
+<p><strong>Purpose:</strong></p>
+<p>These functions handle common operations needed when working with time series data and model outputs:
+- Set operations for validation
+- Dictionary merging for combining model outputs
+- DataFrame merging for handling multiple time series</p>
+<section id="logical-and-for-set-list">
+<h3>logical_and_for_set_list<a class="headerlink" href="#logical-and-for-set-list" title="Permalink to this heading">#</a></h3>
+<p>Compute the intersection of a list of sets.</p>
+<p><strong>Purpose:</strong></p>
+<p>Finds elements that are common to all sets in a list. Used internally for validation (e.g., checking for duplicate keys in dictionaries).</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">set_list</span></code> (list[set]): List of sets to compute the intersection of. Must contain at least one set.</p></li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">set</span></code>: A set containing elements that appear in all input sets. If any set is empty or there are no common elements, returns an empty set.</p></li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul class="simple">
+<li><p>Validating that multiple sets have no common elements (check if result is empty)</p></li>
+<li><p>Finding common elements across multiple sets</p></li>
+<li><p>Internal validation in framework code</p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">logical_and_for_set_list</span>
+
+<span class="n">sets</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">},</span>
+<span class="p">]</span>
+<span class="n">common</span> <span class="o">=</span> <span class="n">logical_and_for_set_list</span><span class="p">(</span><span class="n">sets</span><span class="p">)</span>  <span class="c1"># {&#39;c&#39;}</span>
+
+<span class="c1"># Check for duplicates (common use case)</span>
+<span class="k">if</span> <span class="n">logical_and_for_set_list</span><span class="p">([</span><span class="nb">set</span><span class="p">(</span><span class="n">d1</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="nb">set</span><span class="p">(</span><span class="n">d2</span><span class="o">.</span><span class="n">keys</span><span class="p">())]):</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Duplicate keys found!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Note:</strong></p>
+<p>Typically used internally by the framework for validation purposes. The function computes the intersection sequentially: <code class="docutils literal notranslate"><span class="pre">set1</span> <span class="pre">&amp;</span> <span class="pre">set2</span> <span class="pre">&amp;</span> <span class="pre">set3</span> <span class="pre">&amp;</span> <span class="pre">...</span></code>.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="deep_time_series.util.logical_and_for_set_list">
+<span class="sig-name descname"><span class="pre">logical_and_for_set_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">set_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/util.html#logical_and_for_set_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.util.logical_and_for_set_list" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="logical-or-for-set-list">
+<h3>logical_or_for_set_list<a class="headerlink" href="#logical-or-for-set-list" title="Permalink to this heading">#</a></h3>
+<p>Compute the union of a list of sets.</p>
+<p><strong>Purpose:</strong></p>
+<p>Finds all unique elements across all sets in a list. Used internally for combining sets.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">set_list</span></code> (list[set]): List of sets to compute the union of. Must contain at least one set.</p></li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">set</span></code>: A set containing all unique elements from all input sets.</p></li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul class="simple">
+<li><p>Combining multiple sets into one</p></li>
+<li><p>Finding all unique elements across sets</p></li>
+<li><p>Internal operations in framework code</p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">logical_or_for_set_list</span>
+
+<span class="n">sets</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">},</span>
+<span class="p">]</span>
+<span class="n">union</span> <span class="o">=</span> <span class="n">logical_or_for_set_list</span><span class="p">(</span><span class="n">sets</span><span class="p">)</span>  <span class="c1"># {&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;}</span>
+
+<span class="c1"># Get all unique keys from multiple dictionaries</span>
+<span class="n">all_keys</span> <span class="o">=</span> <span class="n">logical_or_for_set_list</span><span class="p">([</span><span class="nb">set</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dict_list</span><span class="p">])</span>
+</pre></div>
+</div>
+<p><strong>Note:</strong></p>
+<p>Typically used internally by the framework. The function computes the union sequentially: <code class="docutils literal notranslate"><span class="pre">set1</span> <span class="pre">|</span> <span class="pre">set2</span> <span class="pre">|</span> <span class="pre">set3</span> <span class="pre">|</span> <span class="pre">...</span></code>.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="deep_time_series.util.logical_or_for_set_list">
+<span class="sig-name descname"><span class="pre">logical_or_for_set_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">set_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/util.html#logical_or_for_set_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.util.logical_or_for_set_list" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="merge-dicts">
+<h3>merge_dicts<a class="headerlink" href="#merge-dicts" title="Permalink to this heading">#</a></h3>
+<p>Merge multiple dictionaries into a single dictionary. Raises an error if keys are duplicated.</p>
+<p><strong>Purpose:</strong></p>
+<p>Combines multiple dictionaries into one, ensuring no key conflicts. Used extensively in the framework to merge encoder outputs with decoder inputs.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dicts</span></code> (list[dict]): List of dictionaries to merge. All dictionaries will be combined into one.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ignore_keys</span></code> (set | list[str] | None): Optional set or list of keys to ignore during merging. These keys will be excluded from the result even if they appear in multiple dictionaries. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dict</span></code>: A new dictionary containing all key-value pairs from all input dictionaries (except ignored keys). Maintains insertion order (Python 3.7+).</p></li>
+</ul>
+<p><strong>Raises:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">AssertionError</span></code>: If any keys overlap between dictionaries (unless they are in <code class="docutils literal notranslate"><span class="pre">ignore_keys</span></code>).</p></li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul class="simple">
+<li><p>Combining model outputs from different stages (e.g., encoder + decoder)</p></li>
+<li><p>Merging multiple dictionaries without key conflicts</p></li>
+<li><p>Internal framework operations</p></li>
+</ul>
+<p><strong>Key Features:</strong></p>
+<ul class="simple">
+<li><p><strong>Duplicate Detection</strong>: Raises an assertion error if any keys overlap</p></li>
+<li><p><strong>Key Filtering</strong>: Can ignore specific keys during merging</p></li>
+<li><p><strong>Order Preservation</strong>: Maintains insertion order (Python 3.7+)</p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">merge_dicts</span>
+
+<span class="n">dict1</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<span class="n">dict2</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
+<span class="n">merged</span> <span class="o">=</span> <span class="n">merge_dicts</span><span class="p">([</span><span class="n">dict1</span><span class="p">,</span> <span class="n">dict2</span><span class="p">])</span>  <span class="c1"># {&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3, &#39;d&#39;: 4}</span>
+
+<span class="c1"># With ignore_keys</span>
+<span class="n">dict1</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;temp&#39;</span><span class="p">:</span> <span class="mi">999</span><span class="p">}</span>
+<span class="n">dict2</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+<span class="n">merged</span> <span class="o">=</span> <span class="n">merge_dicts</span><span class="p">([</span><span class="n">dict1</span><span class="p">,</span> <span class="n">dict2</span><span class="p">],</span> <span class="n">ignore_keys</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;temp&#39;</span><span class="p">])</span>
+<span class="c1"># {&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3}</span>
+</pre></div>
+</div>
+<p><strong>Use in ForecastingModule:</strong></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">ForecastingModule.forward()</span></code> method uses this to merge encoder outputs with inputs for the decoder:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">encoder_outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+<span class="n">decoder_inputs</span> <span class="o">=</span> <span class="n">merge_dicts</span><span class="p">([</span><span class="n">inputs</span><span class="p">,</span> <span class="n">encoder_outputs</span><span class="p">])</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">decoder_inputs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Important:</strong></p>
+<ul class="simple">
+<li><p>Keys must be unique across all dictionaries (unless in ignore_keys)</p></li>
+<li><p>Raises AssertionError if duplicates are found</p></li>
+<li><p>The function creates a new dictionary; original dictionaries are not modified</p></li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="deep_time_series.util.merge_dicts">
+<span class="sig-name descname"><span class="pre">merge_dicts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/util.html#merge_dicts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.util.merge_dicts" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="merge-data-frames">
+<h3>merge_data_frames<a class="headerlink" href="#merge-data-frames" title="Permalink to this heading">#</a></h3>
+<p>Merge multiple pandas DataFrames by concatenating them and adding time_index and time_series_id columns.</p>
+<p><strong>Purpose:</strong></p>
+<p>Combines multiple time series DataFrames into a single DataFrame while preserving information about which series each row belongs to. This is useful when working with multiple related time series that need to be analyzed together.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dfs</span></code> (list[pd.DataFrame]): List of DataFrames to merge. Each DataFrame represents a separate time series. DataFrames should have compatible column structures (same column names and types).</p></li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pd.DataFrame</span></code>: A single DataFrame containing all rows from all input DataFrames, with two additional columns:
+- <code class="docutils literal notranslate"><span class="pre">time_index</span></code>: The original index values from each DataFrame
+- <code class="docutils literal notranslate"><span class="pre">time_series_id</span></code>: Integer identifier (0, 1, 2, …) indicating which DataFrame each row came from</p></li>
+</ul>
+<p><strong>Key Features:</strong></p>
+<ul class="simple">
+<li><p><strong>Time Index Preservation</strong>: Adds original index as ‘time_index’ column</p></li>
+<li><p><strong>Series Identification</strong>: Adds ‘time_series_id’ to track source DataFrame</p></li>
+<li><p><strong>Deep Copy</strong>: Creates copies to avoid modifying original DataFrames</p></li>
+<li><p><strong>Index Reset</strong>: Resets the index of the merged DataFrame (uses default integer index)</p></li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul class="simple">
+<li><p>Combining multiple time series for analysis</p></li>
+<li><p>Preparing data from multiple sources</p></li>
+<li><p>Creating a unified dataset from separate series</p></li>
+<li><p>Preprocessing multiple series together with <code class="docutils literal notranslate"><span class="pre">ColumnTransformer</span></code></p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">merge_data_frames</span>
+
+<span class="c1"># Multiple time series from different sensors</span>
+<span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)),</span>
+    <span class="s1">&#39;humidity&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)),</span>
+    <span class="s1">&#39;humidity&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="n">df3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+    <span class="s1">&#39;humidity&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="c1"># Merge with tracking</span>
+<span class="n">merged</span> <span class="o">=</span> <span class="n">merge_data_frames</span><span class="p">([</span><span class="n">df1</span><span class="p">,</span> <span class="n">df2</span><span class="p">,</span> <span class="n">df3</span><span class="p">])</span>
+<span class="c1"># Result has columns: [&#39;temperature&#39;, &#39;humidity&#39;, &#39;time_index&#39;, &#39;time_series_id&#39;]</span>
+<span class="c1"># time_series_id: 0 for df1, 1 for df2, 2 for df3</span>
+<span class="c1"># time_index: original index values from each DataFrame</span>
+</pre></div>
+</div>
+<p><strong>Output Format:</strong></p>
+<p>The merged DataFrame includes:
+- All original columns from input DataFrames
+- <code class="docutils literal notranslate"><span class="pre">time_index</span></code>: Original index values (preserved from each source DataFrame)
+- <code class="docutils literal notranslate"><span class="pre">time_series_id</span></code>: Integer ID (0, 1, 2, …) indicating source DataFrame</p>
+<p><strong>Use Cases:</strong></p>
+<ul class="simple">
+<li><p>Combining data from multiple sensors/locations</p></li>
+<li><p>Merging training and validation sets for preprocessing</p></li>
+<li><p>Creating unified datasets for analysis</p></li>
+<li><p>Preparing data for models that can handle multiple time series</p></li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="deep_time_series.util.merge_data_frames">
+<span class="sig-name descname"><span class="pre">merge_data_frames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dfs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/util.html#merge_data_frames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.util.merge_data_frames" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+<section id="plotting">
+<h2>Plotting<a class="headerlink" href="#plotting" title="Permalink to this heading">#</a></h2>
+<p>The plotting module provides visualization utilities for time series data.</p>
+<section id="plot-chunks">
+<h3>plot_chunks<a class="headerlink" href="#plot-chunks" title="Permalink to this heading">#</a></h3>
+<p>Visualize chunk specifications as horizontal bars showing the time windows for encoding, decoding, and labels.</p>
+<p><strong>Purpose:</strong></p>
+<p>Creates a visual representation of chunk specifications, making it easy to understand the temporal structure of your model’s input/output windows. This visualization helps debug chunk configurations and understand how data flows through the model.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">chunk_specs</span></code> (list[BaseChunkSpec]): List of chunk specifications to visualize. Each chunk will be displayed as a horizontal bar.</p></li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: The function modifies the current matplotlib figure/axes in place. Use <code class="docutils literal notranslate"><span class="pre">plt.show()</span></code> or <code class="docutils literal notranslate"><span class="pre">plt.savefig()</span></code> to display or save the plot.</p></li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul class="simple">
+<li><p>Understanding model architecture</p></li>
+<li><p>Debugging chunk specifications</p></li>
+<li><p>Visualizing data windows</p></li>
+<li><p>Documentation and presentations</p></li>
+<li><p>Verifying that chunk ranges are correct</p></li>
+</ul>
+<p><strong>Output:</strong></p>
+<p>Creates a horizontal bar chart where:
+- Each bar represents a chunk specification
+- Bar position (left edge) shows the start of the time range
+- Bar width shows the window length (end - start)
+- Labels show the chunk tag
+- Y-axis position indicates different chunks</p>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_chunks</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.chunk</span><span class="w"> </span><span class="kn">import</span> <span class="n">EncodingChunkSpec</span><span class="p">,</span> <span class="n">LabelChunkSpec</span><span class="p">,</span> <span class="n">DecodingChunkSpec</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Create chunk specifications</span>
+<span class="n">chunk_specs</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">EncodingChunkSpec</span><span class="p">(</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;temp&#39;</span><span class="p">],</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+    <span class="n">DecodingChunkSpec</span><span class="p">(</span><span class="s1">&#39;nontargets&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;humidity&#39;</span><span class="p">],</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+    <span class="n">LabelChunkSpec</span><span class="p">(</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;temp&#39;</span><span class="p">],</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="c1"># Visualize</span>
+<span class="n">plot_chunks</span><span class="p">(</span><span class="n">chunk_specs</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time Index&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Chunk Specifications&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Integration with TimeSeriesDataset:</strong></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">TimeSeriesDataset</span></code> class provides a convenience method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.dataset</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeSeriesDataset</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">TimeSeriesDataset</span><span class="p">(</span><span class="n">data_frames</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">chunk_specs</span><span class="o">=</span><span class="n">chunk_specs</span><span class="p">)</span>
+<span class="n">dataset</span><span class="o">.</span><span class="n">plot_chunks</span><span class="p">()</span>  <span class="c1"># Visualize the chunks used by this dataset</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Visualization Details:</strong></p>
+<ul class="simple">
+<li><p>Uses matplotlib’s <code class="docutils literal notranslate"><span class="pre">barh()</span></code> for horizontal bars</p></li>
+<li><p>Alpha transparency (0.8) for overlapping bars</p></li>
+<li><p>Annotations show chunk tags at the left edge of each bar</p></li>
+<li><p>Y-axis shows different chunks (numbered from 1)</p></li>
+<li><p>X-axis shows time indices</p></li>
+</ul>
+<p><strong>Note:</strong></p>
+<ul class="simple">
+<li><p>Requires matplotlib to be installed</p></li>
+<li><p>The function modifies the current matplotlib figure/axes</p></li>
+<li><p>You may want to add labels and title using <code class="docutils literal notranslate"><span class="pre">plt.xlabel()</span></code>, <code class="docutils literal notranslate"><span class="pre">plt.ylabel()</span></code>, <code class="docutils literal notranslate"><span class="pre">plt.title()</span></code></p></li>
+<li><p>Call <code class="docutils literal notranslate"><span class="pre">plt.show()</span></code> or <code class="docutils literal notranslate"><span class="pre">plt.savefig()</span></code> after calling this function to display or save the plot</p></li>
+</ul>
+<span class="target" id="module-deep_time_series.plotting"></span><dl class="py function">
+<dt class="sig sig-object py" id="deep_time_series.plotting.plot_chunks">
+<span class="sig-name descname"><span class="pre">plot_chunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunk_specs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/plotting.html#plot_chunks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deep_time_series.plotting.plot_chunks" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">plot_chunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunk_specs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deep_time_series/plotting.html#plot_chunks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="layers.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Layers</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#utility-functions">Utility Functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#logical-and-for-set-list">logical_and_for_set_list</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.util.logical_and_for_set_list"><code class="docutils literal notranslate"><span class="pre">logical_and_for_set_list()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#logical-or-for-set-list">logical_or_for_set_list</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.util.logical_or_for_set_list"><code class="docutils literal notranslate"><span class="pre">logical_or_for_set_list()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#merge-dicts">merge_dicts</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.util.merge_dicts"><code class="docutils literal notranslate"><span class="pre">merge_dicts()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#merge-data-frames">merge_data_frames</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.util.merge_data_frames"><code class="docutils literal notranslate"><span class="pre">merge_data_frames()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting">Plotting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-chunks">plot_chunks</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deep_time_series.plotting.plot_chunks"><code class="docutils literal notranslate"><span class="pre">plot_chunks()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id0"><code class="docutils literal notranslate"><span class="pre">plot_chunks()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/utilities.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, betlab and dartwork.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

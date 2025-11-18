@@ -1,0 +1,1508 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Data Input/Output &#8212; DeepTimeSeries  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/io';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="DeepTimeSeries Tutorials" href="../tutorials/index.html" />
+    <link rel="prev" title="Design of DeepTimeSeries" href="design.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DeepTimeSeries  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="design.html">Design of DeepTimeSeries</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Data Input/Output</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">DeepTimeSeries User Guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Data Input/Output</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="data-input-output">
+<h1>Data Input/Output<a class="headerlink" href="#data-input-output" title="Permalink to this heading">#</a></h1>
+<p>This guide explains how to load, preprocess, and transform data in DeepTimeSeries.</p>
+<section id="data-format">
+<h2>Data Format<a class="headerlink" href="#data-format" title="Permalink to this heading">#</a></h2>
+<p>DeepTimeSeries uses pandas DataFrame as the primary data format. Each DataFrame represents a time series where:</p>
+<ul class="simple">
+<li><p>Rows correspond to time steps</p></li>
+<li><p>Columns correspond to features (target variables and non-target features)</p></li>
+<li><p>The index can be used for time information, but is not required</p></li>
+</ul>
+</section>
+<section id="loading-data">
+<h2>Loading Data<a class="headerlink" href="#loading-data" title="Permalink to this heading">#</a></h2>
+<p>Since DeepTimeSeries works with pandas DataFrames, you can load data from various sources using pandas:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Load from CSV</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">)</span>
+
+<span class="c1"># Load from Excel</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;data.xlsx&#39;</span><span class="p">)</span>
+
+<span class="c1"># Load from Parquet</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;data.parquet&#39;</span><span class="p">)</span>
+
+<span class="c1"># Create from NumPy array</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)),</span>
+    <span class="s1">&#39;feature1&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)),</span>
+    <span class="s1">&#39;feature2&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</section>
+<section id="multiple-time-series">
+<h2>Multiple Time Series<a class="headerlink" href="#multiple-time-series" title="Permalink to this heading">#</a></h2>
+<p>You can work with multiple time series by passing a list of DataFrames to <code class="docutils literal notranslate"><span class="pre">TimeSeriesDataset</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">deep_time_series</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dts</span>
+
+<span class="c1"># Create multiple time series</span>
+<span class="n">series1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)})</span>
+<span class="n">series2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">50</span><span class="p">)})</span>
+
+<span class="c1"># Pass as a list</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">TimeSeriesDataset</span><span class="p">(</span>
+    <span class="n">data_frames</span><span class="o">=</span><span class="p">[</span><span class="n">series1</span><span class="p">,</span> <span class="n">series2</span><span class="p">],</span>
+    <span class="n">chunk_specs</span><span class="o">=</span><span class="n">chunk_specs</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="data-preprocessing">
+<h2>Data Preprocessing<a class="headerlink" href="#data-preprocessing" title="Permalink to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">ColumnTransformer</span></code> class provides a convenient way to apply transformations to specific columns of your DataFrame.</p>
+<section id="basic-usage">
+<h3>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">MinMaxScaler</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">deep_time_series</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dts</span>
+
+<span class="c1"># Create transformer</span>
+<span class="n">transformer</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">ColumnTransformer</span><span class="p">(</span>
+    <span class="n">transformer_tuples</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">,</span> <span class="s1">&#39;feature1&#39;</span><span class="p">]),</span>
+        <span class="p">(</span><span class="n">MinMaxScaler</span><span class="p">(),</span> <span class="p">[</span><span class="s1">&#39;feature2&#39;</span><span class="p">])</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Fit and transform</span>
+<span class="n">data_transformed</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Or fit and transform separately</span>
+<span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">data_transformed</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="using-transformer-dictionary">
+<h3>Using Transformer Dictionary<a class="headerlink" href="#using-transformer-dictionary" title="Permalink to this heading">#</a></h3>
+<p>You can also use a dictionary to specify transformers:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+
+<span class="n">transformer</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">ColumnTransformer</span><span class="p">(</span>
+    <span class="n">transformer_dict</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">StandardScaler</span><span class="p">(),</span>
+        <span class="s1">&#39;feature1&#39;</span><span class="p">:</span> <span class="n">StandardScaler</span><span class="p">(),</span>
+        <span class="s1">&#39;feature2&#39;</span><span class="p">:</span> <span class="n">StandardScaler</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">data_transformed</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="inverse-transform">
+<h3>Inverse Transform<a class="headerlink" href="#inverse-transform" title="Permalink to this heading">#</a></h3>
+<p>To convert transformed data back to original scale:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Transform</span>
+<span class="n">data_transformed</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Inverse transform</span>
+<span class="n">data_original</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">data_transformed</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="understanding-chunk-specifications">
+<h2>Understanding Chunk Specifications<a class="headerlink" href="#understanding-chunk-specifications" title="Permalink to this heading">#</a></h2>
+<p>Chunk specifications define how time series data is extracted and organized for model training and prediction. They are the core concept for understanding how DeepTimeSeries handles temporal data.</p>
+<section id="what-are-chunk-specifications">
+<h3>What are Chunk Specifications?<a class="headerlink" href="#what-are-chunk-specifications" title="Permalink to this heading">#</a></h3>
+<p>A chunk specification (<code class="docutils literal notranslate"><span class="pre">ChunkSpec</span></code>) defines:
+- <strong>What features</strong> to extract (via <code class="docutils literal notranslate"><span class="pre">names</span></code>)
+- <strong>When to extract</strong> them (via <code class="docutils literal notranslate"><span class="pre">range_</span></code>)
+- <strong>How to label</strong> them (via <code class="docutils literal notranslate"><span class="pre">tag</span></code>)
+- <strong>What data type</strong> to use (via <code class="docutils literal notranslate"><span class="pre">dtype</span></code>)</p>
+</section>
+<section id="types-of-chunk-specifications">
+<h3>Types of Chunk Specifications<a class="headerlink" href="#types-of-chunk-specifications" title="Permalink to this heading">#</a></h3>
+<p>DeepTimeSeries provides three types of chunk specifications:</p>
+<ol class="arabic simple">
+<li><p><strong>EncodingChunkSpec</strong>: Defines the input window for the encoder
+- Used for historical data that the model uses to understand patterns
+- Typically has negative range values (e.g., <code class="docutils literal notranslate"><span class="pre">range_=(-10,</span> <span class="pre">0)</span></code>)</p></li>
+<li><p><strong>DecodingChunkSpec</strong>: Defines the input window for the decoder
+- Used in autoregressive models where decoder needs previous predictions
+- Can have positive range values (e.g., <code class="docutils literal notranslate"><span class="pre">range_=(0,</span> <span class="pre">5)</span></code>)</p></li>
+<li><p><strong>LabelChunkSpec</strong>: Defines the target window for prediction
+- Used for ground truth labels during training
+- Typically has positive range values (e.g., <code class="docutils literal notranslate"><span class="pre">range_=(0,</span> <span class="pre">5)</span></code>)</p></li>
+</ol>
+</section>
+<section id="understanding-the-range-parameter">
+<h3>Understanding the <cite>range_</cite> Parameter<a class="headerlink" href="#understanding-the-range-parameter" title="Permalink to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">range_</span></code> parameter is a tuple <code class="docutils literal notranslate"><span class="pre">(start,</span> <span class="pre">end)</span></code> that defines the relative time window:</p>
+<ul class="simple">
+<li><p><strong>Negative values</strong>: Refer to past time steps relative to the current position</p></li>
+<li><p><strong>Zero</strong>: Represents the current time step</p></li>
+<li><p><strong>Positive values</strong>: Refer to future time steps relative to the current position</p></li>
+</ul>
+<p>Examples:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">deep_time_series</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dts</span>
+
+<span class="c1"># Extract 10 past time steps (t-10 to t-1, excluding current time)</span>
+<span class="n">encoding_spec</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">EncodingChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;input&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">,</span> <span class="s1">&#39;feature1&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>  <span class="c1"># From 10 steps ago to current (exclusive)</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+<span class="p">)</span>
+
+<span class="c1"># Extract 5 future time steps (t to t+4)</span>
+<span class="n">label_spec</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">LabelChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;output&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>  <span class="c1"># From current to 4 steps ahead</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+<span class="p">)</span>
+
+<span class="c1"># Extract overlapping window (t-5 to t+5)</span>
+<span class="n">window_spec</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">EncodingChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;context&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>  <span class="c1"># 5 steps before to 5 steps after</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="visual-representation">
+<h3>Visual Representation<a class="headerlink" href="#visual-representation" title="Permalink to this heading">#</a></h3>
+<p>For a time series with data points at indices 0, 1, 2, …, and a chunk specification with <code class="docutils literal notranslate"><span class="pre">range_=(-3,</span> <span class="pre">2)</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Time</span> <span class="n">indices</span><span class="p">:</span>  <span class="o">...</span>  <span class="o">-</span><span class="mi">3</span>  <span class="o">-</span><span class="mi">2</span>  <span class="o">-</span><span class="mi">1</span>   <span class="mi">0</span>   <span class="mi">1</span>   <span class="mi">2</span>   <span class="mi">3</span>  <span class="o">...</span>
+<span class="n">Relative</span> <span class="n">to</span> <span class="n">t</span><span class="p">:</span> <span class="o">...</span>  <span class="o">-</span><span class="mi">3</span>  <span class="o">-</span><span class="mi">2</span>  <span class="o">-</span><span class="mi">1</span>  <span class="p">[</span><span class="n">t</span><span class="p">]</span>  <span class="mi">1</span>   <span class="mi">2</span>   <span class="mi">3</span>  <span class="o">...</span>
+
+<span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="n">extracts</span><span class="p">:</span> <span class="p">[</span><span class="n">t</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="n">t</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">t</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+                          <span class="p">(</span><span class="mi">5</span> <span class="n">time</span> <span class="n">steps</span> <span class="n">total</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="tag-naming-convention">
+<h3>Tag Naming Convention<a class="headerlink" href="#tag-naming-convention" title="Permalink to this heading">#</a></h3>
+<p>Tags are used to identify different chunks in the data dictionary. They follow a prefix pattern:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EncodingChunkSpec</span></code>: Automatically adds <code class="docutils literal notranslate"><span class="pre">'encoding.'</span></code> prefix</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DecodingChunkSpec</span></code>: Automatically adds <code class="docutils literal notranslate"><span class="pre">'decoding.'</span></code> prefix</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LabelChunkSpec</span></code>: Automatically adds <code class="docutils literal notranslate"><span class="pre">'label.'</span></code> prefix</p></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">spec</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">EncodingChunkSpec</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;my_feature&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+<span class="c1"># spec.tag will be &#39;encoding.my_feature&#39;</span>
+
+<span class="n">spec</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">LabelChunkSpec</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;target&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+<span class="c1"># spec.tag will be &#39;label.target&#39;</span>
+</pre></div>
+</div>
+<p>Tags must be unique within a list of chunk specifications. When you access data from <code class="docutils literal notranslate"><span class="pre">TimeSeriesDataset</span></code>, you’ll use these tags as dictionary keys.</p>
+</section>
+<section id="choosing-the-right-data-type">
+<h3>Choosing the Right Data Type<a class="headerlink" href="#choosing-the-right-data-type" title="Permalink to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">dtype</span></code> parameter controls the NumPy data type used for the extracted chunks:</p>
+<ul class="simple">
+<li><p><strong>np.float32</strong>: Recommended for most cases (memory efficient, sufficient precision)</p></li>
+<li><p><strong>np.float64</strong>: Use when high precision is required (uses more memory)</p></li>
+<li><p><strong>np.int32</strong>: Use for integer features (e.g., counts, categories)</p></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># For continuous values</span>
+<span class="n">continuous_spec</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">EncodingChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;features&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;humidity&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>  <span class="c1"># Standard for neural networks</span>
+<span class="p">)</span>
+
+<span class="c1"># For integer counts</span>
+<span class="n">count_spec</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">EncodingChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;counts&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sales_count&#39;</span><span class="p">,</span> <span class="s1">&#39;visitor_count&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="creating-dataset">
+<h2>Creating Dataset<a class="headerlink" href="#creating-dataset" title="Permalink to this heading">#</a></h2>
+<p>After preprocessing, create a <code class="docutils literal notranslate"><span class="pre">TimeSeriesDataset</span></code> with appropriate chunk specifications:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">deep_time_series</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dts</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.chunk</span><span class="w"> </span><span class="kn">import</span> <span class="n">EncodingChunkSpec</span><span class="p">,</span> <span class="n">LabelChunkSpec</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Define chunk specifications</span>
+<span class="n">encoding_spec</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">EncodingChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;input&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">,</span> <span class="s1">&#39;feature1&#39;</span><span class="p">,</span> <span class="s1">&#39;feature2&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>  <span class="c1"># 10 time steps before current time</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+<span class="p">)</span>
+
+<span class="n">label_spec</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">LabelChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;output&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>  <span class="c1"># 5 time steps ahead</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+<span class="p">)</span>
+
+<span class="c1"># Create dataset</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">TimeSeriesDataset</span><span class="p">(</span>
+    <span class="n">data_frames</span><span class="o">=</span><span class="n">data_transformed</span><span class="p">,</span>
+    <span class="n">chunk_specs</span><span class="o">=</span><span class="p">[</span><span class="n">encoding_spec</span><span class="p">,</span> <span class="n">label_spec</span><span class="p">],</span>
+    <span class="n">return_time_index</span><span class="o">=</span><span class="kc">True</span>  <span class="c1"># Optional: include time index in chunks</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="how-chunkextractor-works">
+<h2>How ChunkExtractor Works<a class="headerlink" href="#how-chunkextractor-works" title="Permalink to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">ChunkExtractor</span></code> class is responsible for extracting data chunks from a DataFrame according to chunk specifications. Understanding its behavior helps you debug and optimize your data pipeline.</p>
+<section id="data-extraction-mechanism">
+<h3>Data Extraction Mechanism<a class="headerlink" href="#data-extraction-mechanism" title="Permalink to this heading">#</a></h3>
+<p>When you create a <code class="docutils literal notranslate"><span class="pre">TimeSeriesDataset</span></code>, it internally creates a <code class="docutils literal notranslate"><span class="pre">ChunkExtractor</span></code> for each DataFrame. The extractor:</p>
+<ol class="arabic simple">
+<li><p><strong>Preprocesses the DataFrame</strong>: Converts specified columns to the required data type</p></li>
+<li><p><strong>Calculates window boundaries</strong>: Determines the minimum and maximum time indices needed</p></li>
+<li><p><strong>Extracts chunks</strong>: For each sample, extracts the specified time windows</p></li>
+</ol>
+<p>Example of extraction process:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.chunk</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChunkExtractor</span><span class="p">,</span> <span class="n">EncodingChunkSpec</span><span class="p">,</span> <span class="n">LabelChunkSpec</span>
+
+<span class="c1"># Create sample data</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span>
+    <span class="s1">&#39;feature&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="p">})</span>
+
+<span class="c1"># Define specifications</span>
+<span class="n">encoding_spec</span> <span class="o">=</span> <span class="n">EncodingChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;input&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">,</span> <span class="s1">&#39;feature&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>  <span class="c1"># Last 3 time steps</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+<span class="p">)</span>
+
+<span class="n">label_spec</span> <span class="o">=</span> <span class="n">LabelChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;output&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>  <span class="c1"># Next 2 time steps</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+<span class="p">)</span>
+
+<span class="c1"># Create extractor</span>
+<span class="n">extractor</span> <span class="o">=</span> <span class="n">ChunkExtractor</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="n">encoding_spec</span><span class="p">,</span> <span class="n">label_spec</span><span class="p">])</span>
+
+<span class="c1"># Extract chunk at time index 5</span>
+<span class="n">chunk</span> <span class="o">=</span> <span class="n">extractor</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">start_time_index</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">return_time_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># chunk contains:</span>
+<span class="c1"># - &#39;encoding.input&#39;: shape (3, 2) - 3 time steps, 2 features</span>
+<span class="c1"># - &#39;label.output&#39;: shape (2, 1) - 2 time steps, 1 feature</span>
+</pre></div>
+</div>
+</section>
+<section id="understanding-start-time-index">
+<h3>Understanding <cite>start_time_index</cite><a class="headerlink" href="#understanding-start-time-index" title="Permalink to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">start_time_index</span></code> parameter determines where in the time series to start extraction:</p>
+<ul class="simple">
+<li><p><strong>start_time_index = 0</strong>: Extract from the beginning of the series</p></li>
+<li><p><strong>start_time_index = 5</strong>: Extract starting from index 5</p></li>
+<li><p>The extractor ensures that <code class="docutils literal notranslate"><span class="pre">start_time_index</span> <span class="pre">+</span> <span class="pre">chunk_min_t</span> <span class="pre">&gt;=</span> <span class="pre">0</span></code></p></li>
+</ul>
+<p>For the example above with <code class="docutils literal notranslate"><span class="pre">range_=(-3,</span> <span class="pre">0)</span></code> for encoding:
+- At <code class="docutils literal notranslate"><span class="pre">start_time_index=5</span></code>, it extracts indices [2, 3, 4] (5-3 to 5-1)
+- At <code class="docutils literal notranslate"><span class="pre">start_time_index=0</span></code>, it cannot extract because 0 + (-3) &lt; 0</p>
+</section>
+<section id="multiple-chunk-specifications">
+<h3>Multiple Chunk Specifications<a class="headerlink" href="#multiple-chunk-specifications" title="Permalink to this heading">#</a></h3>
+<p>When multiple chunk specifications are provided, the extractor:</p>
+<ol class="arabic simple">
+<li><p>Finds the overall window: <code class="docutils literal notranslate"><span class="pre">[min(range[0]),</span> <span class="pre">max(range[1])]</span></code></p></li>
+<li><p>Extracts data for the entire window</p></li>
+<li><p>Then slices each specification’s portion</p></li>
+</ol>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Specification 1: range_=(-5, 0)</span>
+<span class="c1"># Specification 2: range_=(0, 3)</span>
+<span class="c1"># Overall window: range_=(-5, 3) - extracts 8 time steps total</span>
+
+<span class="n">spec1</span> <span class="o">=</span> <span class="n">EncodingChunkSpec</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;past&#39;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span> <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">spec2</span> <span class="o">=</span> <span class="n">LabelChunkSpec</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;future&#39;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span> <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="n">extractor</span> <span class="o">=</span> <span class="n">ChunkExtractor</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="n">spec1</span><span class="p">,</span> <span class="n">spec2</span><span class="p">])</span>
+<span class="c1"># chunk_min_t = -5, chunk_max_t = 3, chunk_length = 8</span>
+
+<span class="n">chunk</span> <span class="o">=</span> <span class="n">extractor</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">start_time_index</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="c1"># Extracts indices [5, 6, 7, 8, 9, 10, 11, 12]</span>
+<span class="c1"># Then slices:</span>
+<span class="c1">#   - &#39;encoding.past&#39;: indices [5, 6, 7, 8, 9] (relative -5 to -1)</span>
+<span class="c1">#   - &#39;label.future&#39;: indices [10, 11, 12] (relative 0 to 2)</span>
+</pre></div>
+</div>
+</section>
+<section id="the-return-time-index-option">
+<h3>The <cite>return_time_index</cite> Option<a class="headerlink" href="#the-return-time-index-option" title="Permalink to this heading">#</a></h3>
+<p>When <code class="docutils literal notranslate"><span class="pre">return_time_index=True</span></code>, the extractor also includes time index information:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">chunk</span> <span class="o">=</span> <span class="n">extractor</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">start_time_index</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">return_time_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># chunk contains:</span>
+<span class="c1"># - &#39;encoding.input&#39;: the data array</span>
+<span class="c1"># - &#39;encoding.input.time_index&#39;: array([2, 3, 4]) - actual DataFrame indices</span>
+<span class="c1"># - &#39;label.output&#39;: the data array</span>
+<span class="c1"># - &#39;label.output.time_index&#39;: array([5, 6]) - actual DataFrame indices</span>
+</pre></div>
+</div>
+<p>This is useful when you need to track which time points correspond to predictions.</p>
+</section>
+</section>
+<section id="timeseriesdataset-deep-dive">
+<h2>TimeSeriesDataset Deep Dive<a class="headerlink" href="#timeseriesdataset-deep-dive" title="Permalink to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">TimeSeriesDataset</span></code> class wraps <code class="docutils literal notranslate"><span class="pre">ChunkExtractor</span></code> to provide a PyTorch-compatible Dataset interface.</p>
+<section id="dataset-length-calculation">
+<h3>Dataset Length Calculation<a class="headerlink" href="#dataset-length-calculation" title="Permalink to this heading">#</a></h3>
+<p>The length of the dataset depends on:</p>
+<ol class="arabic simple">
+<li><p><strong>DataFrame length</strong>: Total number of time steps</p></li>
+<li><p><strong>Chunk length</strong>: Maximum window size needed (<code class="docutils literal notranslate"><span class="pre">chunk_max_t</span> <span class="pre">-</span> <span class="pre">chunk_min_t</span></code>)</p></li>
+<li><p><strong>Minimum start index</strong>: Ensures valid extractions (<code class="docutils literal notranslate"><span class="pre">max(0,</span> <span class="pre">-chunk_min_t)</span></code>)</p></li>
+</ol>
+<p>Formula: <code class="docutils literal notranslate"><span class="pre">length</span> <span class="pre">=</span> <span class="pre">len(df)</span> <span class="pre">-</span> <span class="pre">chunk_length</span> <span class="pre">+</span> <span class="pre">1</span> <span class="pre">-</span> <span class="pre">min_start_time_index</span></code></p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)})</span>  <span class="c1"># 100 time steps</span>
+
+<span class="n">spec</span> <span class="o">=</span> <span class="n">EncodingChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;input&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>  <span class="c1"># chunk_length = 10</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+<span class="p">)</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">TimeSeriesDataset</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="n">spec</span><span class="p">])</span>
+<span class="c1"># Length = 100 - 10 + 1 - 0 = 91 samples</span>
+
+<span class="c1"># Can extract from indices 0 to 90</span>
+<span class="c1"># At index 0: extracts [0:10]</span>
+<span class="c1"># At index 90: extracts [90:100]</span>
+</pre></div>
+</div>
+</section>
+<section id="multiple-dataframes-handling">
+<h3>Multiple DataFrames Handling<a class="headerlink" href="#multiple-dataframes-handling" title="Permalink to this heading">#</a></h3>
+<p>When multiple DataFrames are provided, the dataset:</p>
+<ol class="arabic simple">
+<li><p>Creates a separate <code class="docutils literal notranslate"><span class="pre">ChunkExtractor</span></code> for each DataFrame</p></li>
+<li><p>Concatenates samples from all DataFrames</p></li>
+<li><p>Uses cumulative indexing to map dataset index to DataFrame index</p></li>
+</ol>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">series1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">50</span><span class="p">)})</span>   <span class="c1"># 50 time steps</span>
+<span class="n">series2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">30</span><span class="p">)})</span>   <span class="c1"># 30 time steps</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">TimeSeriesDataset</span><span class="p">([</span><span class="n">series1</span><span class="p">,</span> <span class="n">series2</span><span class="p">],</span> <span class="n">chunk_specs</span><span class="p">)</span>
+
+<span class="c1"># series1 contributes: 50 - chunk_length + 1 samples</span>
+<span class="c1"># series2 contributes: 30 - chunk_length + 1 samples</span>
+<span class="c1"># Total length = sum of contributions</span>
+
+<span class="c1"># dataset[0] to dataset[N-1]: from series1</span>
+<span class="c1"># dataset[N] to dataset[M-1]: from series2</span>
+</pre></div>
+</div>
+</section>
+<section id="indexing-behavior">
+<h3>Indexing Behavior<a class="headerlink" href="#indexing-behavior" title="Permalink to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> method:</p>
+<ol class="arabic simple">
+<li><p>Determines which DataFrame the index belongs to using cumulative sum</p></li>
+<li><p>Calculates the relative index within that DataFrame</p></li>
+<li><p>Adjusts for <code class="docutils literal notranslate"><span class="pre">min_start_time_index</span></code> to get the actual start position</p></li>
+<li><p>Calls the appropriate <code class="docutils literal notranslate"><span class="pre">ChunkExtractor.extract()</span></code></p></li>
+</ol>
+</section>
+<section id="memory-efficiency">
+<h3>Memory Efficiency<a class="headerlink" href="#memory-efficiency" title="Permalink to this heading">#</a></h3>
+<p>The dataset stores:
+- <strong>DataFrames</strong>: Original data (can be large)
+- <strong>ChunkExtractors</strong>: Lightweight objects that reference the DataFrames
+- <strong>Metadata</strong>: Lengths, indices (minimal memory)</p>
+<p>Data is extracted on-demand during <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>, so memory usage is efficient. However, for very large datasets, consider:</p>
+<ul class="simple">
+<li><p>Using <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> with <code class="docutils literal notranslate"><span class="pre">num_workers</span> <span class="pre">&gt;</span> <span class="pre">0</span></code> for parallel loading</p></li>
+<li><p>Preprocessing and saving to disk in chunk format</p></li>
+<li><p>Using data streaming for extremely large datasets</p></li>
+</ul>
+</section>
+<section id="model-based-chunk-specifications">
+<h3>Model-Based Chunk Specifications<a class="headerlink" href="#model-based-chunk-specifications" title="Permalink to this heading">#</a></h3>
+<p>Models can automatically generate chunk specifications:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">MLP</span>
+
+<span class="c1"># Create model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span>
+    <span class="n">encoding_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">decoding_length</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span>
+    <span class="n">nontarget_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;feature1&#39;</span><span class="p">,</span> <span class="s1">&#39;feature2&#39;</span><span class="p">],</span>
+    <span class="c1"># ... other parameters</span>
+<span class="p">)</span>
+
+<span class="c1"># Get chunk specifications from model</span>
+<span class="n">chunk_specs</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">make_chunk_specs</span><span class="p">()</span>
+
+<span class="c1"># Create dataset</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">TimeSeriesDataset</span><span class="p">(</span>
+    <span class="n">data_frames</span><span class="o">=</span><span class="n">data_transformed</span><span class="p">,</span>
+    <span class="n">chunk_specs</span><span class="o">=</span><span class="n">chunk_specs</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">make_chunk_specs()</span></code> method creates appropriate specifications based on:
+- <code class="docutils literal notranslate"><span class="pre">encoding_length</span></code>: Creates <code class="docutils literal notranslate"><span class="pre">EncodingChunkSpec</span></code> with <code class="docutils literal notranslate"><span class="pre">range_=(-encoding_length,</span> <span class="pre">0)</span></code>
+- <code class="docutils literal notranslate"><span class="pre">decoding_length</span></code>: Creates <code class="docutils literal notranslate"><span class="pre">DecodingChunkSpec</span></code> and <code class="docutils literal notranslate"><span class="pre">LabelChunkSpec</span></code> with <code class="docutils literal notranslate"><span class="pre">range_=(0,</span> <span class="pre">decoding_length)</span></code>
+- <code class="docutils literal notranslate"><span class="pre">target_names</span></code> and <code class="docutils literal notranslate"><span class="pre">nontarget_names</span></code>: Determines which features to include</p>
+</section>
+</section>
+<section id="converting-model-outputs">
+<h2>Converting Model Outputs<a class="headerlink" href="#converting-model-outputs" title="Permalink to this heading">#</a></h2>
+<p>After model prediction, use <code class="docutils literal notranslate"><span class="pre">ChunkInverter</span></code> to convert tensor outputs back to DataFrame format:</p>
+<section id="id1">
+<h3>Basic Usage<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.chunk</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChunkInverter</span>
+
+<span class="c1"># Create inverter (use the same chunk_specs as dataset)</span>
+<span class="n">inverter</span> <span class="o">=</span> <span class="n">ChunkInverter</span><span class="p">(</span><span class="n">chunk_specs</span><span class="p">)</span>
+
+<span class="c1"># Model outputs are dictionaries with tag keys</span>
+<span class="c1"># Example output from model</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;head.target&#39;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># (batch, time, features)</span>
+<span class="p">}</span>
+
+<span class="c1"># Convert to DataFrame</span>
+<span class="n">df_output</span> <span class="o">=</span> <span class="n">inverter</span><span class="o">.</span><span class="n">invert</span><span class="p">(</span><span class="s1">&#39;head.target&#39;</span><span class="p">,</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;head.target&#39;</span><span class="p">])</span>
+<span class="c1"># Returns DataFrame with columns [&#39;target&#39;] and MultiIndex (batch_index, time_index)</span>
+</pre></div>
+</div>
+</section>
+<section id="converting-multiple-outputs">
+<h3>Converting Multiple Outputs<a class="headerlink" href="#converting-multiple-outputs" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert entire output dictionary</span>
+<span class="n">outputs_dict</span> <span class="o">=</span> <span class="n">inverter</span><span class="o">.</span><span class="n">invert_dict</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+<span class="c1"># Returns dictionary of DataFrames</span>
+</pre></div>
+</div>
+</section>
+<section id="tag-matching">
+<h3>Tag Matching<a class="headerlink" href="#tag-matching" title="Permalink to this heading">#</a></h3>
+<p>The inverter can match tags in different formats:</p>
+<ul class="simple">
+<li><p>Full tag: <code class="docutils literal notranslate"><span class="pre">'head.target'</span></code></p></li>
+<li><p>Core tag: <code class="docutils literal notranslate"><span class="pre">'target'</span></code></p></li>
+<li><p>Tag without prefix: <code class="docutils literal notranslate"><span class="pre">'label.target'</span></code> → matches <code class="docutils literal notranslate"><span class="pre">'target'</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="practical-examples">
+<h2>Practical Examples<a class="headerlink" href="#practical-examples" title="Permalink to this heading">#</a></h2>
+<section id="complete-workflow-example">
+<h3>Complete Workflow Example<a class="headerlink" href="#complete-workflow-example" title="Permalink to this heading">#</a></h3>
+<p>Full example from data loading to prediction:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytorch_lightning</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">deep_time_series</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dts</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">MLP</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.chunk</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChunkInverter</span>
+
+<span class="c1"># 1. Load data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;timeseries_data.csv&#39;</span><span class="p">)</span>
+
+<span class="c1"># 2. Preprocess</span>
+<span class="n">transformer</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">ColumnTransformer</span><span class="p">(</span>
+    <span class="n">transformer_tuples</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">data_transformed</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># 3. Create model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span>
+    <span class="n">hidden_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">encoding_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">decoding_length</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span>
+    <span class="n">nontarget_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;feature1&#39;</span><span class="p">,</span> <span class="s1">&#39;feature2&#39;</span><span class="p">],</span>
+    <span class="n">n_hidden_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># 4. Create dataset</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">TimeSeriesDataset</span><span class="p">(</span>
+    <span class="n">data_frames</span><span class="o">=</span><span class="n">data_transformed</span><span class="p">,</span>
+    <span class="n">chunk_specs</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">make_chunk_specs</span><span class="p">()</span>
+<span class="p">)</span>
+<span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+
+<span class="c1"># 5. Train model</span>
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span><span class="n">max_epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_dataloaders</span><span class="o">=</span><span class="n">dataloader</span><span class="p">)</span>
+
+<span class="c1"># 6. Make predictions</span>
+<span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">batch</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">dataloader</span><span class="p">))</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+
+<span class="c1"># 7. Convert predictions to DataFrame</span>
+<span class="n">inverter</span> <span class="o">=</span> <span class="n">ChunkInverter</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">make_chunk_specs</span><span class="p">())</span>
+<span class="n">predictions_df</span> <span class="o">=</span> <span class="n">inverter</span><span class="o">.</span><span class="n">invert</span><span class="p">(</span><span class="s1">&#39;head.target&#39;</span><span class="p">,</span> <span class="n">predictions</span><span class="p">[</span><span class="s1">&#39;head.target&#39;</span><span class="p">])</span>
+
+<span class="c1"># 8. Inverse transform if needed</span>
+<span class="n">predictions_original_scale</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span>
+    <span class="n">predictions_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s1">&#39;time_index&#39;</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="example-multiple-time-series-with-different-preprocessing">
+<h3>Example: Multiple Time Series with Different Preprocessing<a class="headerlink" href="#example-multiple-time-series-with-different-preprocessing" title="Permalink to this heading">#</a></h3>
+<p>When working with multiple time series that need different preprocessing:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">RobustScaler</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">deep_time_series</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dts</span>
+
+<span class="c1"># Load multiple series</span>
+<span class="n">series1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;series1.csv&#39;</span><span class="p">)</span>
+<span class="n">series2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;series2.csv&#39;</span><span class="p">)</span>
+
+<span class="c1"># Different transformers for different series</span>
+<span class="n">transformer1</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">ColumnTransformer</span><span class="p">(</span>
+    <span class="n">transformer_tuples</span><span class="o">=</span><span class="p">[(</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="n">series1</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="n">transformer2</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">ColumnTransformer</span><span class="p">(</span>
+    <span class="n">transformer_tuples</span><span class="o">=</span><span class="p">[(</span><span class="n">RobustScaler</span><span class="p">(),</span> <span class="n">series2</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span>
+<span class="p">)</span>
+
+<span class="c1"># Transform separately</span>
+<span class="n">series1_transformed</span> <span class="o">=</span> <span class="n">transformer1</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">series1</span><span class="p">)</span>
+<span class="n">series2_transformed</span> <span class="o">=</span> <span class="n">transformer2</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">series2</span><span class="p">)</span>
+
+<span class="c1"># Create model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">MLP</span><span class="p">(</span>
+    <span class="n">encoding_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">decoding_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span>
+    <span class="n">nontarget_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;feature1&#39;</span><span class="p">,</span> <span class="s1">&#39;feature2&#39;</span><span class="p">],</span>
+    <span class="c1"># ... other parameters</span>
+<span class="p">)</span>
+
+<span class="c1"># Create dataset with multiple series</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">TimeSeriesDataset</span><span class="p">(</span>
+    <span class="n">data_frames</span><span class="o">=</span><span class="p">[</span><span class="n">series1_transformed</span><span class="p">,</span> <span class="n">series2_transformed</span><span class="p">],</span>
+    <span class="n">chunk_specs</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">make_chunk_specs</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="example-custom-chunk-specifications">
+<h3>Example: Custom Chunk Specifications<a class="headerlink" href="#example-custom-chunk-specifications" title="Permalink to this heading">#</a></h3>
+<p>Creating custom chunk specifications for advanced use cases:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">deep_time_series</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dts</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deep_time_series.chunk</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">EncodingChunkSpec</span><span class="p">,</span>
+    <span class="n">DecodingChunkSpec</span><span class="p">,</span>
+    <span class="n">LabelChunkSpec</span>
+<span class="p">)</span>
+
+<span class="c1"># Define custom specifications</span>
+<span class="c1"># Encoding: last 30 days</span>
+<span class="n">encoding_spec</span> <span class="o">=</span> <span class="n">EncodingChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;historical&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sales&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">,</span> <span class="s1">&#39;promotion&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+<span class="p">)</span>
+
+<span class="c1"># Decoding: autoregressive input (previous predictions)</span>
+<span class="n">decoding_spec</span> <span class="o">=</span> <span class="n">DecodingChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;previous_pred&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sales&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>  <span class="c1"># Last 5 predictions</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+<span class="p">)</span>
+
+<span class="c1"># Label: next 7 days</span>
+<span class="n">label_spec</span> <span class="o">=</span> <span class="n">LabelChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;forecast&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sales&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+<span class="p">)</span>
+
+<span class="c1"># Create dataset</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">TimeSeriesDataset</span><span class="p">(</span>
+    <span class="n">data_frames</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">chunk_specs</span><span class="o">=</span><span class="p">[</span><span class="n">encoding_spec</span><span class="p">,</span> <span class="n">decoding_spec</span><span class="p">,</span> <span class="n">label_spec</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Access chunks</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1"># sample[&#39;encoding.historical&#39;]: shape (30, 3)</span>
+<span class="c1"># sample[&#39;decoding.previous_pred&#39;]: shape (5, 1)</span>
+<span class="c1"># sample[&#39;label.forecast&#39;]: shape (7, 1)</span>
+</pre></div>
+</div>
+</section>
+<section id="example-working-with-time-index">
+<h3>Example: Working with Time Index<a class="headerlink" href="#example-working-with-time-index" title="Permalink to this heading">#</a></h3>
+<p>Using time index information for tracking predictions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">deep_time_series</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dts</span>
+
+<span class="c1"># Create data with datetime index</span>
+<span class="n">dates</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s1">&#39;2024-01-01&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;D&#39;</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="n">dates</span><span class="p">)</span>
+
+<span class="c1"># Create dataset with return_time_index=True</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">TimeSeriesDataset</span><span class="p">(</span>
+    <span class="n">data_frames</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">chunk_specs</span><span class="o">=</span><span class="n">chunk_specs</span><span class="p">,</span>
+    <span class="n">return_time_index</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="c1"># Get a sample</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
+
+<span class="c1"># Access time indices</span>
+<span class="n">encoding_times</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="s1">&#39;encoding.input.time_index&#39;</span><span class="p">]</span>
+<span class="n">label_times</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="s1">&#39;label.output.time_index&#39;</span><span class="p">]</span>
+
+<span class="c1"># Convert to actual datetime if needed</span>
+<span class="n">encoding_dates</span> <span class="o">=</span> <span class="n">dates</span><span class="p">[</span><span class="n">encoding_times</span><span class="p">]</span>
+<span class="n">label_dates</span> <span class="o">=</span> <span class="n">dates</span><span class="p">[</span><span class="n">label_times</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Encoding period: </span><span class="si">{</span><span class="n">encoding_dates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">encoding_dates</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Forecast period: </span><span class="si">{</span><span class="n">label_dates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">label_dates</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="example-handling-missing-data">
+<h3>Example: Handling Missing Data<a class="headerlink" href="#example-handling-missing-data" title="Permalink to this heading">#</a></h3>
+<p>Preprocessing data with missing values:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">deep_time_series</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dts</span>
+
+<span class="c1"># Load data with missing values</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data_with_missing.csv&#39;</span><span class="p">)</span>
+
+<span class="c1"># Handle missing values before creating transformer</span>
+<span class="c1"># Option 1: Forward fill</span>
+<span class="n">data_ffill</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;ffill&#39;</span><span class="p">)</span>
+
+<span class="c1"># Option 2: Interpolation</span>
+<span class="n">data_interp</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span>
+
+<span class="c1"># Option 3: Drop rows with missing values</span>
+<span class="n">data_clean</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+<span class="c1"># Then apply transformer</span>
+<span class="n">transformer</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">ColumnTransformer</span><span class="p">(</span>
+    <span class="n">transformer_tuples</span><span class="o">=</span><span class="p">[(</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="n">data_clean</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="n">data_transformed</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data_clean</span><span class="p">)</span>
+
+<span class="c1"># Create dataset</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">TimeSeriesDataset</span><span class="p">(</span>
+    <span class="n">data_frames</span><span class="o">=</span><span class="n">data_transformed</span><span class="p">,</span>
+    <span class="n">chunk_specs</span><span class="o">=</span><span class="n">chunk_specs</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="example-visualizing-chunk-structure">
+<h3>Example: Visualizing Chunk Structure<a class="headerlink" href="#example-visualizing-chunk-structure" title="Permalink to this heading">#</a></h3>
+<p>Visualizing how chunks are extracted:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">deep_time_series</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dts</span>
+
+<span class="c1"># Create sample data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="c1"># Create specifications</span>
+<span class="n">encoding_spec</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">EncodingChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;input&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+<span class="p">)</span>
+
+<span class="n">label_spec</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">LabelChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;output&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+<span class="p">)</span>
+
+<span class="c1"># Create dataset</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">dts</span><span class="o">.</span><span class="n">TimeSeriesDataset</span><span class="p">(</span>
+    <span class="n">data_frames</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">chunk_specs</span><span class="o">=</span><span class="p">[</span><span class="n">encoding_spec</span><span class="p">,</span> <span class="n">label_spec</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Visualize chunk structure</span>
+<span class="n">dataset</span><span class="o">.</span><span class="n">plot_chunks</span><span class="p">()</span>  <span class="c1"># Shows the chunk ranges</span>
+
+<span class="c1"># Get a sample and visualize</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="mi">50</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Full series&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="c1"># Plot encoding window</span>
+<span class="n">encoding_data</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="s1">&#39;encoding.input&#39;</span><span class="p">]</span>
+<span class="n">encoding_start</span> <span class="o">=</span> <span class="mi">50</span> <span class="o">-</span> <span class="mi">10</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">encoding_start</span><span class="p">,</span> <span class="n">encoding_start</span> <span class="o">+</span> <span class="mi">10</span><span class="p">),</span>
+         <span class="n">encoding_data</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Encoding window&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot label window</span>
+<span class="n">label_data</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="s1">&#39;label.output&#39;</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span> <span class="o">+</span> <span class="mi">5</span><span class="p">),</span>
+         <span class="n">label_data</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="s1">&#39;s-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Label window&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Chunk Extraction Visualization&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="troubleshooting-common-issues">
+<h2>Troubleshooting Common Issues<a class="headerlink" href="#troubleshooting-common-issues" title="Permalink to this heading">#</a></h2>
+<p>This section covers common errors and how to resolve them.</p>
+<section id="error-tags-are-duplicated">
+<h3>Error: “Tags are duplicated”<a class="headerlink" href="#error-tags-are-duplicated" title="Permalink to this heading">#</a></h3>
+<p><strong>Problem</strong>: You get a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> saying tags are duplicated.</p>
+<p><strong>Cause</strong>: Multiple chunk specifications have the same tag.</p>
+<p><strong>Solution</strong>: Ensure each chunk specification has a unique tag:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Wrong: Same tag used twice</span>
+<span class="n">spec1</span> <span class="o">=</span> <span class="n">EncodingChunkSpec</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+<span class="n">spec2</span> <span class="o">=</span> <span class="n">EncodingChunkSpec</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>  <span class="c1"># Error!</span>
+
+<span class="c1"># Correct: Different tags</span>
+<span class="n">spec1</span> <span class="o">=</span> <span class="n">EncodingChunkSpec</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;features&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+<span class="n">spec2</span> <span class="o">=</span> <span class="n">EncodingChunkSpec</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="error-range-0-range-1">
+<h3>Error: “range[0] &gt;= range[1]”<a class="headerlink" href="#error-range-0-range-1" title="Permalink to this heading">#</a></h3>
+<p><strong>Problem</strong>: You get a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> about invalid range.</p>
+<p><strong>Cause</strong>: The <code class="docutils literal notranslate"><span class="pre">range_</span></code> tuple has <code class="docutils literal notranslate"><span class="pre">start</span> <span class="pre">&gt;=</span> <span class="pre">end</span></code>.</p>
+<p><strong>Solution</strong>: Ensure <code class="docutils literal notranslate"><span class="pre">range_[0]</span> <span class="pre">&lt;</span> <span class="pre">range_[1]</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Wrong</span>
+<span class="n">spec</span> <span class="o">=</span> <span class="n">EncodingChunkSpec</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="o">...</span><span class="p">)</span>  <span class="c1"># Error!</span>
+
+<span class="c1"># Correct</span>
+<span class="n">spec</span> <span class="o">=</span> <span class="n">EncodingChunkSpec</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="error-assertionerror-in-chunkextractor-extract">
+<h3>Error: AssertionError in ChunkExtractor.extract()<a class="headerlink" href="#error-assertionerror-in-chunkextractor-extract" title="Permalink to this heading">#</a></h3>
+<p><strong>Problem</strong>: <code class="docutils literal notranslate"><span class="pre">AssertionError</span></code> when extracting chunks: <code class="docutils literal notranslate"><span class="pre">start_time_index</span> <span class="pre">+</span> <span class="pre">chunk_min_t</span> <span class="pre">&gt;=</span> <span class="pre">0</span></code>.</p>
+<p><strong>Cause</strong>: Trying to extract a chunk that requires data before index 0.</p>
+<p><strong>Solution</strong>: Ensure your data is long enough or adjust the range:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># If you have 100 time steps and range_=(-20, 0)</span>
+<span class="c1"># You can only extract from index 20 onwards</span>
+
+<span class="c1"># Option 1: Use longer data</span>
+<span class="c1"># Option 2: Reduce the encoding window</span>
+<span class="n">spec</span> <span class="o">=</span> <span class="n">EncodingChunkSpec</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="o">...</span><span class="p">)</span>  <span class="c1"># Smaller window</span>
+
+<span class="c1"># Option 3: Pad your data at the beginning</span>
+<span class="c1"># (Not recommended, consider using range_ that doesn&#39;t go negative)</span>
+</pre></div>
+</div>
+</section>
+<section id="error-column-not-found-in-dataframe">
+<h3>Error: Column not found in DataFrame<a class="headerlink" href="#error-column-not-found-in-dataframe" title="Permalink to this heading">#</a></h3>
+<p><strong>Problem</strong>: <code class="docutils literal notranslate"><span class="pre">KeyError</span></code> when creating chunk specifications.</p>
+<p><strong>Cause</strong>: Column names in <code class="docutils literal notranslate"><span class="pre">names</span></code> parameter don’t match DataFrame columns.</p>
+<p><strong>Solution</strong>: Verify column names match exactly:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check available columns</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+
+<span class="c1"># Ensure names match exactly (case-sensitive)</span>
+<span class="n">spec</span> <span class="o">=</span> <span class="n">EncodingChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;input&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">,</span> <span class="s1">&#39;feature1&#39;</span><span class="p">],</span>  <span class="c1"># Must match DataFrame columns exactly</span>
+    <span class="o">...</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="error-dataset-length-is-0-or-too-small">
+<h3>Error: Dataset length is 0 or too small<a class="headerlink" href="#error-dataset-length-is-0-or-too-small" title="Permalink to this heading">#</a></h3>
+<p><strong>Problem</strong>: Dataset has fewer samples than expected.</p>
+<p><strong>Cause</strong>: Data is too short for the specified chunk ranges.</p>
+<p><strong>Solution</strong>: Check data length and chunk requirements:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check data length</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Data length: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Check chunk length requirement</span>
+<span class="n">chunk_specs</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">make_chunk_specs</span><span class="p">()</span>
+<span class="n">min_required</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="n">spec</span><span class="o">.</span><span class="n">range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">chunk_specs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Minimum data length needed: </span><span class="si">{</span><span class="n">min_required</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Ensure: len(data) &gt;= min_required + decoding_length</span>
+</pre></div>
+</div>
+</section>
+<section id="error-shape-mismatch-in-model-forward-pass">
+<h3>Error: Shape mismatch in model forward pass<a class="headerlink" href="#error-shape-mismatch-in-model-forward-pass" title="Permalink to this heading">#</a></h3>
+<p><strong>Problem</strong>: Model receives data with unexpected shape.</p>
+<p><strong>Cause</strong>: Chunk specifications don’t match model expectations.</p>
+<p><strong>Solution</strong>: Use model’s <code class="docutils literal notranslate"><span class="pre">make_chunk_specs()</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Always use model&#39;s chunk specs</span>
+<span class="n">chunk_specs</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">make_chunk_specs</span><span class="p">()</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">TimeSeriesDataset</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">chunk_specs</span><span class="o">=</span><span class="n">chunk_specs</span><span class="p">)</span>
+
+<span class="c1"># Don&#39;t manually create specs unless you know what you&#39;re doing</span>
+</pre></div>
+</div>
+</section>
+<section id="error-chunkinverter-cannot-find-tag">
+<h3>Error: ChunkInverter cannot find tag<a class="headerlink" href="#error-chunkinverter-cannot-find-tag" title="Permalink to this heading">#</a></h3>
+<p><strong>Problem</strong>: <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>: tag not found in chunk_specs when using <code class="docutils literal notranslate"><span class="pre">ChunkInverter</span></code>.</p>
+<p><strong>Cause</strong>: Tag doesn’t match any chunk specification.</p>
+<p><strong>Solution</strong>: Use correct tag format:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check available tags</span>
+<span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="n">spec</span><span class="o">.</span><span class="n">tag</span> <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">chunk_specs</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Available tags: </span><span class="si">{</span><span class="n">tags</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Use full tag or core tag</span>
+<span class="n">inverter</span><span class="o">.</span><span class="n">invert</span><span class="p">(</span><span class="s1">&#39;head.target&#39;</span><span class="p">,</span> <span class="n">tensor</span><span class="p">)</span>  <span class="c1"># Full tag</span>
+<span class="n">inverter</span><span class="o">.</span><span class="n">invert</span><span class="p">(</span><span class="s1">&#39;target&#39;</span><span class="p">,</span> <span class="n">tensor</span><span class="p">)</span>        <span class="c1"># Core tag (also works)</span>
+</pre></div>
+</div>
+</section>
+<section id="performance-issues">
+<h3>Performance Issues<a class="headerlink" href="#performance-issues" title="Permalink to this heading">#</a></h3>
+<p><strong>Problem</strong>: Data loading is slow.</p>
+<p><strong>Solutions</strong>:</p>
+<ol class="arabic">
+<li><p><strong>Use DataLoader with multiple workers</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+    <span class="n">dataset</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+    <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>  <span class="c1"># Parallel data loading</span>
+    <span class="n">pin_memory</span><span class="o">=</span><span class="kc">True</span>  <span class="c1"># Faster GPU transfer</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Preprocess data once and save</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Preprocess and save</span>
+<span class="n">data_transformed</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">data_transformed</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s1">&#39;preprocessed_data.parquet&#39;</span><span class="p">)</span>
+
+<span class="c1"># Load preprocessed data later</span>
+<span class="n">data_transformed</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;preprocessed_data.parquet&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Reduce chunk window size</strong> if possible (smaller windows = faster extraction)</p></li>
+</ol>
+</section>
+<section id="data-type-issues">
+<h3>Data Type Issues<a class="headerlink" href="#data-type-issues" title="Permalink to this heading">#</a></h3>
+<p><strong>Problem</strong>: Unexpected data types or precision loss.</p>
+<p><strong>Solution</strong>: Explicitly set dtype in chunk specifications:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># For neural networks, use float32 (standard)</span>
+<span class="n">spec</span> <span class="o">=</span> <span class="n">EncodingChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;input&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>  <span class="c1"># Explicitly set</span>
+<span class="p">)</span>
+
+<span class="c1"># For high precision requirements</span>
+<span class="n">spec</span> <span class="o">=</span> <span class="n">EncodingChunkSpec</span><span class="p">(</span>
+    <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;input&#39;</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">],</span>
+    <span class="n">range_</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span>  <span class="c1"># Higher precision, more memory</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="tips-and-best-practices">
+<h2>Tips and Best Practices<a class="headerlink" href="#tips-and-best-practices" title="Permalink to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Data Validation</strong>:
+- Ensure your DataFrame has no missing values before creating the dataset
+- Check data types are appropriate (numeric for most models)
+- Verify column names match chunk specification names</p></li>
+<li><p><strong>Index Handling</strong>:
+- The dataset uses integer indices internally
+- If your DataFrame has a datetime index, store it separately or reset it
+- Use <code class="docutils literal notranslate"><span class="pre">return_time_index=True</span></code> if you need to track time points</p></li>
+<li><p><strong>Memory Efficiency</strong>:
+- For large datasets, use <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> with appropriate <code class="docutils literal notranslate"><span class="pre">num_workers</span></code>
+- Consider preprocessing and saving to disk
+- Use <code class="docutils literal notranslate"><span class="pre">float32</span></code> instead of <code class="docutils literal notranslate"><span class="pre">float64</span></code> when possible</p></li>
+<li><p><strong>Preprocessing</strong>:
+- Always fit transformers on training data only
+- Transform both training and validation/test data with the same transformer
+- Save transformers for inference time</p></li>
+<li><p><strong>Chunk Specifications</strong>:
+- Use model’s <code class="docutils literal notranslate"><span class="pre">make_chunk_specs()</span></code> when possible
+- Ensure chunk ranges don’t exceed your data length
+- Consider the minimum data length requirement: <code class="docutils literal notranslate"><span class="pre">len(data)</span> <span class="pre">&gt;=</span> <span class="pre">max(-range[0])</span> <span class="pre">+</span> <span class="pre">max(range[1])</span></code></p></li>
+<li><p><strong>Debugging</strong>:
+- Use <code class="docutils literal notranslate"><span class="pre">dataset.plot_chunks()</span></code> to visualize chunk structure
+- Inspect a single sample: <code class="docutils literal notranslate"><span class="pre">sample</span> <span class="pre">=</span> <span class="pre">dataset[0]</span></code>
+- Check shapes: <code class="docutils literal notranslate"><span class="pre">print({k:</span> <span class="pre">v.shape</span> <span class="pre">for</span> <span class="pre">k,</span> <span class="pre">v</span> <span class="pre">in</span> <span class="pre">sample.items()})</span></code>
+- Verify time indices if using <code class="docutils literal notranslate"><span class="pre">return_time_index=True</span></code></p></li>
+<li><p><strong>Multiple Time Series</strong>:
+- Ensure all DataFrames have the same column structure
+- Apply consistent preprocessing to all series
+- Consider series length differences when interpreting results</p></li>
+</ol>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="design.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Design of DeepTimeSeries</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../tutorials/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">DeepTimeSeries Tutorials</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-format">Data Format</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-data">Loading Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-time-series">Multiple Time Series</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing">Data Preprocessing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage">Basic Usage</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-transformer-dictionary">Using Transformer Dictionary</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inverse-transform">Inverse Transform</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-chunk-specifications">Understanding Chunk Specifications</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-are-chunk-specifications">What are Chunk Specifications?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-chunk-specifications">Types of Chunk Specifications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-range-parameter">Understanding the <cite>range_</cite> Parameter</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-representation">Visual Representation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tag-naming-convention">Tag Naming Convention</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#choosing-the-right-data-type">Choosing the Right Data Type</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-dataset">Creating Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-chunkextractor-works">How ChunkExtractor Works</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-extraction-mechanism">Data Extraction Mechanism</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-start-time-index">Understanding <cite>start_time_index</cite></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-chunk-specifications">Multiple Chunk Specifications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-return-time-index-option">The <cite>return_time_index</cite> Option</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#timeseriesdataset-deep-dive">TimeSeriesDataset Deep Dive</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-length-calculation">Dataset Length Calculation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-dataframes-handling">Multiple DataFrames Handling</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#indexing-behavior">Indexing Behavior</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-efficiency">Memory Efficiency</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-based-chunk-specifications">Model-Based Chunk Specifications</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-model-outputs">Converting Model Outputs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Basic Usage</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-multiple-outputs">Converting Multiple Outputs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tag-matching">Tag Matching</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-examples">Practical Examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-workflow-example">Complete Workflow Example</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-multiple-time-series-with-different-preprocessing">Example: Multiple Time Series with Different Preprocessing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-custom-chunk-specifications">Example: Custom Chunk Specifications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-working-with-time-index">Example: Working with Time Index</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-handling-missing-data">Example: Handling Missing Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-visualizing-chunk-structure">Example: Visualizing Chunk Structure</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting-common-issues">Troubleshooting Common Issues</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-tags-are-duplicated">Error: “Tags are duplicated”</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-range-0-range-1">Error: “range[0] &gt;= range[1]”</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-assertionerror-in-chunkextractor-extract">Error: AssertionError in ChunkExtractor.extract()</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-column-not-found-in-dataframe">Error: Column not found in DataFrame</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-dataset-length-is-0-or-too-small">Error: Dataset length is 0 or too small</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-shape-mismatch-in-model-forward-pass">Error: Shape mismatch in model forward pass</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-chunkinverter-cannot-find-tag">Error: ChunkInverter cannot find tag</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-issues">Performance Issues</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-type-issues">Data Type Issues</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tips-and-best-practices">Tips and Best Practices</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/user_guide/io.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, betlab and dartwork.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
