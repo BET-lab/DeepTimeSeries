@@ -8,11 +8,11 @@ The API is organized into the following sections:
 .. toctree::
    :maxdepth: 2
 
-   core
-   chunk
-   dataset
-   transform
-   models
-   layers
-   utilities
+   core.rst
+   chunk.rst
+   dataset.rst
+   transform.rst
+   models.rst
+   layers.rst
+   utilities.rst
 
